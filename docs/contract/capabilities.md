@@ -12,7 +12,8 @@ Status has a precise scope:
 Qualification is a separate column. An untested target is never a passing proxy.
 HMS-01 defines the profile contract. HMS-02 adds an isolated fields API and
 HMS-03 adds a separate authoritative base API. The original signer/verifier and
-full profile API support are unchanged. New capabilities below apply to `/base`.
+root API are unchanged. HMS-04 adds `/protocol` and explicit `/webcrypto`;
+full body/replay profiles remain unavailable until HMS-05.
 
 | Feature | Current runtime status | Evidence / remaining implementation |
 |---|---|---|
@@ -30,14 +31,14 @@ full profile API support are unchanged. New capabilities below apply to `/base`.
 | Complete envelope label agreement and duplicate rejection | supported via `/fields` | All labels validated; no union/fallback; independent of old verifier |
 | Unrestricted RFC 8941 / all RFC metadata | unsupported | `/fields` remains signature-specific; `/base` has broader internal grammar with explicit count and duplicate restrictions; RFC 9651 forms excluded |
 | RSA, ECDSA, Ed25519 sign or verify | unsupported | HMS-06 primitive and vector gates |
-| New message/result/profile API and typed capabilities | unsupported at runtime | Defined by HMS-01; HMS-02–05 implementation |
-| Mandatory alg/tag, skew, scoped resolver and 256-bit minimum | unsupported as v1 policy | Some old checks exist; cannot use them as v1 enforcement |
+| Message/result/profile API and explicit capabilities | supported HMS-04 subset via `/protocol` | Body excluded/replay none; exact coverage, scoped keys, bounded work and fixed failures |
+| Mandatory alg/tag, skew, scoped resolver and 256-bit minimum | supported via `/protocol` | Tamper, time boundaries, resolver scoping and invalid backend tests |
 | Content-Digest body computation/verification | unsupported | Digest is currently an opaque header; HMS-05 |
 | Atomic replay state | unsupported | Nonce metadata is not replay protection; HMS-05 |
-| Associated-request component binding | supported via `/base` | Exact §2.4; all request-derived components with req; full response profile enforcement still future |
+| Associated-request component binding | supported via `/base` | Exact §2.4; all request-derived components with req; HMS-04 response target/coverage/domain enforcement; body/replay pending |
 | Required field known absent | unavailable input (known absence) | Old missing-field test; v1 distinguishes `COMPONENT_MISSING` |
 | Raw target, retained body/trailer/request not exposed | unavailable input | Host adapter must report reason; no reconstruction fallback |
-| Explicit crypto backend missing | unavailable capability | Old calls reject/fail; global Web Crypto default remains an inherited gap |
+| Explicit crypto backend missing | unavailable capability | New `/protocol` rejects; `/webcrypto` requires explicit SubtleCrypto and key. Root spike retains global default |
 | Accept-Signature negotiation / signature append | unsupported | Outside v1; no automatic label/policy downgrade |
 
 | Target | Realization status | Qualification |
@@ -45,7 +46,7 @@ full profile API support are unchanged. New capabilities below apply to `/base`.
 | Node JS 24.19.0, old spike API | supported reference | Six recovered tests plus boundary observations; no production security qualification |
 | Node JS 24.19.0, `/fields` API | supported experimental subset | HMS-02 tests and logical-work counters; no host/crypto policy |
 | Node JS 24.19.0, `/base` API | supported experimental subset | HMS-03 exact byte/corpus/negative tests and logical-work counters; no adapter provenance proof |
-| Node JS, HMS v1 profile API | unsupported | Contract only; not implemented |
+| Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental HMAC subset | HMS-04 protocol/adapter tests, RFC B.2.5; no body/replay enforcement or host provenance proof |
 | Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
 | Node Native | unavailable realization | No approved lowerer or host bridge |
 | Fastly Native / Viceroy | unavailable realization | No compile, local host or deployed receipt |
@@ -56,7 +57,7 @@ full profile API support are unchanged. New capabilities below apply to `/base`.
 |---|---|
 | Signature-envelope parsing and serialization | Package, HMS-02 implemented; see `../signature-fields.md` for exclusions |
 | Component sources, descriptors and exact base | Package HMS-03 implemented; host adapter qualification remains open |
-| Capability crypto/key policy and result API | Package/backend, HMS-04 |
+| Capability crypto/key policy and result API | Package/backend, HMS-04 implemented; see `../protocol.md` |
 | Content and nonce/replay enforcement | Package/host/store, HMS-05 |
 | Additional algorithms | Crypto primitive owner and package, HMS-06 |
 | Host authority, opaque key handles and Native fit | Pulse contract owners, read-only investigation in HMS-07 |

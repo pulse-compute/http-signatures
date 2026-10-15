@@ -3,10 +3,13 @@ import { readFile } from 'node:fs/promises';
 import * as api from '@pulse-compute/http-signatures';
 import * as fields from '@pulse-compute/http-signatures/fields';
 import * as base from '@pulse-compute/http-signatures/base';
+import * as protocol from '@pulse-compute/http-signatures/protocol';
+import * as webcrypto from '@pulse-compute/http-signatures/webcrypto';
 
 const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
 assert.equal(pkg.private, true, 'The experimental package must remain private');
-assert.deepEqual(pkg.exports, { '.': './src/index.js', './fields': './src/signature-fields.js', './base': './src/signature-base.js' });
+assert.deepEqual(pkg.exports, { '.': './src/index.js', './fields': './src/signature-fields.js', './base': './src/signature-base.js',
+  './protocol': './src/protocol.js', './webcrypto': './src/webcrypto.js' });
 assert.deepEqual(Object.keys(api).sort(), [
   'createSignatureBase', 'serializeSignatureParams', 'signMessage', 'verifyMessage',
 ].sort());
@@ -19,4 +22,7 @@ for (const [key, fn] of Object.entries(fields)) if (key !== 'signatureFieldLimit
 assert.deepEqual(Object.keys(base).sort(), ['createSignatureBase', 'signatureBaseLimits']);
 assert.equal(typeof base.createSignatureBase, 'function');
 assert.ok(Object.isFrozen(base.signatureBaseLimits));
-console.log('Original four exports, fields and base subpaths resolve; private guard retained.');
+assert.deepEqual(Object.keys(protocol).sort(), ['sign', 'verify']);
+assert.deepEqual(Object.keys(webcrypto).sort(), ['createHmacSigner', 'createHmacVerifier']);
+for (const value of [...Object.values(protocol), ...Object.values(webcrypto)]) assert.equal(typeof value, 'function');
+console.log('Original root, fields, base, protocol and explicit Web Crypto exports resolve; private guard retained.');

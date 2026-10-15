@@ -1,0 +1,69 @@
+{
+  "contractVersion": 1,
+  "id": "example-hmac-request-v1",
+  "label": "sig1",
+  "context": {
+    "kind": "request",
+    "direction": "outbound",
+    "trustDomain": "example",
+    "scheme": "https",
+    "authority": "example.com"
+  },
+  "requiredComponents": [
+    {
+      "kind": "derived",
+      "name": "@method",
+      "parameters": []
+    },
+    {
+      "kind": "derived",
+      "name": "@target-uri",
+      "parameters": []
+    }
+  ],
+  "structuredFields": {},
+  "allowedAlgorithms": [
+    "hmac-sha256"
+  ],
+  "keyPolicy": {
+    "resolverId": "example-local",
+    "acceptedKeyIds": [
+      "example-key"
+    ]
+  },
+  "time": {
+    "requireCreated": true,
+    "requireExpires": true,
+    "maxAgeSeconds": 60,
+    "maxLifetimeSeconds": 60,
+    "clockSkewSeconds": 5
+  },
+  "requiredTag": "example-http",
+  "body": {
+    "mode": "excluded"
+  },
+  "replay": {
+    "mode": "none"
+  },
+  "limits": {
+    "envelopeFieldBytes": 16384,
+    "instancesPerName": 16,
+    "signatures": 8,
+    "components": 32,
+    "componentParameters": 5,
+    "signatureParameters": 6,
+    "metadataStringBytes": 512,
+    "labelBytes": 64,
+    "fieldNameBytes": 256,
+    "signatureBytes": 32,
+    "workUnits": 2097152,
+    "totalFieldBytes": 131072,
+    "fieldValueBytes": 16384,
+    "fieldCount": 128,
+    "targetBytes": 16384,
+    "signatureBaseBytes": 65536,
+    "bodyBytes": 1048576,
+    "structuredMembers": 128,
+    "structuredParameters": 32
+  }
+}

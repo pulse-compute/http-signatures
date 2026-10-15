@@ -85,3 +85,17 @@ and resource semantics are an HMS-07 owner question.
 HMS-02/03 qualify parser/base allocation and work, HMS-04 qualifies key/crypto
 limits, HMS-05 qualifies bounded content/replay paths, HMS-09 qualifies target
 memory and latency. No production limit is declared by HMS-01.
+
+## HMS-04 enforcement
+
+`/protocol` requires every limit explicitly, at or below the `/base` defaults,
+with signatureBytes exactly 32. Profile validation, envelope operations, base
+construction and output serialization share one logical-work budget. The local
+accepted-key list has a schema ceiling of 32 unique nonempty IDs. Raw combined
+envelope lengths include joining overhead before normalization; emitted sign
+fields must fit per-field and aggregate bytes/counts before invoking crypto.
+Tests exercise exact work thresholds and one-below failures for sign/verify.
+Backend cryptography and async host work are not package work-counter units.
+The explicit Web Crypto adapter separately bounds base inputs to 65,536 bytes,
+MACs to 32 bytes and key metadata to 256–32768 bits. These are reference bounds,
+not a Native capacity qualification or worst-case resource guarantee.

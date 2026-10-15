@@ -153,3 +153,12 @@ is outside what the protocol can detect; inconsistent inputs still fail closed.
 References for implementation review: RFC 9421 §§2, 3.2, 7–8 and RFC 9530 §2.
 The profile choices above (fixed alg/tag/label, time windows, limits) are this
 workstream's restrictions, not universal RFC requirements.
+
+## HMS-04 implementation boundary
+
+The [explicit HMAC API](../protocol.md) now enforces this profile for body excluded /
+replay none. Valid body-required or replay-required configurations fail with
+CAPABILITY_UNAVAILABLE until HMS-05, even when callbacks are supplied. Success
+never claims body integrity or replay protection. Key allowlists contain 1–32
+unique IDs; responses bind an associated request in the same trust domain.
+Node Web Crypto tests establish only the reference backend behavior.

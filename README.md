@@ -43,7 +43,7 @@ export, CommonJS entry point or TypeScript declaration bundle. A checkout consum
 inside this package or from an explicitly installed local copy; nothing is
 available from npm through this workstream.
 
-The protocol source imports no modules. It needs standard `URL`, `TextEncoder`
+The root spike source imports no modules. It needs standard `URL`, `TextEncoder`
 and `Uint8Array` globals, plus a Web Crypto backend. Pass `crypto` explicitly
 (for Node, `webcrypto` from `node:crypto`); the recovered API also defaults to
 `globalThis.crypto`. This inherited fallback is recorded for HMS-01 review.
@@ -71,8 +71,7 @@ non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
 See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
 actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
 describes the small PR/test workflow. The [HMS-01 contract](docs/contract/README.md) defines the intended message model,
-profiles and explicit capabilities for later implementation. It is not a new
-runtime profile API. The [HMS-02 fields API](docs/signature-fields.md) is now
+profiles and explicit capabilities, with body/replay enforcement still pending HMS-05. The [HMS-02 fields API](docs/signature-fields.md) is now
 available through `@pulse-compute/http-signatures/fields` for bounded parsing and
 serialization. It does not alter the original signer/verifier or establish full
 RFC conformance. The [HMS-03 base API](docs/signature-base.md) is available through
@@ -80,7 +79,12 @@ RFC conformance. The [HMS-03 base API](docs/signature-base.md) is available thro
 structured field selectors, binary wrapping, trailers, derived components and
 request-bound responses. It returns exact signature-base bytes; it does not
 implement the new authentication policy or change the old signer/verifier.
-Next: **HMS-04 — explicit HMAC signing and verification policy**. Native work is
+The [HMS-04 protocol API](docs/protocol.md) adds explicit HMAC `sign`/`verify`
+through `/protocol`, with an optional explicit `/webcrypto` adapter. It enforces
+context, coverage, metadata, time and scoped keys. Run `node examples/hmac.mjs`.
+Body-required and replay-required profiles fail closed until HMS-05; the current
+receipt reports both as not checked. See the [implementation receipt](docs/hms-04.md).
+Next: **HMS-05 — body integrity and replay enforcement**. Native work is
 conditional on a later integration investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),

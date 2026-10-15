@@ -1,4 +1,5 @@
-/** HMS contract v1: design types only. No runtime or package exports. */
+/** HMS contract v1: contract types only, not package exports. HMS-04 implements the
+ * body-excluded/replay-none Protocol subset; required modes await HMS-05. */
 export type Available<T> =
   | { state: 'available'; value: T }
   | { state: 'unavailable'; reason: 'not-exposed' | 'transformed' | 'not-retained' };
@@ -72,6 +73,7 @@ export type Profile = {
   requiredComponents: readonly Component[];
   structuredFields: Readonly<Record<string, StructuredFieldType>>;
   allowedAlgorithms: readonly ['hmac-sha256'];
+  /** HMS-04: 1–32 unique locally accepted key IDs. */
   keyPolicy: { resolverId: string; acceptedKeyIds: readonly string[] };
   time: { requireCreated: true; requireExpires: boolean; maxAgeSeconds: number;
     maxLifetimeSeconds: number; clockSkewSeconds: number };
