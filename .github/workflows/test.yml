@@ -23,4 +23,6 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run check
+      - run: npm run check:contract
+      - run: node scripts/measure-reference-limits.mjs
       - run: npm test

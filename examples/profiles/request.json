@@ -1,0 +1,78 @@
+{
+  "contractVersion": 1,
+  "allowedAlgorithms": [
+    "hmac-sha256"
+  ],
+  "time": {
+    "requireCreated": true,
+    "requireExpires": true,
+    "maxAgeSeconds": 60,
+    "maxLifetimeSeconds": 60,
+    "clockSkewSeconds": 5
+  },
+  "body": {
+    "mode": "required",
+    "algorithm": "sha-256"
+  },
+  "limits": {
+    "envelopeFieldBytes": 16384,
+    "totalFieldBytes": 131072,
+    "fieldValueBytes": 16384,
+    "fieldNameBytes": 256,
+    "fieldCount": 128,
+    "instancesPerName": 16,
+    "signatures": 8,
+    "components": 32,
+    "componentParameters": 5,
+    "signatureParameters": 6,
+    "metadataStringBytes": 512,
+    "labelBytes": 64,
+    "targetBytes": 16384,
+    "signatureBaseBytes": 65536,
+    "signatureBytes": 32,
+    "bodyBytes": 65536,
+    "workUnits": 2097152
+  },
+  "id": "webhook-request-v1",
+  "label": "webhook",
+  "context": {
+    "kind": "request",
+    "direction": "inbound",
+    "trustDomain": "example-webhooks",
+    "scheme": "https",
+    "authority": "webhooks.example.test"
+  },
+  "requiredComponents": [
+    {
+      "kind": "derived",
+      "name": "@method",
+      "parameters": []
+    },
+    {
+      "kind": "derived",
+      "name": "@target-uri",
+      "parameters": []
+    },
+    {
+      "kind": "field",
+      "name": "content-type",
+      "parameters": []
+    },
+    {
+      "kind": "field",
+      "name": "content-digest",
+      "parameters": []
+    }
+  ],
+  "keyPolicy": {
+    "resolverId": "webhook-verifier",
+    "acceptedKeyIds": [
+      "webhook-2026-10"
+    ]
+  },
+  "requiredTag": "example-webhook-request-v1",
+  "replay": {
+    "mode": "required",
+    "namespace": "example/webhooks/inbound"
+  }
+}

@@ -72,8 +72,9 @@ non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
 
 See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
 actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
-describes the small PR/test workflow. Next: **HMS-01 — contract, capability
-matrix, and threat model**. Native work is conditional on a later integration
+describes the small PR/test workflow. The [HMS-01 contract](docs/contract/README.md) defines the intended message model,
+profiles and explicit capabilities for later implementation. It is not a new
+runtime API. Next: **HMS-02 — bounded signature-field parsing and serialization**. Native work is conditional on a later integration
 investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),

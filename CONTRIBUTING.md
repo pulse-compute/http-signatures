@@ -5,7 +5,7 @@ This is an experimental reference package. Preserve honest, profile-scoped claim
 - Branch from `main` using `hms-NN/short-description`; open one scoped PR against
   `main`. Maintainers merge after human review. Do not auto-merge or publish.
 - Use Node 24.19.0 (`.nvmrc`). Run `npm ci --ignore-scripts --no-audit --no-fund`,
-  `npm run check`, and `npm test`. Direct test command: `node --test test/rfc9421.test.js`.
+  `npm run check`, `npm run check:contract`, and `npm test`. Direct test command: `node --test test/rfc9421.test.js`.
 - Keep dependencies explicit. None are needed for the initial six-test reference.
   No formatter/type-checker dependency is imposed on the unchanged spike.
 - Keep implementation changes separate from bootstrap. Add exact positive and
