@@ -16,8 +16,6 @@ runtime or development dependencies**, build step, or install scripts.
 ```sh
 git clone https://github.com/pulse-compute/http-signatures.git
 cd http-signatures
-# Before HMS-00 merges:
-git switch hms-00/bootstrap-reference
 nvm install
 nvm use
 npm ci --ignore-scripts --no-audit --no-fund
@@ -65,7 +63,7 @@ origin-form `@request-target`, `@status`). It selects one explicitly labeled
 signature from a restricted dictionary representation. This is implemented
 surface, not a complete interoperability qualification.
 
-Unsupported: other algorithms; `;sf`, `;key`, `;bs`, `;tr`, `;req`; `@query-param`;
+Unsupported in the unchanged root spike: other algorithms; `;sf`, `;key`, `;bs`, `;tr`, `;req`; `@query-param`;
 request/response cross-signing; `Accept-Signature`; complete RFC 8941 parsing;
 non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
 `set-cookie` values. URL normalization and field joining need further review.
@@ -77,8 +75,13 @@ profiles and explicit capabilities for later implementation. It is not a new
 runtime profile API. The [HMS-02 fields API](docs/signature-fields.md) is now
 available through `@pulse-compute/http-signatures/fields` for bounded parsing and
 serialization. It does not alter the original signer/verifier or establish full
-RFC conformance. Next: **HMS-03 — component resolution and signature bases**. Native work is conditional on a later integration
-investigation and human architectural approval.
+RFC conformance. The [HMS-03 base API](docs/signature-base.md) is available through
+`@pulse-compute/http-signatures/base` for authoritative snapshots, ordinary and
+structured field selectors, binary wrapping, trailers, derived components and
+request-bound responses. It returns exact signature-base bytes; it does not
+implement the new authentication policy or change the old signer/verifier.
+Next: **HMS-04 — explicit HMAC signing and verification policy**. Native work is
+conditional on a later integration investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),

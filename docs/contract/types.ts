@@ -3,6 +3,7 @@ export type Available<T> =
   | { state: 'available'; value: T }
   | { state: 'unavailable'; reason: 'not-exposed' | 'transformed' | 'not-retained' };
 export type Field = { name: string; value: Uint8Array };
+export type StructuredFieldType = 'item' | 'list' | 'dictionary';
 export type OriginalTarget = {
   form: 'origin' | 'absolute' | 'authority' | 'asterisk' | 'pseudo-headers';
   raw: Uint8Array;
@@ -58,6 +59,7 @@ export type Limits = {
   signatureParameters: number; metadataStringBytes: number; labelBytes: number;
   targetBytes: number; signatureBaseBytes: number; signatureBytes: number;
   bodyBytes: number; workUnits: number;
+  structuredMembers: number; structuredParameters: number;
 };
 export type Profile = {
   contractVersion: 1;
@@ -68,6 +70,7 @@ export type Profile = {
     trustDomain: string; scheme: 'https'; authority: string;
   };
   requiredComponents: readonly Component[];
+  structuredFields: Readonly<Record<string, StructuredFieldType>>;
   allowedAlgorithms: readonly ['hmac-sha256'];
   keyPolicy: { resolverId: string; acceptedKeyIds: readonly string[] };
   time: { requireCreated: true; requireExpires: boolean; maxAgeSeconds: number;

@@ -2,18 +2,20 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 const fields = ['contractVersion', 'id', 'label', 'context', 'requiredComponents',
-  'allowedAlgorithms', 'keyPolicy', 'time', 'requiredTag', 'body', 'replay', 'limits'];
+  'allowedAlgorithms', 'keyPolicy', 'time', 'requiredTag', 'body', 'replay', 'limits', 'structuredFields'];
 const ceilings = { envelopeFieldBytes: 16384, totalFieldBytes: 131072,
   fieldValueBytes: 16384, fieldNameBytes: 256, fieldCount: 128, instancesPerName: 16,
   signatures: 8, components: 32, componentParameters: 5, signatureParameters: 6,
   metadataStringBytes: 512, labelBytes: 64, targetBytes: 16384,
-  signatureBaseBytes: 65536, signatureBytes: 32, bodyBytes: 1048576, workUnits: 2097152 };
+  signatureBaseBytes: 65536, signatureBytes: 32, bodyBytes: 1048576, workUnits: 2097152,
+  structuredMembers: 128, structuredParameters: 32 };
 for (const kind of ['request', 'response']) {
   const profile = JSON.parse(await readFile(new URL(`../examples/profiles/${kind}.json`, import.meta.url)));
   assert.deepEqual(Object.keys(profile).sort(), fields.sort());
   assert.equal(profile.contractVersion, 1);
   for (const field of ['id', 'label', 'requiredTag']) assert.ok(profile[field].length > 0);
   assert.deepEqual(profile.allowedAlgorithms, ['hmac-sha256']);
+  assert.deepEqual(profile.structuredFields, {});
   assert.equal(profile.context.kind, kind);
   assert.equal(profile.context.direction, 'inbound');
   assert.equal(profile.context.scheme, 'https');

@@ -25,4 +25,5 @@ jobs:
       - run: npm run check
       - run: npm run check:contract
       - run: node scripts/measure-reference-limits.mjs
+      - run: node scripts/measure-base-work.mjs
       - run: npm test

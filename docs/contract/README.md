@@ -6,7 +6,10 @@ runtime API, npm types, a host adapter, or supported-package status. Changes to
 this contract must explain compatibility and update the examples and matrix.
 The four existing root exports remain the HMS-00 spike API. The separately
 implemented [HMS-02 fields API](../signature-fields.md) provides syntax operations
-only; `Protocol.sign` and `Protocol.verify` are still future work.
+only. The [HMS-03 base API](../signature-base.md) now implements bounded message
+snapshots and canonical bytes; `Protocol.sign` and `Protocol.verify` are still
+future work. HMS-03 adds an explicit `structuredFields` map to the design Profile
+and two SF count limits. Both examples and authoring checks are updated together.
 
 Start with the [input and operation contract](protocol.md), then the
 [security profile and threat model](security.md). The
