@@ -30,7 +30,7 @@ also run directly without installation: `node --test test/rfc9421.test.js`.
 
 ## Experimental API
 
-The sole package entry point is `@pulse-compute/http-signatures`. It exports:
+The root entry point is `@pulse-compute/http-signatures`. Its unchanged spike API exports:
 
 | Export | Purpose |
 |---|---|
@@ -39,8 +39,8 @@ The sole package entry point is `@pulse-compute/http-signatures`. It exports:
 | `signMessage` | Produce `Signature-Input` and `Signature` fields with HMAC-SHA256 |
 | `verifyMessage` | Check the selected signature against explicit caller policy |
 
-All exports are ESM named exports from `src/index.js`; no default, CommonJS,
-TypeScript declarations, or subpath API is provided. A checkout consumer can use
+These four exports are ESM named exports from `src/index.js`. There is no default
+export, CommonJS entry point or TypeScript declaration bundle. A checkout consumer can use
 `import { signMessage } from './src/index.js'`. The package-name import works
 inside this package or from an explicitly installed local copy; nothing is
 available from npm through this workstream.
@@ -74,7 +74,10 @@ See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
 actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
 describes the small PR/test workflow. The [HMS-01 contract](docs/contract/README.md) defines the intended message model,
 profiles and explicit capabilities for later implementation. It is not a new
-runtime API. Next: **HMS-02 — bounded signature-field parsing and serialization**. Native work is conditional on a later integration
+runtime profile API. The [HMS-02 fields API](docs/signature-fields.md) is now
+available through `@pulse-compute/http-signatures/fields` for bounded parsing and
+serialization. It does not alter the original signer/verifier or establish full
+RFC conformance. Next: **HMS-03 — component resolution and signature bases**. Native work is conditional on a later integration
 investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),

@@ -5,11 +5,12 @@
   "type": "module",
   "description": "Experimental bounded RFC 9421 HTTP Message Signatures protocol package (JS reference)",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./fields": "./src/signature-fields.js"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
-    "check": "node --check src/index.js && node --check test/rfc9421.test.js && node scripts/check-package.mjs",
+    "check": "node scripts/check-syntax.mjs && node scripts/check-package.mjs",
     "check:contract": "node --experimental-strip-types docs/contract/types.ts && node scripts/check-contract.mjs",
     "measure:limits": "node scripts/measure-reference-limits.mjs"
   },

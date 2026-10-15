@@ -1,0 +1,28 @@
+{
+  "runtime": "v24.19.0",
+  "scope": "Logical budget counters only; no CPU or memory limit claim",
+  "envelopeB25WorkUnits": 4228,
+  "cases": [
+    {
+      "name": "B.2.5 input",
+      "inputBytes": 90,
+      "parseWorkUnits": 1053,
+      "serializedBytes": 90,
+      "serializeWorkUnits": 845
+    },
+    {
+      "name": "full 16384-byte field",
+      "inputBytes": 16384,
+      "parseWorkUnits": 65546,
+      "serializedBytes": 4,
+      "serializeWorkUnits": 12
+    },
+    {
+      "name": "8 signatures x 32 parameterized components",
+      "inputBytes": 4270,
+      "parseWorkUnits": 683656,
+      "serializedBytes": 4270,
+      "serializeWorkUnits": 665444
+    }
+  ]
+}

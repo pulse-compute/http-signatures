@@ -1,0 +1,53 @@
+{
+  "sources": [
+    "https://www.rfc-editor.org/rfc/rfc9421.html#appendix-B.2.5",
+    "https://www.rfc-editor.org/rfc/rfc8941.html#section-4.2"
+  ],
+  "rfcB25": {
+    "signatureInput": "sig-b25=(\"date\" \"@authority\" \"content-type\");created=1618884473;keyid=\"test-shared-secret\"",
+    "signature": "sig-b25=:pxcQw6G3AjtMBQjwo8XzkZf/bws5LelbaMk5rGIGtE8=:",
+    "parameters": "(\"date\" \"@authority\" \"content-type\");created=1618884473;keyid=\"test-shared-secret\"",
+    "hex": "a71710c3a1b7023b4c0508f0a3c5f39197ff6f0b392de95b68c939ac6206b44f"
+  },
+  "inputCanonicalization": [
+    ["  a=(  \"@method\"   \"x\"; sf=?1 ) ;created=1", null],
+    ["  a=(  \"@method\"   \"x\"; sf=?1 ); created=0001;keyid=\"a,b;()\" \t,\t b=()\t", "a=(\"@method\" \"x\";sf);created=1;keyid=\"a,b;()\", b=()"],
+    ["a=(\"x\";req;key=\"member\";sf;tr);expires=999999999999999;created=-999999999999999", "a=(\"x\";req;key=\"member\";sf;tr);expires=999999999999999;created=-999999999999999"],
+    ["a=();created=-0;expires=000000000000000", "a=();created=0;expires=0"],
+    ["a=(\"@query-param\";name=\"a%20b\";req)", "a=(\"@query-param\";name=\"a%20b\";req)"],
+    ["a=(\"x\");keyid=\"a\\\"b\\\\c\";nonce=\"\";tag=\"() , ;\";alg=\"hmac-sha256\"", "a=(\"x\");keyid=\"a\\\"b\\\\c\";nonce=\"\";tag=\"() , ;\";alg=\"hmac-sha256\""]
+  ],
+  "malformedInput": [
+    "A=(\"x\")", "a = (\"x\")", "a= (\"x\")", "a=(\"x\"),", "a=(\"x\"),,b=()",
+    "a=(\"x\") b=()", "a", "a=?1", "a=:AA==:", "a=((\"x\"))", "a=(1)",
+    "a=(\"x\"\"y\")", "a=(\"x\"\t\"y\")", "a=(\"x\" ;sf)", "a=(\"x\");\tcreated=1",
+    "a=(\"x\");created= 1", "a=(\"x\");created =1", "a=(\"x\");created=+1",
+    "a=(\"x\");created=1.2", "a=(\"x\");created=1000000000000000", "a=(\"x\");created=-1000000000000000",
+    "a=(\"x\");created=0000000000000000", "a=(\"x\");created=\"1\"", "a=(\"x\");created=?1",
+    "a=(\"x\");alg=hmac-sha256", "a=(\"x\");keyid=1", "a=(\"x\");keyid", "a=(\"x\");future=1",
+    "a=(\"x\");nonce=\"bad\\q\"", "a=(\"x\");nonce=\"bad\\", "a=(\"x\");tag=\"unterminated",
+    "a=(\"X\")", "a=(\"bad name\")", "a=(\"\")", "a=(\"x;sf\")",
+    "a=(\"x\";sf=?0)", "a=(\"x\";sf=1)", "a=(\"x\";key)", "a=(\"x\";key=\"UPPER\")",
+    "a=(\"x\";name=\"q\")", "a=(\"@method\";tr)", "a=(\"@method\";sf)", "a=(\"@status\";req)",
+    "a=(\"@query-param\")", "a=(\"@method\";name=\"q\")", "a=(\"x\";bs;sf)", "a=(\"x\";key=\"a\";bs)",
+    "a=(\"x\";unknown)", "a=(\"x\";sf;sf)", "a=(\"x\");created=1;created=2",
+    "a=(\"x\"), a=(\"y\")", "a=(\"x\" \"x\")", "a=(\"x\";sf;req \"x\";req;sf)",
+    "\ta=()", "a=(\"x\");tag=\"a\tb\"", "a=(\"x\")\r\nb=()", "a=(\"x\");keyid=\"é\""
+  ],
+  "bytes": [
+    ["a=::", "a=::", ""],
+    ["a=:YQ==:", "a=:YQ==:", "61"],
+    ["a=:YQ:", "a=:YQ==:", "61"],
+    ["a=:YQ=:", "a=:YQ==:", "61"],
+    ["a=:YR==:", "a=:YQ==:", "61"],
+    ["a=:YWI:", "a=:YWI=:", "6162"],
+    ["a=:YWJ=:", "a=:YWI=:", "6162"],
+    ["a=:YWJj:", "a=:YWJj:", "616263"]
+  ],
+  "malformedSignature": [
+    "a=\"AA==\"", "a=(\"x\")", "a=:A:", "a=:YQ===:", "a=:YWJj=:", "a=:====:",
+    "a=:Y=Q=:", "a=:YQ==AA:", "a=:YQ==", "a=:YQ== :", "a=:YQ\t==:",
+    "a=:YQ\n==:", "a=:YQ__:", "a=:YQ--:", "a=:é:", "a=:AA==:;keyid=\"x\"",
+    "a=:AA==:, a=:AQ==:", "a=:AA==:,", "a =:AA==:", "a= :AA==:", "\ta=:AA==:"
+  ]
+}

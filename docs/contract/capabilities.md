@@ -10,9 +10,10 @@ Status has a precise scope:
   supplied by the selected host/backend. Do not infer or synthesize it.
 
 Qualification is a separate column. An untested target is never a passing proxy.
-HMS-01 adds a design contract; it does not widen any runtime support cell.
+HMS-01 defines the profile contract. HMS-02 adds an isolated fields API; the
+original signer/verifier and full profile API support are unchanged.
 
-| Feature | HMS-00 runtime status | Evidence / remaining implementation |
+| Feature | Current runtime status | Evidence / remaining implementation |
 |---|---|---|
 | HMAC-SHA256 sign/verify with raw JS bytes | supported, reference only | Exact B.2.5; policy negatives; raw key minimum differs from v1 |
 | Ordered plain covered components / signature parameters | supported, restricted | Exact B.2.5 base and fields; no general SF parser claim |
@@ -21,8 +22,10 @@ HMS-01 adds a design contract; it does not widen any runtime support cell.
 | `@scheme`, `@path`, `@request-target` origin form | supported in source, unqualified | No dedicated recovered vector; URL normalization review in HMS-03 |
 | One selected label among multiple signatures | supported, restricted | Two-label test and duplicate-label rejection |
 | Required coverage, keyid, created age bound | supported, restricted | Existing negative tests; no full v1 policy |
-| `sf`, `key`, `bs`, `tr`, `req`, `@query-param` | unsupported | Types reserve shapes; HMS-02/03 and host visibility required |
-| General RFC 8941 syntax / all RFC metadata | unsupported | Partial parser only; HMS-02 |
+| `sf`, `key`, `bs`, `tr`, `req`, `@query-param` resolution | unsupported | HMS-02 recognizes syntax; HMS-03 and host visibility still required |
+| Bounded signature dictionaries, ordered typed parameters and byte sequences | supported via `/fields` | HMS-02 exact B.2.5, 57 adapted HTTPWG cases and local syntax/limit tests |
+| Complete envelope label agreement and duplicate rejection | supported via `/fields` | All labels validated; no union/fallback; independent of old verifier |
+| General RFC 8941 syntax / all RFC metadata | unsupported | HMS-02 implements only the declared signature-envelope subset |
 | RSA, ECDSA, Ed25519 sign or verify | unsupported | HMS-06 primitive and vector gates |
 | New message/result/profile API and typed capabilities | unsupported at runtime | Defined by HMS-01; HMS-02–05 implementation |
 | Mandatory alg/tag, skew, scoped resolver and 256-bit minimum | unsupported as v1 policy | Some old checks exist; cannot use them as v1 enforcement |
@@ -37,6 +40,7 @@ HMS-01 adds a design contract; it does not widen any runtime support cell.
 | Target | Realization status | Qualification |
 |---|---|---|
 | Node JS 24.19.0, old spike API | supported reference | Six recovered tests plus boundary observations; no production security qualification |
+| Node JS 24.19.0, `/fields` API | supported experimental subset | HMS-02 tests and logical-work counters; no host/crypto policy |
 | Node JS, HMS v1 profile API | unsupported | Contract only; not implemented |
 | Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
 | Node Native | unavailable realization | No approved lowerer or host bridge |
@@ -46,7 +50,7 @@ HMS-01 adds a design contract; it does not widen any runtime support cell.
 
 | Gap | Owner / next ticket |
 |---|---|
-| Structured fields, deterministic parse errors and bounds | Package, HMS-02 |
+| Signature-envelope parsing and serialization | Package, HMS-02 implemented; see `../signature-fields.md` for exclusions |
 | Component sources, descriptors and exact base | Package plus host evidence, HMS-03 |
 | Capability crypto/key policy and result API | Package/backend, HMS-04 |
 | Content and nonce/replay enforcement | Package/host/store, HMS-05 |
