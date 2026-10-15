@@ -4,8 +4,9 @@ Bounded [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421) signing and verificat
 with explicit coverage, keys, trusted time, body integrity and replay policy.
 
 **Experimental and private.** The JavaScript reference supports HMAC-SHA256,
-P-256/SHA-256 and RSA v1.5/SHA-256. It is not published or qualified for production
-or Pulse Native. See the [capability matrix](docs/contract/capabilities.md).
+P-256/SHA-256 and RSA v1.5/SHA-256. A narrow Pulse Node HMAC profile runs as
+package-owned Wasm. Neither is published or qualified for production.
+See the [capability matrix](docs/contract/capabilities.md).
 
 ## Usage
 
@@ -78,6 +79,29 @@ The example keys, clock and in-memory replay store are fixtures. Real hosts own
 snapshot provenance, key provisioning, trusted time, transport and replay storage.
 See [protocol options](docs/protocol.md) and [body/replay policy](docs/content-integrity.md).
 
+**Pulse handler (Node Native or JavaScript).** With the accompanying generic
+Pulse runtime binding and an explicit host key grant:
+
+```ts
+import { signatures } from '@pulse-compute/http-signatures/pulse';
+
+app.post('/events', async ctx => {
+  const result = await signatures.verify(ctx, {
+    binding: 'webhook',
+    profile: {
+      id: 'webhook', label: 'sig1', authority: 'api.example.test',
+      tag: 'webhook', trustDomain: 'partner-a',
+      maxAgeSeconds: 60, clockSkewSeconds: 5,
+    },
+  });
+  return ctx.text(result); // JSON verification receipt; authorize separately.
+});
+```
+
+The host captures HTTP bytes and supplies private crypto; the handler receives a
+bounded JSON Result string. This profile requires signed SHA-256 Content-Digest
+and does not check replay. See [complete configuration and limits](docs/pulse-native.md).
+
 ## API
 
 All entry points use named ESM exports. There is no default export, CommonJS
@@ -85,6 +109,7 @@ entry point or exported TypeScript declaration bundle.
 
 | Import | Purpose |
 |---|---|
+| `/pulse` | Request-owned Node sign/verify effects with literal profile and host binding |
 | `/protocol` | `sign` and `verify` with explicit profile and capabilities |
 | `/webcrypto` | Explicit HMAC, P-256, RSA v1.5 and SHA-256 capability adapters |
 | `/content-digest` | `createContentDigest` for bounded SHA-256 body bytes |
@@ -120,11 +145,12 @@ conformance or a guarantee that a host preserves signed bytes.
 
 ## Pulse integration
 
-Pulse now accepts trusted external lowerers by versioned contract and supports
-64 KiB HMAC signing input. The remaining HMS-08 boundary is request-owned runtime
-binding and authoritative HTTP capture. The [contract proposal](docs/hms-08-contract.md)
-and [executable boundary probe](spikes/hms-08/README.md) describe what still needs
-agreement. **HMS-08 is incomplete; no Native HMS application is qualified.**
+HMS-08 implements package-owned Native protocol Wasm with a generic versioned
+Pulse runtime/host contract, explicit Node capture and host-owned keys. It needs
+the accompanying Pulse runtime-binding change. No HTTP Signatures registration,
+package pin or matching release version is required in Pulse. See
+[the implemented profile](docs/pulse-native.md) and [acceptance evidence](docs/hms-08.md).
+Fastly and the broader target qualification remain HMS-09 work.
 
 [HMS-07](docs/pulse-integration.md) remains the historical investigation against
 its pinned Pulse revision. Its former allowlist, synchronized bridge and 32 KiB
@@ -132,9 +158,9 @@ constraints have been superseded by the merged Pulse prerequisites.
 
 ## Development
 
-Use Node **24.19.0**, pinned in `.nvmrc` and CI. The root package has no runtime
-or development dependencies, build step or install scripts. Optional Pulse
-investigations use separately prepared toolchains.
+Use Node **24.19.0**, pinned in `.nvmrc` and CI. The reference has no runtime dependencies or install scripts. The `/pulse`
+entry has an optional runtime peer, and the committed Native artifact has a
+separate reproducible AssemblyScript build. See the [integration guide](docs/pulse-native.md).
 
 ```sh
 git clone https://github.com/pulse-compute/http-signatures.git
@@ -150,7 +176,7 @@ npm test
 `nvm` is optional; any installation of the pinned Node version works.
 `npm run check:interop` additionally requires the development-only OpenSSL 3 CLI.
 See [CONTRIBUTING.md](CONTRIBUTING.md), the [HMS-00 provenance receipt](docs/hms-00.md)
-and the [HMS-08 checkpoint](docs/hms-08.md).
+and the [HMS-08 implementation](docs/hms-08.md).
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),

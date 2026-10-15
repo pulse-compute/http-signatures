@@ -17,8 +17,8 @@ HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
 HMS-06 adds the [algorithm/key/interop matrix](../algorithms.md).
 HMS-07 records [Pulse feasibility and owner gaps](../pulse-integration.md),
 without promoting any target's integration status.
-The [HMS-08 checkpoint](../hms-08.md) records merged trusted external lowering
-and 64 KiB HMAC prerequisites, with runtime/host contract expansion still pending.
+The [HMS-08 implementation](../hms-08.md) adds a narrow Node HMAC profile with
+package-owned protocol Wasm and the approved generic runtime/host contract.
 
 | Feature | Current runtime status | Evidence / remaining implementation |
 |---|---|---|
@@ -54,7 +54,7 @@ and 64 KiB HMAC prerequisites, with runtime/host contract expansion still pendin
 | Node JS 24.19.0, `/base` API | supported experimental subset | HMS-03 exact byte/corpus/negative tests and logical-work counters; no adapter provenance proof |
 | Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental fixed-algorithm subset | HMS-04–06 tests, RFC B.2.4/B.2.5, OpenSSL CLI and RFC 9530 digest vectors; no host provenance or production replay-store qualification |
 | Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
-| Node Native | unavailable realization | Trusted external lowerers are admitted; HMS protocol realization and authoritative runtime/host binding remain unimplemented. HMS-08 boundary probe records the exact refusals |
+| Node Native and Node JavaScript `/pulse` | implemented experimental narrow HMAC profile | HMS-08 emitted Native parity, 64 KiB body integrity, authority/negative tests and built real HTTP Node execution; accompanying Pulse runtime-binding change required. Broader qualification remains HMS-09 |
 | Fastly Native / Viceroy | unavailable realization | No compile, local host or deployed receipt |
 
 ## Migration and owner gates
@@ -66,7 +66,7 @@ and 64 KiB HMAC prerequisites, with runtime/host contract expansion still pendin
 | Capability crypto/key policy and result API | Package/backend, HMS-04 implemented; see `../protocol.md` |
 | Content and nonce/replay enforcement | Package HMS-05 implemented; host body capture and atomic durable store qualification remain external |
 | Additional algorithms | Package HMS-06 implemented P-256/RSA v1.5; other algorithms remain separate primitive-owner gates |
-| Host authority, opaque key handles and Native fit | HMS-08 [runtime/host contract proposal](../hms-08-contract.md) pending agreement; Native implementation incomplete |
+| Host authority, opaque key handles and Native fit | HMS-08 [approved runtime/host contract](../hms-08-contract.md) implemented for the [narrow Node profile](../pulse-native.md) |
 | Trusted lowering authority / crypto capacity | Approved and merged in Pulse #367 / #366; no per-package registration or synchronized npm version required |
 | Runtime operations / ABI/provider modifications | Contract expansion must be discussed, then implemented in separate Pulse PRs |
 

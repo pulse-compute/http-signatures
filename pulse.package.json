@@ -1,0 +1,65 @@
+{
+  "version": "pulse.package-contract.v1",
+  "kind": "pulse.package-contract",
+  "contractId": "pulse.http-signatures",
+  "npmPackage": "@pulse-compute/http-signatures",
+  "description": "Bounded HTTP Message Signatures with request-owned host authority.",
+  "authoring": {
+    "namespace": "signatures",
+    "import": "@pulse-compute/http-signatures/pulse",
+    "symbols": [
+      "sign",
+      "verify"
+    ]
+  },
+  "ownership": {
+    "profileFragment": "http-signatures",
+    "helperImports": [],
+    "reExportImports": []
+  },
+  "composition": {
+    "status": "reserved",
+    "helperSymbol": "signatures",
+    "profileToken": "opaque-direct-use",
+    "reasonCode": "PULSE_PACKAGE_COMPOSITION_HELPER_NOT_REALIZED"
+  },
+  "targets": {
+    "native": {
+      "status": "provider-dependent",
+      "realization": "canonical-package-lowering",
+      "lowerableSubpath": "@pulse-compute/http-signatures/pulse",
+      "providerRequirements": [
+        "package.invoke"
+      ]
+    },
+    "javascript": {
+      "status": "provider-dependent",
+      "realization": "javascript-package-runtime",
+      "entry": "./src/pulse.js",
+      "providerRequirements": [
+        "package.invoke"
+      ]
+    }
+  },
+  "lowering": {
+    "manifest": "./pulsewasm.manifest.cjs",
+    "trust": "build-dependency",
+    "canonicalOperationVersion": "pulse.canonical-package-operation.v1",
+    "bundleVersion": "pulse.package-lowering-bundle.v1",
+    "providerRequirementVersion": "pulse.provider-requirement-record.v1"
+  },
+  "conformance": {
+    "status": "native-contract-only",
+    "fixtureRoots": [
+      "./native"
+    ],
+    "semanticCases": [
+      "signatures.sign",
+      "signatures.verify"
+    ]
+  },
+  "docs": {
+    "readme": "./README.md",
+    "contract": "./pulse.package.json"
+  }
+}

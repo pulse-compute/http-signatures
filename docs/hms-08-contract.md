@@ -1,9 +1,9 @@
-# HMS-08: remaining runtime contract decision
+# HMS-08 — approved runtime/host contract
 
-**Proposed; not implemented.** The user approved trusted external lowering and
-64 KiB crypto input, and explicitly asked to discuss any expansion of the
-contract itself. HMS-08 reaches that boundary. This is a request for a new runtime
-and host contract, not another request to trust package builders.
+**Approved and implemented for the first Node profile.** The user explicitly
+accepted the generic versioned runtime/host expansion. This document preserves
+the decision rationale and pre-extension evidence; the concrete implementation
+and limits are in [Pulse usage](pulse-native.md) and [HMS-08 evidence](hms-08.md).
 
 ## What is already settled
 
@@ -44,12 +44,12 @@ The runtime's `packages/runtime/src/internal/package-runtime.js` still uses
 fixed implementations. Build-time trust alone supplies none of the missing
 request capture, private key binding or runtime dispatch.
 
-## Recommended decision
+## Approved decision
 
 Extend the trusted-package contract with **statically selected, versioned runtime
 bindings and explicit provider-owned host capabilities**. This makes runtime
 composition usable by independent packages without adding each package to Pulse.
-It is broader than the merged builder-admission change and needs agreement.
+It is broader than the merged builder-admission change; the user approved it.
 
 | Contract addition | Proposed rule |
 |---|---|
@@ -63,12 +63,13 @@ It is broader than the merged builder-admission change and needs agreement.
 | Native execution | Package protocol logic executes as bounded Wasm with an explicit selected crypto realization. Host code only captures authority, marshals bounded inputs/results and handles effects. No JavaScript protocol or crypto fallback for Native. |
 | Reports | Record operation/schema/realization identities and fixed outcomes. Exclude keys, bodies, signature bases and raw sensitive headers. |
 
-This is a proposed semantic contract, not an exported API or a finalized schema.
+The implemented envelopes are `pulse.package-runtime-definition.v1`,
+`pulse.package-runtime-binding.v1` and `pulse.package-wasm.v1`.
 The implementation must version any changed envelopes and preserve existing
-first-party behavior. The initial host realization would be Node; unsupported
+first-party behavior. The initial host realization is Node; unsupported
 Fastly cells remain unavailable until separate implementation and qualification.
 
-## First HMS profile after agreement
+## First HMS profile
 
 HTTPS requests, HMAC-SHA256, one configured label and local profile; required
 `@method`, `@target-uri`, plain `content-digest`, created/expires/keyid/alg/tag;
@@ -84,7 +85,7 @@ restrictions do not reduce the JavaScript reference's existing profile support.
 
 ## Review and implementation split
 
-| Owner / PR | Work after agreement |
+| Owner / PR | Implemented scope |
 |---|---|
 | Pulse runtime/contracts | Generic runtime declaration and invocation validation, request ownership, operation admission and bounded results; no HMS identity in core |
 | Pulse provider/host/Crypto | Explicit Node snapshot and private crypto capability binding, Native source/crypto composition, cancellation and redaction; separate protected contract review |

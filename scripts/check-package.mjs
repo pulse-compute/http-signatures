@@ -10,7 +10,7 @@ import * as webcrypto from '@pulse-compute/http-signatures/webcrypto';
 const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
 assert.equal(pkg.private, true, 'The experimental package must remain private');
 assert.deepEqual(pkg.exports, { '.': './src/index.js', './fields': './src/signature-fields.js', './base': './src/signature-base.js',
-  './protocol': './src/protocol.js', './webcrypto': './src/webcrypto.js', './content-digest': './src/content-digest.js' });
+  './protocol': './src/protocol.js', './webcrypto': './src/webcrypto.js', './content-digest': './src/content-digest.js', './pulse': './src/pulse.js' });
 assert.deepEqual(Object.keys(api).sort(), [
   'createSignatureBase', 'serializeSignatureParams', 'signMessage', 'verifyMessage',
 ].sort());

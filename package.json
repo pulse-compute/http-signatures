@@ -3,21 +3,24 @@
   "version": "0.0.0-development",
   "private": true,
   "type": "module",
-  "description": "Experimental bounded RFC 9421 HTTP Message Signatures protocol package (JS reference)",
+  "description": "Experimental bounded RFC 9421 HTTP Message Signatures with a JavaScript reference and package-owned Pulse Native profile",
   "exports": {
     ".": "./src/index.js",
     "./fields": "./src/signature-fields.js",
     "./base": "./src/signature-base.js",
     "./protocol": "./src/protocol.js",
     "./webcrypto": "./src/webcrypto.js",
-    "./content-digest": "./src/content-digest.js"
+    "./content-digest": "./src/content-digest.js",
+    "./pulse": "./src/pulse.js"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
     "check": "node scripts/check-syntax.mjs && node scripts/check-package.mjs",
     "check:contract": "node --experimental-strip-types docs/contract/types.ts && node scripts/check-contract.mjs",
     "check:interop": "node scripts/check-interop.mjs",
-    "measure:limits": "node scripts/measure-reference-limits.mjs"
+    "measure:limits": "node scripts/measure-reference-limits.mjs",
+    "build:native": "node scripts/build-native.mjs",
+    "test:integration": "node integration/node.mjs"
   },
   "license": "Apache-2.0",
   "engines": {
@@ -26,10 +29,30 @@
   "files": [
     "src/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "as/",
+    "native/",
+    "pulse-profile.cjs",
+    "pulse.package.json",
+    "pulsewasm.manifest.cjs",
+    "pulsewasm.compiler.cjs"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/pulse-compute/http-signatures.git"
+  },
+  "pulse": {
+    "contract": "./pulse.package.json"
+  },
+  "pulsewasm": {
+    "manifest": "./pulsewasm.manifest.cjs"
+  },
+  "peerDependencies": {
+    "@pulse-compute/runtime": "*"
+  },
+  "peerDependenciesMeta": {
+    "@pulse-compute/runtime": {
+      "optional": true
+    }
   }
 }
