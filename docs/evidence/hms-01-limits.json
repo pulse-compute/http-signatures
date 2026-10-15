@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "runtime": "v24.19.0",
+  "sourceSha256": "e487366b1283872c0ebacbde0cf670f6fb16fd193b958e2961d5d44c8c8f1084",
+  "scope": "Boundary acceptance observations; no throughput, memory, adversarial-work, or security qualification",
+  "observations": [
+    {
+      "name": "single-field-bytes",
+      "size": 16384,
+      "accepted": true
+    },
+    {
+      "name": "single-field-bytes",
+      "size": 16385,
+      "accepted": false
+    },
+    {
+      "name": "covered-components",
+      "size": 32,
+      "accepted": true
+    },
+    {
+      "name": "covered-components",
+      "size": 33,
+      "accepted": false
+    },
+    {
+      "name": "instances-of-covered-field",
+      "size": 16,
+      "accepted": true
+    },
+    {
+      "name": "instances-of-covered-field",
+      "size": 17,
+      "accepted": false
+    },
+    {
+      "name": "metadata-string-bytes",
+      "size": 512,
+      "accepted": true
+    },
+    {
+      "name": "metadata-string-bytes",
+      "size": 513,
+      "accepted": false
+    },
+    {
+      "name": "signature-base-bytes",
+      "size": 65536,
+      "accepted": true
+    },
+    {
+      "name": "signature-base-bytes",
+      "size": 65537,
+      "accepted": false
+    },
+    {
+      "name": "raw-hmac-key-bytes",
+      "size": 15,
+      "accepted": false
+    },
+    {
+      "name": "raw-hmac-key-bytes",
+      "size": 16,
+      "accepted": true
+    },
+    {
+      "name": "raw-hmac-key-bytes",
+      "size": 4096,
+      "accepted": true
+    },
+    {
+      "name": "raw-hmac-key-bytes",
+      "size": 4097,
+      "accepted": false
+    },
+    {
+      "name": "signatureInput-bytes",
+      "size": 16384,
+      "accepted": true
+    },
+    {
+      "name": "signatureInput-bytes",
+      "size": 16385,
+      "accepted": false
+    },
+    {
+      "name": "signature-bytes",
+      "size": 16384,
+      "accepted": true
+    },
+    {
+      "name": "signature-bytes",
+      "size": 16385,
+      "accepted": false
+    },
+    {
+      "name": "signature-labels",
+      "size": 8,
+      "accepted": true
+    },
+    {
+      "name": "signature-labels",
+      "size": 9,
+      "accepted": false
+    },
+    {
+      "name": "total-header-count-no-spike-cap",
+      "size": 129,
+      "accepted": true
+    }
+  ]
+}

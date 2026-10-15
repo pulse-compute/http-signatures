@@ -9,7 +9,9 @@
   },
   "scripts": {
     "test": "node --test test/*.test.js",
-    "check": "node --check src/index.js && node --check test/rfc9421.test.js && node scripts/check-package.mjs"
+    "check": "node --check src/index.js && node --check test/rfc9421.test.js && node scripts/check-package.mjs",
+    "check:contract": "node --experimental-strip-types docs/contract/types.ts && node scripts/check-contract.mjs",
+    "measure:limits": "node scripts/measure-reference-limits.mjs"
   },
   "license": "Apache-2.0",
   "engines": {
