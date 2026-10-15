@@ -1,5 +1,5 @@
 /** Internal prepared-snapshot engine shared by /base and /protocol. */
-import { serializeSignatureParameters, signatureFieldLimits } from './signature-fields.js';
+import { serializeSignatureParameters, signatureFieldLimits, signatureByteCeiling } from './signature-fields.js';
 import { BaseFailure, fail, own, record, array, ascii, available, need, join, binary, TOKEN } from './base-support.js';
 import { target, normalizeAuthority, queryParameter } from './target.js';
 import { structured } from './structured-field.js';
@@ -19,7 +19,7 @@ export class Budget {
         const limits = own(options, 'limits'); record(limits, [], Object.keys(signatureBaseLimits));
         for (const key of Object.keys(limits)) {
           const n = limits[key];
-          if (!Number.isSafeInteger(n) || n < 1 || n > signatureBaseLimits[key]) fail();
+          if (!Number.isSafeInteger(n) || n < 1 || n > (key === 'signatureBytes' ? signatureByteCeiling : signatureBaseLimits[key])) fail();
           this.limits[key] = n;
         }
       }

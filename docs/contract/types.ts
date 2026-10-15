@@ -1,5 +1,5 @@
-/** HMS contract v1: contract types only, not package exports. HMS-04–05 implement the
- * bounded HMAC Protocol with explicit digest/replay capabilities. */
+/** HMS contract v1: contract types only, not package exports. HMS-04–06 implement the
+ * bounded fixed-algorithm Protocol with explicit digest/replay capabilities. */
 export type Available<T> =
   | { state: 'available'; value: T }
   | { state: 'unavailable'; reason: 'not-exposed' | 'transformed' | 'not-retained' };
@@ -62,6 +62,7 @@ export type Limits = {
   bodyBytes: number; workUnits: number;
   structuredMembers: number; structuredParameters: number;
 };
+export type Algorithm = 'hmac-sha256' | 'ecdsa-p256-sha256' | 'rsa-v1_5-sha256';
 export type Profile = {
   contractVersion: 1;
   id: string;
@@ -72,7 +73,7 @@ export type Profile = {
   };
   requiredComponents: readonly Component[];
   structuredFields: Readonly<Record<string, StructuredFieldType>>;
-  allowedAlgorithms: readonly ['hmac-sha256'];
+  allowedAlgorithms: readonly [Algorithm];
   /** HMS-04: 1–32 unique locally accepted key IDs. */
   keyPolicy: { resolverId: string; acceptedKeyIds: readonly string[] };
   time: { requireCreated: true; requireExpires: boolean; maxAgeSeconds: number;
@@ -91,8 +92,10 @@ export type FailureCode =
   | 'BODY_DIGEST_INVALID' | 'REPLAY_REJECTED' | 'OPERATION_FAILED';
 export type Result<T> = { ok: true; value: T } | { ok: false; code: FailureCode };
 export type KeyIdentity = {
-  keyId: string; algorithm: 'hmac-sha256'; trustDomain: string;
-  keyVersion: string; keyBits: number;
+  keyId: string; algorithm: Algorithm; trustDomain: string;
+  keyVersion: string;
+  /** HMAC key bits; P-256 field size 256; RSA modulus bits 2048/3072/4096. */
+  keyBits: number;
 };
 export type Signer = KeyIdentity & {
   sign: (base: Uint8Array) => Promise<Uint8Array>;
@@ -103,7 +106,7 @@ export type Verifier = KeyIdentity & {
 export type Clock = { nowSeconds: () => number };
 export type KeyResolver = {
   id: string;
-  resolve: (query: { keyId: string; algorithm: 'hmac-sha256';
+  resolve: (query: { keyId: string; algorithm: Algorithm;
     trustDomain: string; profileId: string }) => Promise<Verifier | null>;
 };
 /** Hash exact captured content bytes once; no stream, decode or ambient backend. */
@@ -117,7 +120,7 @@ export type ReplayStore = {
 export type Signed = { signatureInput: string; signature: string };
 export type Verified = {
   contextId: string; profileId: string; label: string;
-  keyId: string; keyVersion: string; algorithm: 'hmac-sha256';
+  keyId: string; keyVersion: string; algorithm: Algorithm;
   covered: readonly Component[];
   bodyIntegrity: 'verified' | 'not-checked';
   replay: 'consumed' | 'not-checked';
@@ -133,6 +136,6 @@ export interface Protocol {
   }): Promise<Result<Verified>>;
 }
 
-/** /content-digest helper shape; limits may only lower the base ceilings. */
+/** /content-digest helper shape; see base limit rules (signature capacity unused here). */
 export type ContentDigestOptions = { digest: Digest; limits?: Partial<Limits> };
 export type ContentDigestResult = Result<string> & { workUnits: number };

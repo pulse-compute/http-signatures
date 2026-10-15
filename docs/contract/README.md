@@ -1,6 +1,6 @@
 # HMS contract v1
 
-**HMAC reference contract implemented by HMS-02–05.** This document
+**Fixed-algorithm reference contract implemented by HMS-02–06.** This document
 freezes the workstream's intended data model and semantics. It does not add a
 runtime API, npm types, a host adapter, or supported-package status. Changes to
 this contract must explain compatibility and update the examples and matrix.
@@ -9,7 +9,9 @@ implemented [HMS-02 fields API](../signature-fields.md) provides syntax operatio
 only. The [HMS-03 base API](../signature-base.md) now implements bounded message
 snapshots and canonical bytes. The [HMS-04 protocol API](../protocol.md) exports
 `sign` and `verify`; [HMS-05](../content-integrity.md) now enforces required
-body digests and replay consumption through explicit capabilities. HMS-03 adds an explicit `structuredFields` map to the design Profile
+body digests and replay consumption through explicit capabilities.
+[HMS-06](../algorithms.md) adds P-256 and RSA v1.5 contracts; profiles still fix
+exactly one algorithm and signature width locally. HMS-03 adds an explicit `structuredFields` map to the design Profile
 and two SF count limits. Both examples and authoring checks are updated together.
 
 Start with the [input and operation contract](protocol.md), then the

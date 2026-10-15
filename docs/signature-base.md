@@ -121,9 +121,10 @@ This is a security-oriented subset, not a general RFC 8941 parser API:
 ## Bounded operation and fixed failures
 
 The frozen `signatureBaseLimits` contains the HMS-02 ceilings plus these enforced
-snapshot/base limits. `options.limits` may lower known positive-integer ceilings;
-it cannot raise them. This low-level API has defaults; the future Profile remains
-explicit. Envelope-specific limits apply to descriptor serialization here, not
+snapshot/base limits. `options.limits` may lower known positive-integer ceilings.
+The HMS-06 exception is explicit `signatureBytes` capacity up to 512; its default
+remains 32. All other ceilings are unchanged. This low-level API has defaults;
+the protocol Profile remains explicit. Envelope-specific limits apply to descriptor serialization here, not
 complete-envelope verification. Body length checks do not prove body integrity.
 
 | Resource | Ceiling |

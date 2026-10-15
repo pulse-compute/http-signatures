@@ -1,0 +1,27 @@
+{
+  "runtime": "v24.19.0",
+  "nodeOpenSSL": "3.5.7",
+  "externalOpenSSL": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "scope": "Separate Node Web Crypto and OpenSSL CLI interfaces/builds; shared OpenSSL lineage, not independent crypto implementations. Published RFC data is independent expected evidence.",
+  "measurements": [
+    {
+      "algorithm": "ecdsa-p256-sha256",
+      "keyBits": 256,
+      "signatureBytes": 64,
+      "primitiveBothDirections": true,
+      "strictProfileBothDirections": true,
+      "tamperRejectedBothDirections": true,
+      "publishedSignature": "RFC 9421 B.2.4 verified by OpenSSL CLI and Web Crypto"
+    },
+    {
+      "algorithm": "rsa-v1_5-sha256",
+      "keyBits": 2048,
+      "signatureBytes": 256,
+      "primitiveBothDirections": true,
+      "strictProfileBothDirections": true,
+      "tamperRejectedBothDirections": true,
+      "publishedSignature": "none; independently generated RSA v1.5 signature over RFC B.2.3 base",
+      "deterministicSignatureBase64": "B2513q5b4/TSm/GmKu6vH6wxHwPtuOlF0swQ3mgWPyFGZdx/L8coueG1HniVCHIjao/ASN4Ycq+JB/MIR5ITN6vh5d6cADmBv1dpPdj0oJwD3da1xwT+lZ3nJcMr2svyAml3bte3pNMrKPiQm6cPfbbWqCZQJeI52MBk3WOpbOFrNVTvz3TK7E2vPRr9sUKXiN//wqZJGpNe9fJfDQk6249w/Mfixwyk3r8WIs88MiU587o1QNKmWXv7TFS7yk785U7sz7qjR8h9xh2+6Catjfscbmw8C7GW1yOb7ASpVS6tZXPdiUh5oeZzkh7YsbCK6qowYOOcniYxKDKIZeUscg=="
+    }
+  ]
+}

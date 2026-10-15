@@ -1,6 +1,6 @@
 # Content integrity and replay (HMS-05)
 
-The experimental HMAC profile now supports signed-and-verified SHA-256 content
+The experimental fixed-algorithm profiles support signed-and-verified SHA-256 content
 integrity and explicit replay consumption. Run `node examples/webhook.mjs` for
 request and response exchanges using the original contract JSON profiles. The
 example uses public fixture keys, fixed time/nonce and a bounded process-local
@@ -76,7 +76,7 @@ const result = await createContentDigest(capturedBytes, {
 
 The generation helper returns `{ok:true,value,workUnits}` or
 `{ok:false,code,workUnits}`. It takes Uint8Array content and closed options
-`{digest,limits?}`. Optional limits may only lower the `/base` ceilings; the
+`{digest,limits?}`. Optional limits follow the [base capacity rules](signature-base.md); the
 helper uses bodyBytes, fieldValueBytes, signatureBaseBytes and workUnits. Other
 ceilings remain schema-validated but are not message/profile checks here.
 Defaults permit up to 1 MiB. Its 54-byte field output and fixed serialization

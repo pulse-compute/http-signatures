@@ -12,7 +12,7 @@ Both example profiles run in the HMS-05 reference example with explicit capabili
 | `label` | Exactly one configured label; no label search or fallback |
 | `context` | Exact kind, direction and host trust domain; require HTTPS and expected authority |
 | `requiredComponents` | Nonempty set matched against the selected signature's full descriptors; no coverage across signatures |
-| `allowedAlgorithms` | Initial v1 is exactly `['hmac-sha256']`; no negotiation from incoming alg |
+| `allowedAlgorithms` | Exactly one algorithm from the [HMS-06 matrix](../algorithms.md); no negotiation from incoming alg |
 | `keyPolicy` | Explicit resolver capability ID and nonempty allowlist of key IDs scoped to trust domain/profile |
 | `time` | Created required; expiry requirement, maximum age/lifetime and clock skew all explicit |
 | `requiredTag` | Nonempty application domain-separation tag, emitted and checked in signed parameters |
@@ -51,12 +51,15 @@ or disallowed key and algorithm/key/domain mismatch all yield `KEY_REJECTED`.
 Resolver exceptions yield `OPERATION_FAILED`. Key rotation is host-owned; the
 resolver selects exactly one version. It cannot accept a list of keys to try.
 
-Require signed `alg='hmac-sha256'` even though the RFC can omit alg. The original
+Require signed alg equal to the locally fixed algorithm even though the RFC can omit it. The original
 B.2.5 vector omits alg and tag: it remains a low-level canonicalization/crypto
-vector, not an accepted application-profile example. Exactly 32 signature bytes
-are required. Verification uses the backend verify primitive; do not compare
-recomputed MACs with ordinary JS equality. HMAC verifiers can forge messages;
-this profile provides neither non-repudiation nor separation of verifier and
+vector, not an accepted application-profile example. Exact signature widths
+are 32 (HMAC), 64 (P-256), or 256/384/512 (RSA); key metadata must match.
+Verification uses the backend verify primitive; never re-sign to verify.
+P-256 uses raw r||s, not DER. Valid high/low-s signatures are both accepted;
+replay identity uses the scoped nonce, never signature bytes. Asymmetric
+adapters bind private signing keys and public verification keys. HMAC verifiers can forge messages;
+HMAC provides neither non-repudiation nor separation of verifier and
 signer authority at the cryptographic level.
 
 ## Time and nonce rules
@@ -77,7 +80,7 @@ For trusted time N, skew S, max age A and maximum lifetime L:
 - Reject mismatched/missing tag, keyid, alg or required nonce. Empty nonce is
   invalid. Metadata values are bounded before capability calls.
 
-Required replay protection consumes a nonce **after** MAC, time, context,
+Required replay protection consumes a nonce **after** signature verification, time, context,
 coverage and body verification. The store atomically rejects an existing tuple
 `(namespace, profileId, trustDomain, keyId, nonce)` across concurrent requests.
 Key version and signature label are deliberately excluded, so rotation or label
@@ -156,9 +159,9 @@ workstream's restrictions, not universal RFC requirements.
 
 ## HMS-05 implementation boundary
 
-The [explicit HMAC API](../protocol.md) supports both required and excluded modes.
+The [explicit signature API](../protocol.md) supports both required and excluded modes.
 Required digest/replay capabilities must be present; failures never degrade to
-MAC-only acceptance. Success claims only completed checks. Digest syntax and
+signature-only acceptance. Success claims only completed checks. Digest syntax and
 replay-store obligations are documented in [content integrity](../content-integrity.md).
 Key allowlists contain 1–32 unique IDs; responses bind an associated request in
 the same trust domain. Only the response's own captured body is hashed for its

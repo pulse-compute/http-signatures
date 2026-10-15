@@ -1,0 +1,9 @@
+{
+  "source": "Locally generated OpenSSL CLI reference; not an RFC-published signature",
+  "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "algorithm": "rsa-v1_5-sha256",
+  "key": "RFC 9421 B.1.1, test/fixtures/rfc9421-crypto.json rsa",
+  "base": "RFC 9421 B.2.3 literal base (its published signature uses RSA-PSS)",
+  "command": "openssl dgst -sha256 -sign private.pem -out signature.bin base.bin",
+  "signatureBase64": "B2513q5b4/TSm/GmKu6vH6wxHwPtuOlF0swQ3mgWPyFGZdx/L8coueG1HniVCHIjao/ASN4Ycq+JB/MIR5ITN6vh5d6cADmBv1dpPdj0oJwD3da1xwT+lZ3nJcMr2svyAml3bte3pNMrKPiQm6cPfbbWqCZQJeI52MBk3WOpbOFrNVTvz3TK7E2vPRr9sUKXiN//wqZJGpNe9fJfDQk6249w/Mfixwyk3r8WIs88MiU587o1QNKmWXv7TFS7yk785U7sz7qjR8h9xh2+6Catjfscbmw8C7GW1yOb7ASpVS6tZXPdiUh5oeZzkh7YsbCK6qowYOOcniYxKDKIZeUscg=="
+}

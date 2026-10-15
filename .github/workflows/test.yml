@@ -27,6 +27,9 @@ jobs:
       - run: node scripts/measure-reference-limits.mjs
       - run: node scripts/measure-base-work.mjs
       - run: node scripts/measure-content-work.mjs
+      - run: node scripts/measure-algorithm-work.mjs
+      - run: node scripts/check-interop.mjs
       - run: node examples/hmac.mjs
       - run: node examples/webhook.mjs
+      - run: node examples/asymmetric.mjs
       - run: npm test

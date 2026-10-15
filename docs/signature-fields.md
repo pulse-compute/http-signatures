@@ -38,7 +38,8 @@ No raw input or exception text appears in diagnostics.
 | `serializeSignatureInput(entries, options?)` | InputEntry array → canonical field string |
 | `serializeSignature(entries, options?)` | SignatureEntry array → canonical field string |
 | `serializeSignatureParameters({components, parameters}, options?)` | One member → canonical inner-list string without label or equals sign |
-| `signatureFieldLimits` | Frozen resource ceilings; no application-policy defaults |
+| `signatureFieldLimits` | Frozen bounded defaults; no application-policy defaults |
+| `signatureByteCeiling` | Maximum explicit signature capacity, 512 decoded bytes |
 
 `InputEntry = {label, components, parameters}`. Components use the HMS-01
 `{kind, name, parameters}` descriptor. Every parameter is an ordered
@@ -108,7 +109,8 @@ can be parsed; HMAC verification must require exactly 32 bytes later.
 ## Bounds and errors
 
 The low-level API has bounded defaults; `options = {limits: {name: lowerValue}}`
-can lower individual ceilings. Every supplied value is a positive safe integer
+can lower individual ceilings. HMS-06 also permits an explicit
+`signatureBytes` capacity up to `signatureByteCeiling` (512); its default remains 32. Every supplied value is a positive safe integer
 at or below the ceiling. Unknown option/limit keys or invalid values return
 PROFILE_INVALID. Do not pass the full HMS-01 Profile limits object: only the
 field-specific keys listed here are accepted. HMS-04 must deliberately map its
@@ -123,12 +125,15 @@ explicit profile configuration to this primitive.
 | componentParameters / signatureParameters | 5 / 6 per owner |
 | fieldNameBytes / labelBytes | 256 / 64 |
 | metadataStringBytes | 512 decoded ASCII bytes per string |
-| signatureBytes | 32 decoded bytes per entry |
+| signatureBytes | 32 by default; explicit capacity at most 512 decoded bytes per entry |
 | workUnits | 2,097,152 per call |
 
-The 32-byte parser ceiling follows the initial HMAC workstream. It is a ceiling,
-not an exact-length cryptographic check. Larger algorithm signatures require an
-explicit future ceiling change and fixtures; passing alg alone cannot raise it.
+Signature capacity is a parser limit, not an exact-length cryptographic check.
+HMS-06 profiles separately require the exact [algorithm width](algorithms.md).
+Capacity applies to every entry, including unselected labels: a P-256 profile
+with capacity 64 rejects an envelope containing a 256-byte RSA signature. Passing
+alg alone cannot raise capacity. [HMS-06 measurements](evidence/hms-06-work.json)
+cover eight entries of each supported asymmetric width and exact work boundaries.
 
 Length checks precede input conversion/join, decoded-byte allocation and output
 appends. Parsing is iterative. Work is charged for scans, output, structure

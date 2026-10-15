@@ -23,7 +23,7 @@ asserts each observation. The probe uses synthetic public keys and inputs.
 | Signature parameters | Six known names in source; not a new measured boundary | 6 per signature |
 | Component parameters | Unsupported by spike | 5 per descriptor, subject to combination rules |
 | Label bytes | No individual spike limit demonstrated | 64 |
-| Authenticator bytes | HMAC implementation requires 32; no new boundary probe | 32, exact for HMAC-SHA256 |
+| Authenticator bytes | HMAC implementation requires 32; no new boundary probe | Default 32; HMS-06 explicit maximum 512, exact per algorithm (see revision below) |
 | Body bytes | Not inspected by spike | 1,048,576 across supplied message/request bodies; provisional, unmeasured |
 | Work units | No global spike work budget | 2,097,152; provisional, unmeasured |
 
@@ -76,7 +76,7 @@ passes and demonstrate normal fixtures fit the budget; adjust the provisional
 ceiling with evidence if needed. The body ceiling is not a promise that every
 body at that size fits the work budget.
 
-Each operation invokes the clock once, key resolver at most once, MAC sign or
+Each operation invokes the clock once, key resolver at most once, signature sign or
 verify at most once, digest at most once and replay store at most once. The
 trusted host wraps async capabilities with its own deadline/cancellation and
 capacity limits. The package cannot preempt a hung JavaScript callback; never
@@ -120,3 +120,22 @@ for 0, 65,536 and 1,048,576 content bytes. The default work ceiling admits these
 cases; dense headers/selectors can still exhaust it. The explicit SHA-256 adapter
 bounds one input to 1 MiB and owns its own defensive copy. Neither the receipt nor
 package counters bound backend cryptographic work, store CPU, wall time or RSS.
+
+## HMS-06 signature capacity revision
+
+The earlier 32-byte signature ceiling is now the unchanged **default**, with an
+explicit hard capacity ceiling of 512 bytes. `/fields` exports
+`signatureByteCeiling`; `/base` shares the same limit validation. Only
+`signatureBytes` can rise above its default. All other byte/count/work ceilings
+remain unchanged. Protocol sizes are exact: HMAC 32, P-256 64, and RSA
+256/384/512, matched to a 2048/3072/4096-bit key. Every parsed envelope member,
+selected or not, must fit the configured signature capacity.
+
+The [HMS-06 work receipt](../evidence/hms-06-work.json) checks eight labels at
+64/256/384/512 bytes, exact work success and one-below failure. Eight RSA-4096
+signatures contain 4,096 decoded bytes and serialize to 5,526 field bytes;
+392,776 envelope work units fit the unchanged default. Protocol sign/verify
+thresholds are 10,212/15,793 for the P-256 fixture and 11,966/34,891 for RSA-2048.
+A one-below budget fails before crypto. This evidence supports the bounded
+capacity change; it is not a target memory, latency or safe-concurrency claim.
+See the [algorithm matrix](../algorithms.md) for key constraints and target gates.
