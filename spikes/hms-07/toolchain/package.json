@@ -1,0 +1,12 @@
+{
+  "name": "hms07-investigation-toolchain",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Isolated development-only subset of Pulse lockfile toolchain",
+  "dependencies": {
+    "assemblyscript": "0.28.18",
+    "binaryen": "129.0.0-nightly.20260428",
+    "long": "5.3.2",
+    "typescript": "5.9.3"
+  }
+}

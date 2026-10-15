@@ -15,6 +15,8 @@ HMS-03 adds a separate authoritative base API. The original signer/verifier and
 root API are unchanged. HMS-04 adds `/protocol` and explicit `/webcrypto`;
 HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
 HMS-06 adds the [algorithm/key/interop matrix](../algorithms.md).
+HMS-07 records [Pulse feasibility and owner gaps](../pulse-integration.md),
+without promoting any target's integration status.
 
 | Feature | Current runtime status | Evidence / remaining implementation |
 |---|---|---|
@@ -50,7 +52,7 @@ HMS-06 adds the [algorithm/key/interop matrix](../algorithms.md).
 | Node JS 24.19.0, `/base` API | supported experimental subset | HMS-03 exact byte/corpus/negative tests and logical-work counters; no adapter provenance proof |
 | Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental fixed-algorithm subset | HMS-04–06 tests, RFC B.2.4/B.2.5, OpenSSL CLI and RFC 9530 digest vectors; no host provenance or production replay-store qualification |
 | Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
-| Node Native | unavailable realization | No approved lowerer or host bridge |
+| Node Native | unavailable realization | HMS-07: unchanged package source rejected; standalone HMAC Wasm primitive passes, with no approved lowerer or host bridge |
 | Fastly Native / Viceroy | unavailable realization | No compile, local host or deployed receipt |
 
 ## Migration and owner gates
@@ -62,7 +64,7 @@ HMS-06 adds the [algorithm/key/interop matrix](../algorithms.md).
 | Capability crypto/key policy and result API | Package/backend, HMS-04 implemented; see `../protocol.md` |
 | Content and nonce/replay enforcement | Package HMS-05 implemented; host body capture and atomic durable store qualification remain external |
 | Additional algorithms | Package HMS-06 implemented P-256/RSA v1.5; other algorithms remain separate primitive-owner gates |
-| Host authority, opaque key handles and Native fit | Pulse contract owners, read-only investigation in HMS-07 |
+| Host authority, opaque key handles and Native fit | HMS-07 investigation complete; [decision and target gaps](../pulse-integration.md); host/bridge ownership needs approval |
 | Trusted lowering authority / ABI/provider modifications | Human architectural approval before HMS-08, separate Pulse PRs |
 
 No repo membership or type declaration grants compiler-extension trust. There

@@ -124,9 +124,10 @@ heap, RSS, cryptographic CPU, latency or concurrency qualifications.
 
 Run `node examples/asymmetric.mjs` for complete explicit P-256/RSA compositions.
 CI also runs both scripts, the full test suite and the existing HMAC/body examples.
-Known failures in the declared new subset: none. Remaining integration work is
-HMS-07's read-only Pulse investigation; no Pulse core, ABI, compiler, provider,
-Native fallback or trusted-lowering changes are part of HMS-06.
+Known failures in the declared new subset: none. The subsequent
+[HMS-07 Pulse investigation](pulse-integration.md) records HMAC primitive reuse,
+Native admission failures and the approval gate for HMS-08. No Pulse core, ABI,
+compiler, provider, Native fallback or trusted-lowering changes are part of HMS-06.
 
 Sources: [RFC 9421 §3.3 and Appendix B](https://www.rfc-editor.org/rfc/rfc9421.html#section-3.3),
 [Node Web Crypto](https://nodejs.org/docs/latest-v24.x/api/webcrypto.html),

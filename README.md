@@ -11,8 +11,9 @@ Pulse Native support.
 ## Run locally
 
 Use Node **24.19.0** (pinned in `.nvmrc` and CI). This is the only qualification
-runtime for HMS-00; other Node versions are unqualified. The package has **no
-runtime or development dependencies**, build step, or install scripts.
+runtime for HMS-00; other Node versions are unqualified. The root package has **no
+runtime or development dependencies**, build step, or install scripts. The optional
+HMS-07 investigation has an isolated, pinned development toolchain.
 
 ```sh
 git clone https://github.com/pulse-compute/http-signatures.git
@@ -91,8 +92,11 @@ See the [HMS-05 receipt](docs/hms-05.md). The [HMS-06 algorithm matrix](docs/alg
 adds explicit P-256 and RSA v1.5 adapters, fixed-size profiles and RFC/OpenSSL
 interoperability evidence. Run `node examples/asymmetric.mjs` and
 `npm run check:interop` (development-only OpenSSL 3 CLI required for the latter).
-See the [HMS-06 receipt](docs/hms-06.md). Next: **HMS-07 Pulse integration investigation**. Native work is
-conditional on a later integration investigation and human architectural approval.
+See the [HMS-06 receipt](docs/hms-06.md). The [HMS-07 Pulse investigation](docs/pulse-integration.md)
+proves HMAC primitive reuse and records the exact Native admission failures,
+host gaps and a narrow bridge proposal. See its [reproduction instructions](spikes/hms-07/README.md)
+and [receipt](docs/hms-07.md). **HMS-08 requires human architectural approval**;
+the unchanged protocol is not Native eligible and no Pulse integration is qualified.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),

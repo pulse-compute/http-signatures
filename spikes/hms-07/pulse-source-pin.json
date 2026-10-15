@@ -1,0 +1,1336 @@
+{
+  "version": "hms07.pulse-source-pin.v1",
+  "repository": "pulse-compute/pulse",
+  "ref": "latest",
+  "commit": "e6a78640928a93f0e41813f55d9847895ea9be41",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "gitBlobSha": "8a504f2b319152a0e16215b992215aa492b70d81"
+    },
+    {
+      "path": "docs/architecture/current-contracts.md",
+      "gitBlobSha": "240c56b6d9a8cda5f20dba7e73b78ece078f4ef5"
+    },
+    {
+      "path": "docs/concepts/package-owned-lowering.md",
+      "gitBlobSha": "03e0c68b5c8db78b777072753179ac417e340b74"
+    },
+    {
+      "path": "docs/contributing/adding-first-party-lowerer.md",
+      "gitBlobSha": "ec126485717ccfb7df24c6c5b48904a98f0282af"
+    },
+    {
+      "path": "docs/contributing/package-lowerer-contract.md",
+      "gitBlobSha": "b84ee994030f3731b56b85b46c416706af0227c0"
+    },
+    {
+      "path": "package.json",
+      "gitBlobSha": "73fa1557f1e86a4ab115c34e26c929e350162fa9"
+    },
+    {
+      "path": "packages/AGENTS.md",
+      "gitBlobSha": "b5a6a6a2a9d69669387062457cf0e04987921239"
+    },
+    {
+      "path": "packages/crypto/README.md",
+      "gitBlobSha": "d83adc3f92acbac6a2f978370f9c103221b64549"
+    },
+    {
+      "path": "packages/crypto/as/pulse-hmac-as.ts",
+      "gitBlobSha": "d7ab64a1331ce5a75b0727f831ff62b2880e1a19"
+    },
+    {
+      "path": "packages/crypto/package.json",
+      "gitBlobSha": "53f56c200cdaea2390c03195191ff5e77256831f"
+    },
+    {
+      "path": "packages/crypto/pulse.package.json",
+      "gitBlobSha": "3dc45a094113453fea45522b1ccc92a8819f6898"
+    },
+    {
+      "path": "packages/crypto/pulsewasm.manifest.cjs",
+      "gitBlobSha": "e78a5e69f5a480821057d30cb75933724fdbe893"
+    },
+    {
+      "path": "packages/crypto/pulsewasm.native.cjs",
+      "gitBlobSha": "477416f5ecc46b729a86a3533e88d6698625c320"
+    },
+    {
+      "path": "packages/crypto/src/contracts.ts",
+      "gitBlobSha": "904ae8b79a51cb56e8a6375e6a68f0fa8710f9d5"
+    },
+    {
+      "path": "packages/crypto/src/index.ts",
+      "gitBlobSha": "9273da86a0ab916fdd8de38def0bec97e7af0df6"
+    },
+    {
+      "path": "packages/crypto/src/internal/data.ts",
+      "gitBlobSha": "91fa17742b1ced7a69607c2f01ba09f38c2a2cba"
+    },
+    {
+      "path": "packages/crypto/src/internal/realization.ts",
+      "gitBlobSha": "9996f3b10b5dfc94b2febe2b3e352b4811ab62f8"
+    },
+    {
+      "path": "packages/crypto/src/internal/verification.ts",
+      "gitBlobSha": "10557c3fc6d4bb3b6c458ab2a76a75de96138d07"
+    },
+    {
+      "path": "packages/crypto/src/provider.cjs",
+      "gitBlobSha": "a6c4ae87cb90a2829593752ae04b3f7c6baee619"
+    },
+    {
+      "path": "packages/jwt/as/index.as.ts",
+      "gitBlobSha": "b9fa2b26a7fc0df0a475b34b865f96a776bff88c"
+    },
+    {
+      "path": "packages/jwt/as/sign.as.ts",
+      "gitBlobSha": "47e20ed0e12ea8758fc2284bffd33600e6dd2d30"
+    },
+    {
+      "path": "packages/jwt/pulse.package.json",
+      "gitBlobSha": "4f8cbc055e9be9e427c713699cf05d9db3e06587"
+    },
+    {
+      "path": "packages/jwt/pulsewasm.compiler.cjs",
+      "gitBlobSha": "346cb651d256d150e132d757fdf8180fba8cccb1"
+    },
+    {
+      "path": "packages/jwt/pulsewasm.manifest.cjs",
+      "gitBlobSha": "08c34278252ccad8bcb50d23a695cf80d9f76a1f"
+    },
+    {
+      "path": "packages/jwt/pulsewasm.native.cjs",
+      "gitBlobSha": "0a13ea9050709f40a1dcf04e868cfdbf6fc85957"
+    },
+    {
+      "path": "packages/jwt/src/crypto-verifier.ts",
+      "gitBlobSha": "000b541db04eafb83db489b09d75e997c3b4fd71"
+    },
+    {
+      "path": "packages/jwt/src/internal/clock.ts",
+      "gitBlobSha": "e0189201ed3a230b8a3676c35109f85f27fcdc7f"
+    },
+    {
+      "path": "packages/jwt/src/internal/package-runtime.ts",
+      "gitBlobSha": "9d3187fcd61ef7e156ff5b84d1980040fe287fc2"
+    },
+    {
+      "path": "packages/jwt/src/provider.ts",
+      "gitBlobSha": "c9ff85b3621b8f786383c0955ffb86e697bc9b2b"
+    },
+    {
+      "path": "packages/jwt/src/sign.ts",
+      "gitBlobSha": "9438bec534cbad5b65c7d1e904dcf023cbca97e1"
+    },
+    {
+      "path": "packages/provider-fastly/src/build/native-request-headers.js",
+      "gitBlobSha": "a9992ece2a963a4cc3000330e573986e2739ef52"
+    },
+    {
+      "path": "packages/provider-fastly/src/javascript/jwt-verifier.js",
+      "gitBlobSha": "cf1102ea4b9f1b7684b64439b5b84b9c2b714bbc"
+    },
+    {
+      "path": "packages/provider-fastly/src/javascript/package-effects.js",
+      "gitBlobSha": "72b964ccc6120a24942457e931d76b6aa84dd077"
+    },
+    {
+      "path": "packages/provider-fastly/src/javascript/runtime-host.js",
+      "gitBlobSha": "9235b83781baad1cc91ac9d354972660fb7ef020"
+    },
+    {
+      "path": "packages/provider-node/src/javascript/jwt-verifier.js",
+      "gitBlobSha": "8939a1ed3d9a017293824acd1e005114731ac2e7"
+    },
+    {
+      "path": "packages/provider-node/src/javascript/node-adapter.js",
+      "gitBlobSha": "e17128b331dd2ef4be0f1aa5bad8ee1df3eb72a5"
+    },
+    {
+      "path": "packages/provider-node/src/javascript/package-effects.js",
+      "gitBlobSha": "fc4eb2e801a3c0cba61d2f00807334d3f1a058a6"
+    },
+    {
+      "path": "packages/provider-node/src/javascript/runtime-host.js",
+      "gitBlobSha": "7e9c15889cc19877d1e1fcb5eec9926c3b6ca14b"
+    },
+    {
+      "path": "packages/runtime/package.json",
+      "gitBlobSha": "81290bbb19f8d7a89f55b46928559e6e7dd7ef2a"
+    },
+    {
+      "path": "packages/runtime/src/host.d.ts",
+      "gitBlobSha": "2ed2bc20bea638ba25cacca0ad185a012c55923c"
+    },
+    {
+      "path": "packages/runtime/src/index.d.ts",
+      "gitBlobSha": "602e8f8e5c25d749c0131eb7b585d1e43946f5ad"
+    },
+    {
+      "path": "packages/runtime/src/internal/errors.js",
+      "gitBlobSha": "9a7743142e6815a17c511b7b0db1710aede6c747"
+    },
+    {
+      "path": "packages/runtime/src/internal/package-runtime.js",
+      "gitBlobSha": "92eb716919be7d25e168afa9c7c709e08c90ed6c"
+    },
+    {
+      "path": "packages/runtime/src/internal/request-budget.js",
+      "gitBlobSha": "00ee21096d7e256f59ae136fad4e6956f16a11fb"
+    },
+    {
+      "path": "packages/runtime/src/package.js",
+      "gitBlobSha": "3eb8d171542dfcd3c186a1c6c0e4a5cf24fccb1c"
+    },
+    {
+      "path": "packages/s3/pulsewasm.compiler.cjs",
+      "gitBlobSha": "2e4452158fa9d2141cc331cdb7fb1e32b73d7472"
+    },
+    {
+      "path": "packages/s3/pulsewasm.manifest.cjs",
+      "gitBlobSha": "0307b0cbab3491cf88a9271f0452c558565529f6"
+    },
+    {
+      "path": "packages/s3/pulsewasm.native.cjs",
+      "gitBlobSha": "12e11d23d64d834c0d7d8100cb14975a6d1ce364"
+    },
+    {
+      "path": "packages/s3/src/signing.js",
+      "gitBlobSha": "3a08be51d170a1cdede786d083b3d5b2c4e87ce9"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "gitBlobSha": "ac73ea4a7fd02251589791dd73310b9bece3cfc8"
+    },
+    {
+      "path": "release/maintenance-policy.json",
+      "gitBlobSha": "a7b321c03619aa8d12b6b9dba7b6b04bbcf66ccb"
+    },
+    {
+      "path": "release/pulse-release-manifest.json",
+      "gitBlobSha": "c9372b577acdcf3e682f3d44ebb07de42126fe59"
+    },
+    {
+      "path": "wasm/AGENTS.md",
+      "gitBlobSha": "6acf85b016da015dd1145fe9b020f7323971d5b0"
+    },
+    {
+      "path": "wasm/packages/build-support/package.json",
+      "gitBlobSha": "8c9b77261da423e2eb39712c5f143db1319a55b4"
+    },
+    {
+      "path": "wasm/packages/build-support/src/artifacts-dir.js",
+      "gitBlobSha": "92d8b58cc3b74d6396ced4f219cdc2aaecb7b327"
+    },
+    {
+      "path": "wasm/packages/build-support/src/assemblyscript-compile.js",
+      "gitBlobSha": "27e5253e93897c86827c3ead434fe5322c2156fb"
+    },
+    {
+      "path": "wasm/packages/build-support/src/build-observation.js",
+      "gitBlobSha": "e01c15ad02a74e86a083e223734d80a79f10d7e1"
+    },
+    {
+      "path": "wasm/packages/build-support/src/files.js",
+      "gitBlobSha": "6c9eceff8444f278cc26ffd3ced1c261101ed32f"
+    },
+    {
+      "path": "wasm/packages/build-support/src/index.js",
+      "gitBlobSha": "d1daa89f5112039d9a5368901ae9736e12cd9d35"
+    },
+    {
+      "path": "wasm/packages/build-support/src/native-optimization.js",
+      "gitBlobSha": "bbd93509b6571fdedca39f725cbb6d8142ac379a"
+    },
+    {
+      "path": "wasm/packages/build-support/src/native-retention-transform.cjs",
+      "gitBlobSha": "e987dc1a622cd2fda7fdf2f57526c8321b329e0c"
+    },
+    {
+      "path": "wasm/packages/build-support/src/report-capture-transform.cjs",
+      "gitBlobSha": "76d0d48e7618790994e3ec804d5c0c668c077f98"
+    },
+    {
+      "path": "wasm/packages/build-support/src/report-capture.js",
+      "gitBlobSha": "8da454d6173a25925dac864f192d1f8fa8223115"
+    },
+    {
+      "path": "wasm/packages/build-support/src/report-direct-graph.js",
+      "gitBlobSha": "d52c803dd4a07b81c7cfa3282f76292b118f0da2"
+    },
+    {
+      "path": "wasm/packages/build-support/src/schema-cache-arena-transform.cjs",
+      "gitBlobSha": "5b559b040528ce3e3dbdf160344a767437e402a3"
+    },
+    {
+      "path": "wasm/packages/build-support/src/wasm-evidence.js",
+      "gitBlobSha": "2a95e7d53c545484adc211e136b392f0516d3f40"
+    },
+    {
+      "path": "wasm/packages/compiler/AGENTS.md",
+      "gitBlobSha": "99570cb8f55d44eb6a2c2e2633b44b2ac07704b3"
+    },
+    {
+      "path": "wasm/packages/compiler/bin/provider-proof-composition.js",
+      "gitBlobSha": "f27b5c7210738456090f749a2cc086555915c285"
+    },
+    {
+      "path": "wasm/packages/compiler/bin/pulsewasm-extract.js",
+      "gitBlobSha": "3df279747473a22f107a6d117f26db1023fc0fcb"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/assets-provider-node.js",
+      "gitBlobSha": "4df8ac11a1517eabb003e3282e7a276b864a7e3f"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/compiled-handlers.js",
+      "gitBlobSha": "9d0baf8a221f0e879444c2ab088d14fd108dcfd6"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/compiled.config.js",
+      "gitBlobSha": "b0b6c16333e0675fd602cbe40e67e1f0c792522e"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/config-provider-missing-stores.config.js",
+      "gitBlobSha": "bf85105fd7fbc9bdefc192859c322636c1fa1ea7"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/config-provider.config.js",
+      "gitBlobSha": "360b621506d1e15e301bc300f316ee39bad26be5"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/config-refs-missing-store.config.js",
+      "gitBlobSha": "6649b70886940011965647225038ecb2977101a3"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/config-refs.config.js",
+      "gitBlobSha": "710b1ef5f7cd16448d9067c0dded5260891a6990"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/example.js",
+      "gitBlobSha": "a206c7bc41bc6609e690c91bf0c20f9a7b1d4cd5"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/fastly-provider.config.js",
+      "gitBlobSha": "2a00165b63a50d0cdc81a27c8b3db6d344d7de85"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/integrated-compiled-app.js",
+      "gitBlobSha": "5d5c7af350c4bad93d1c417a7f90ff801c938b89"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/integrated.config.js",
+      "gitBlobSha": "2c9fe8103fd3bd720cc1aa3b4f2bcc69cc3fdb23"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/libraries/pulse.assets/pulse.library.json",
+      "gitBlobSha": "d818b5421838f65107dc8ade782dcc3483fc52e4"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/libraries/pulse.grip/pulse.library.json",
+      "gitBlobSha": "7e0c5ef9169dea0c949f3edccaa77a6231abcd8b"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/libraries/pulse.test-extension/pulse.library.json",
+      "gitBlobSha": "30d53ff9c2e2883e12e24a084be61c65c914534f"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/local-harness-contract.js",
+      "gitBlobSha": "6e77aed9b6346d1cb554bf198bb832c356c36fed"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/parity-next-error.js",
+      "gitBlobSha": "7cf33fd48cb4081cf81ce696e682fc398228874c"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/pulse.config.bad.js",
+      "gitBlobSha": "0f58fc8b066995e8820ee26b5f2f65149e2b1b93"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/pulse.config.js",
+      "gitBlobSha": "efaa061e28fde619f8a9a8bd26558222a2db77b0"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/route-handler-effects.js",
+      "gitBlobSha": "7ab4ad505f46dc17af425f11d4766e362cd8c433"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/runtime-provider-fastly.config.js",
+      "gitBlobSha": "bc584baf68c248b43d3b4a4db80cab15f6a97bb4"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema-compile.config.js",
+      "gitBlobSha": "ccc0d67cc943f106b097d8aedf0ac4a37c1bf2c7"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema-generic-parser.config.js",
+      "gitBlobSha": "cbecaacaea2e252ee72f0e0d807ad799619ff668"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema-v2-combinations.config.js",
+      "gitBlobSha": "543a87291f6b8975f95308e5a41461860185df19"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema-v2-presence.config.js",
+      "gitBlobSha": "9e9631aab6b7c3bc3316580616fafb1e170b3f2c"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema-v2.config.js",
+      "gitBlobSha": "6b2aa9fbaf519b13a348f4c81c4e7108824fe37d"
+    },
+    {
+      "path": "wasm/packages/compiler/examples/schema.config.js",
+      "gitBlobSha": "e305a9ccdc48d6c5bdc185d06696b0428a7fb2d7"
+    },
+    {
+      "path": "wasm/packages/compiler/package.json",
+      "gitBlobSha": "582adf1e1ab21683c1fec1fcb8383d0a29a36fe9"
+    },
+    {
+      "path": "wasm/packages/compiler/scripts/build-config-provider-resolution.cjs",
+      "gitBlobSha": "a48ab7170bb465af42eb49eaa47fec5f63881a77"
+    },
+    {
+      "path": "wasm/packages/compiler/scripts/build-fastly-config-secret-serve.cjs",
+      "gitBlobSha": "697d769cf40db22b133ca40fcc9ac13de4274466"
+    },
+    {
+      "path": "wasm/packages/compiler/scripts/build-runtime-provider-kv.cjs",
+      "gitBlobSha": "533800167e4c0ede38e76f4150567a60de219106"
+    },
+    {
+      "path": "wasm/packages/compiler/src/artifacts-dir.js",
+      "gitBlobSha": "18bdc44d2841b50b580566600f074e8582f9e11e"
+    },
+    {
+      "path": "wasm/packages/compiler/src/ast-json.js",
+      "gitBlobSha": "e5fab38f6036e4f72676f48912b38de6cab2e2fa"
+    },
+    {
+      "path": "wasm/packages/compiler/src/build-manifest.js",
+      "gitBlobSha": "49c8fb1853c354955765a2caa33609b30d803339"
+    },
+    {
+      "path": "wasm/packages/compiler/src/canonical-api-compiler.js",
+      "gitBlobSha": "5ea93c45fd18c908bad0663632c76a215de222b6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/canonical-native-compiler.js",
+      "gitBlobSha": "e76db100ce4bb1454859595d36327d6c7898c48a"
+    },
+    {
+      "path": "wasm/packages/compiler/src/canonical-native-plan.js",
+      "gitBlobSha": "fc88251227bad762be742faf4a89a3162f469289"
+    },
+    {
+      "path": "wasm/packages/compiler/src/canonical-project-compiler.js",
+      "gitBlobSha": "7d7fdd973719556e0205888d56f79c0757e6077d"
+    },
+    {
+      "path": "wasm/packages/compiler/src/canonical-router-compiler.js",
+      "gitBlobSha": "9f4d602551302312e8e69a2b54a08eda01371b81"
+    },
+    {
+      "path": "wasm/packages/compiler/src/cli-intents.js",
+      "gitBlobSha": "e5193a63997ec5ff90dacba69028b7b8d5da633b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/cli.js",
+      "gitBlobSha": "962e2c174a8f9cdb8343862c8137bf2bc44140ac"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/assemblyscript-compile.js",
+      "gitBlobSha": "fbbde1583f3953f276dbe9bdc33b13d0ed1d759f"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/assemblyscript-core.js",
+      "gitBlobSha": "e1ac82268b8af12397b6e6defa79fb1a626a45ad"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/assemblyscript-shape.js",
+      "gitBlobSha": "53eeddfbab2d5d9fc0003f8cd25ba254fd01f614"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/assemblyscript-wasm-smoke.js",
+      "gitBlobSha": "d053cf2d461578a075bf2c9f146a93339d14f015"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/backend-capabilities.js",
+      "gitBlobSha": "073b0a5cdb14eef33bf7a485a17310357726f9a6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/channel-broadcaster.js",
+      "gitBlobSha": "8b69dd19088225d8c29f18afff6bd161d153cf0e"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/compiled-handlers.js",
+      "gitBlobSha": "cc0d11a65fb9d9a0010836bfc83f930c9b9ad5a9"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/compiled-wasm-runtime.js",
+      "gitBlobSha": "28ecf718a783f7558bc78bdfc2d1ae047333e344"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/config-references.js",
+      "gitBlobSha": "95a8895d1972dd3cea623515c1c215264d1a26f2"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/dispatch-ts.js",
+      "gitBlobSha": "4dbeb4fa9397b8236fac7c7066f8f705955db1ea"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/effect-composition.js",
+      "gitBlobSha": "b10ec1df88488296605244548b197f6a5fb4a26e"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/effect-runtime.js",
+      "gitBlobSha": "190b9ee0e6c27a7aa722c800b5d89639e6f36685"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/execution-harness-ts.js",
+      "gitBlobSha": "0c452a88c7b634f77edc6c99610085a82e6a1634"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/handler-bindings-ts.js",
+      "gitBlobSha": "4ee893a0124cc615db759958662f1ade85561db4"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/handler-library-contracts.js",
+      "gitBlobSha": "b59914f9ec3ca8045df657387d2bbf4bdb208dbc"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/host-capabilities.js",
+      "gitBlobSha": "44a486b5b8bbb38b19186c482c00ca0bc60f7c52"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/host-runtime-kernel.js",
+      "gitBlobSha": "d52c313e76c41fc0222071555c6be0fd2e4f85c2"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/integrated-compiled-app.js",
+      "gitBlobSha": "6ace1040a55dd0029a83e1283fa8d5ed3096f9b7"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/json-body.js",
+      "gitBlobSha": "7ee8f155de9847e1b0ff2b4515d7c6ddbdcbeb60"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/library-sidecars.js",
+      "gitBlobSha": "fd074b6f8f9a0aa54b3a33ddb6fa4393a6831509"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/local-harness-ts.js",
+      "gitBlobSha": "91cf0bf77e226cedac06bceccdcde2a2c13f2089"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/pulse-wrapper.js",
+      "gitBlobSha": "8bd04bd788a54e12cff66103e4b9ee4c5bd5453f"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/request-result-headers.js",
+      "gitBlobSha": "ee6b7bf74ca56fa74b9c297dbd7a064222ccceb7"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/schema-json-compile.js",
+      "gitBlobSha": "3dc144a9f41b135884fd6b6c4c7088a92329eca9"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/schema-json-sidecar-v2.js",
+      "gitBlobSha": "6e3f61e0570f23a481e10bd5b4a6cace4d171bdb"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/schema-json-sidecar.js",
+      "gitBlobSha": "68b69b6893670b46887a8076228a16cd47b09892"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/streaming-passthrough.js",
+      "gitBlobSha": "644c08871758a0d0da17db9826edb718fb13bf30"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/wasm-host-abi.js",
+      "gitBlobSha": "2de625c3fd8b200bcf4f1e031122680a75a7817b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/codegen/wasm-host-bridge.js",
+      "gitBlobSha": "7797f954d8480a9b971d538399ac8fd77ce926a6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/compiled-wasm-host-runtime-kv.js",
+      "gitBlobSha": "b6a5348d8ab3c4692bc75705d5602953171e8941"
+    },
+    {
+      "path": "wasm/packages/compiler/src/config-resolver.js",
+      "gitBlobSha": "4ae6853a2fb063c4ec800e67efcc1ea26d1b05e6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/crypto-requirement-planner.js",
+      "gitBlobSha": "badd353ef3198e525f3194bdd2d19ad5aeb61fb3"
+    },
+    {
+      "path": "wasm/packages/compiler/src/definitions/config-schema.js",
+      "gitBlobSha": "96e00b8e88c2208767b265da92a724c4ac795e16"
+    },
+    {
+      "path": "wasm/packages/compiler/src/definitions/handler-roles.js",
+      "gitBlobSha": "de69b730b2a63b5f0822f6875fd274fc4ce444f8"
+    },
+    {
+      "path": "wasm/packages/compiler/src/definitions/path-grammar.js",
+      "gitBlobSha": "c938ad70fd096b5f47e2a0e5feb48fe31c793111"
+    },
+    {
+      "path": "wasm/packages/compiler/src/definitions/router-api.js",
+      "gitBlobSha": "54bac1bce416941050b7aada914244fa38771ddd"
+    },
+    {
+      "path": "wasm/packages/compiler/src/diagnostics.js",
+      "gitBlobSha": "3659d8c44152534591f87d7a660f21027e59f2e9"
+    },
+    {
+      "path": "wasm/packages/compiler/src/diagnostics/codes.js",
+      "gitBlobSha": "c6a7ab42e1527753d687012dbc21d7b77d6bce97"
+    },
+    {
+      "path": "wasm/packages/compiler/src/diagnostics/reporter.js",
+      "gitBlobSha": "26ef3a14f2efec8d25ecf6fd2777f0fbc1bcdf9d"
+    },
+    {
+      "path": "wasm/packages/compiler/src/dispatch-table.js",
+      "gitBlobSha": "79f6e4660627cd9a164d79eea34961c44a4f410e"
+    },
+    {
+      "path": "wasm/packages/compiler/src/events/event-emit.js",
+      "gitBlobSha": "2e63732022f213bfdecebe23e00a160d294db350"
+    },
+    {
+      "path": "wasm/packages/compiler/src/events/event-topology.js",
+      "gitBlobSha": "e1314c924c96aac246047d434165e8c828c1fd2c"
+    },
+    {
+      "path": "wasm/packages/compiler/src/execution-plan.js",
+      "gitBlobSha": "1ec4aed152e65a4f4fd49c421259685c84963a2f"
+    },
+    {
+      "path": "wasm/packages/compiler/src/extractor.js",
+      "gitBlobSha": "eedb411e0ea593b76576e2bcbf76fbaff68c9f0c"
+    },
+    {
+      "path": "wasm/packages/compiler/src/handler-eval.js",
+      "gitBlobSha": "35a6b4c2ac7cd7b9c418741078a6fc44abb58269"
+    },
+    {
+      "path": "wasm/packages/compiler/src/handler-table.js",
+      "gitBlobSha": "89ba145a3a533ad761d392b6b819a7ae3654f6b8"
+    },
+    {
+      "path": "wasm/packages/compiler/src/index.js",
+      "gitBlobSha": "c3af8d8cabbc024a36e56717f6a7db3fecb30645"
+    },
+    {
+      "path": "wasm/packages/compiler/src/javascript-application-plan.js",
+      "gitBlobSha": "d7dbfb05662da2a79f05dda988b732be487776c4"
+    },
+    {
+      "path": "wasm/packages/compiler/src/kv-provider.js",
+      "gitBlobSha": "9659785ff91d43202cd1aca88a7291616c809894"
+    },
+    {
+      "path": "wasm/packages/compiler/src/native-result-facts.js",
+      "gitBlobSha": "c1a3d74f072818bb4c23b478cb5c2929c36f5dc1"
+    },
+    {
+      "path": "wasm/packages/compiler/src/path-table.js",
+      "gitBlobSha": "48040c887523dafa80b0eb448b5a830dfb1e2a03"
+    },
+    {
+      "path": "wasm/packages/compiler/src/path.js",
+      "gitBlobSha": "f17b502d52501277cc1dac753d610e537815cc91"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/config-define.js",
+      "gitBlobSha": "65aa36faa36ef764a29b65a163362a7572eefdc2"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/dependency-call.js",
+      "gitBlobSha": "4f0c7833493298efbb0bffd23b66fd2f766acd98"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/env-lookup.js",
+      "gitBlobSha": "c7969a3dc872aad1a9f8b7be426de89a21878f5a"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/handler-reference.js",
+      "gitBlobSha": "d985242aba592863292b6ca5ec71bda2852f5b1c"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/path-literal.js",
+      "gitBlobSha": "14b1585d17c478c61f884714a4df29d57a202747"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/result.js",
+      "gitBlobSha": "71fb35423a4a29f9538b5aab1386ff60c6e6e771"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/router-chain-call.js",
+      "gitBlobSha": "e4e61ab5ccbd833eeddc6c851c660d61a7a9a1b5"
+    },
+    {
+      "path": "wasm/packages/compiler/src/patterns/router-construction.js",
+      "gitBlobSha": "25197020b53d5dc749c001b27d781323e4f057a7"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project-config-compiler.js",
+      "gitBlobSha": "05bee6c167a3267f97f809397c87db2c7d25750b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project-target-support.js",
+      "gitBlobSha": "f3b857e5ab324265831850240b271a13a7defed7"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/npm-source-resolution.js",
+      "gitBlobSha": "fc46e49b0efa8fbd46d547ec0d07ccb2d8c62eb6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/package-reachability.js",
+      "gitBlobSha": "c10a52248a62dea7d02247bcdb42e815ba34db06"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/reachable-graph-builder.js",
+      "gitBlobSha": "9318c1e7c165446a293891208b4cd0ce3438bb14"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/reachable-graph-contract.js",
+      "gitBlobSha": "8204b35dd4fc179df96372b4fc46ad1defff8c3f"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/reachable-graph-implementation.js",
+      "gitBlobSha": "6f965004772fc89fb3595397f00c66711b037180"
+    },
+    {
+      "path": "wasm/packages/compiler/src/project/router-module-linker.js",
+      "gitBlobSha": "8b6569e3b3981546d0609d7eed65ea9b6982713b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/provider-toolchain.js",
+      "gitBlobSha": "0bd767666f313ba7545eb0d0750fad0fbdf512d0"
+    },
+    {
+      "path": "wasm/packages/compiler/src/pure-helper-values.js",
+      "gitBlobSha": "115510d78029a02e95bb4b464297c3b70de3b0a7"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-handler-topology.js",
+      "gitBlobSha": "80cbea32308b86d8d82d5bc7137bef7605e711c0"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-reference-provenance.js",
+      "gitBlobSha": "827203fc567bb91d2001748fcf1242bc8dee4765"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-response-payloads.js",
+      "gitBlobSha": "43dcf0e848643987b5bb01c3d3fa9ab9729eaff1"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-route-behavior.js",
+      "gitBlobSha": "f9bdc1a37d61cf956c8b2687538af019827f6cdc"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-router-control.js",
+      "gitBlobSha": "ac8895f42eed023491dce5740928f4a73483b197"
+    },
+    {
+      "path": "wasm/packages/compiler/src/report-source-inputs.js",
+      "gitBlobSha": "3fc0e465b32bf3eebd0274ec0b17c50d55181c9b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/shared-stage-plan.js",
+      "gitBlobSha": "28a5cf10a1d840306d5cf72c04bbb0e401f62933"
+    },
+    {
+      "path": "wasm/packages/compiler/src/source-helper-plan.js",
+      "gitBlobSha": "f2e2df2c9aa60ebf9dbc555043d7a6d5794389de"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/async-surface-normalizer.js",
+      "gitBlobSha": "e6e338c400cb57e44d7bb4f3a6908cdb145be268"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/binding-ownership.js",
+      "gitBlobSha": "b91a8fdd81ef6ca8f4daac076e8f034e666a99ae"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/bounded-pure-loop.js",
+      "gitBlobSha": "1ab91244539c930ee50c625139021407e868a825"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-handler-ir.js",
+      "gitBlobSha": "a3a6920832377cb2b3563be157e495b4ea3f1d8f"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-native-module.js",
+      "gitBlobSha": "88aa0060447249849c14b49b7767107bc6d83866"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-native-plan.js",
+      "gitBlobSha": "8cdb462df261d6c928fa389f69d761b642d2e8a6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-project.js",
+      "gitBlobSha": "bb9c8f10e0ce9a0ea22321428b8c30e701139ce6"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-router.js",
+      "gitBlobSha": "7afb260d59e2797bdb1dde68af1ddfe34e6e5bf2"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/canonical-source.js",
+      "gitBlobSha": "7ca0f5e9730f3e4dc1562fd85630f026a098d303"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/diagnostic-authority.js",
+      "gitBlobSha": "549f48992b0d4109479b515cca97665dda15d619"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/equivalence.js",
+      "gitBlobSha": "cd81e2c03d7872ec9e4c7f5007040d832f7729b3"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/guest-unit-stage.js",
+      "gitBlobSha": "1c3002f511b7f427b81826b38f64b8328b7d8934"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/handler-ir-emitter.js",
+      "gitBlobSha": "8f7b2531c1ebbbae9adbef1174960e41d439c145"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/handler-ir-managed.js",
+      "gitBlobSha": "4444efac36d8e47fa49c7f78966356fc20816b7b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/handler-ir.js",
+      "gitBlobSha": "b449c934285dca23541d631cbb0d7b1a7bfef29e"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/handler-surface-authority.js",
+      "gitBlobSha": "ce6edb043796590926670c608000a28afb60a474"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/incoming-body-source.js",
+      "gitBlobSha": "5291b07d24ea7309b89836a7f3cb028974b11eb0"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/package-operation-seam.js",
+      "gitBlobSha": "4ad8efaa097def9121518ada7cf05b794be9d80a"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/pipeline.js",
+      "gitBlobSha": "f41262ba52213dd86eed2f36df67c9d89060cb6b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/plain-handler-frontend.js",
+      "gitBlobSha": "78a303463a171bcfe8b3c92d3c0daa0ba519dd92"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/provider-requirement-authority.js",
+      "gitBlobSha": "afb2541e7cd09731f9dc6f23a7cd39b54aa32774"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/pure-helper-source.js",
+      "gitBlobSha": "1f381588faa0001c5943fd34342dbb23f67c1c06"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/router-control-contract.js",
+      "gitBlobSha": "6dc4ed7f6daf01c4729e93d7c86f1aabd7ae553b"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/router-handler-frontend.js",
+      "gitBlobSha": "7b3f0b00a66106ca48946c93c2f8622dd70df0dc"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/router-handler-ir.js",
+      "gitBlobSha": "cdb1bf1975a25e204e10afcb0df01a337077fc81"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/router-topology-frontend.js",
+      "gitBlobSha": "d82ba46d79aeb2a784a8e86b11802416ccbb2bc3"
+    },
+    {
+      "path": "wasm/packages/compiler/src/spine/terminal-package-native.js",
+      "gitBlobSha": "e080f87d0c033527ec9b025d2642b7d307315bf0"
+    },
+    {
+      "path": "wasm/packages/compiler/src/stable-id.js",
+      "gitBlobSha": "b9104fdb784e47d1e3634c15b4496befd738c4c8"
+    },
+    {
+      "path": "wasm/packages/contracts/package.json",
+      "gitBlobSha": "f71640b0f7f60045cc8d193a47a6b5f5fe55ff14"
+    },
+    {
+      "path": "wasm/packages/contracts/src/assets/contracts.js",
+      "gitBlobSha": "3649c00a588f8b42a88bba491104634dcdf56233"
+    },
+    {
+      "path": "wasm/packages/contracts/src/assets/embedded.js",
+      "gitBlobSha": "fff37de525b192b02de090b7f9f2362306b32188"
+    },
+    {
+      "path": "wasm/packages/contracts/src/config/provider-resolution.js",
+      "gitBlobSha": "a0ebbe4b49a488dd279811ca9b24ca7ff575928a"
+    },
+    {
+      "path": "wasm/packages/contracts/src/config/runtime-provider-kv.js",
+      "gitBlobSha": "bd4ed594e05f1f7128a180a4b02288c3b191bf12"
+    },
+    {
+      "path": "wasm/packages/contracts/src/config/symbolic-refs.js",
+      "gitBlobSha": "bd3a31164b2109fd85ee5668ecec8cd6aeb24016"
+    },
+    {
+      "path": "wasm/packages/contracts/src/crypto/contracts.js",
+      "gitBlobSha": "a162aaf5855937144c0ab6f7f051d8d2e5d46be5"
+    },
+    {
+      "path": "wasm/packages/contracts/src/definitions/config-schema.js",
+      "gitBlobSha": "7e46c5a2eeb18df615a24d19e27a930f521b4d64"
+    },
+    {
+      "path": "wasm/packages/contracts/src/definitions/handler-roles.js",
+      "gitBlobSha": "982d5c1a304ce1592a830cb4275da59c6eff7214"
+    },
+    {
+      "path": "wasm/packages/contracts/src/definitions/path-grammar.js",
+      "gitBlobSha": "b8f7ae74e9b2a80359a32c2c5c1d0fa7c7722b26"
+    },
+    {
+      "path": "wasm/packages/contracts/src/definitions/router-api.js",
+      "gitBlobSha": "8cb4b660ccec8b2b5270b441d7e0d09d8ac7ba2a"
+    },
+    {
+      "path": "wasm/packages/contracts/src/diagnostics.js",
+      "gitBlobSha": "91c3b5eccd69e6d79d979feb8b5a6fabbb0ec7eb"
+    },
+    {
+      "path": "wasm/packages/contracts/src/diagnostics/codes.js",
+      "gitBlobSha": "0cacdb210796f2ad51f61ce92a9b153ea054bebd"
+    },
+    {
+      "path": "wasm/packages/contracts/src/diagnostics/reporter.js",
+      "gitBlobSha": "d02ef2e5168a7a7c62033bc7fafa4aa0add553f5"
+    },
+    {
+      "path": "wasm/packages/contracts/src/dispatch-table.js",
+      "gitBlobSha": "79b8dc55b6dbcdf8bb3285692869399b91251045"
+    },
+    {
+      "path": "wasm/packages/contracts/src/entities/catalog.js",
+      "gitBlobSha": "fe976738544f6d0cdffed74b7f9de5814146bb41"
+    },
+    {
+      "path": "wasm/packages/contracts/src/entities/contracts.js",
+      "gitBlobSha": "7c47b3b7de555d29ac62383f85534572b8bc8519"
+    },
+    {
+      "path": "wasm/packages/contracts/src/entities/json-rpc.js",
+      "gitBlobSha": "334c03fc8e34ae439336e893b1e0b1c407e4bf39"
+    },
+    {
+      "path": "wasm/packages/contracts/src/entities/runtime.js",
+      "gitBlobSha": "e3be70ae276df2aac900b0315b5047e3ae2962d0"
+    },
+    {
+      "path": "wasm/packages/contracts/src/events/contracts.js",
+      "gitBlobSha": "247b9e12351deb82d4521ec741f4b3b0b73a40ca"
+    },
+    {
+      "path": "wasm/packages/contracts/src/execution-plan.js",
+      "gitBlobSha": "707cf68f9a8e85cf0df021a82c2aeccad9ef94c4"
+    },
+    {
+      "path": "wasm/packages/contracts/src/grip/contracts.js",
+      "gitBlobSha": "be72577f453ece9db9d5cc2afb01fab557f4a980"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler-table.js",
+      "gitBlobSha": "1df72a0ac8a1d8e716ec8e7cb17064b5f9b9e0aa"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/backend-json-request-body.js",
+      "gitBlobSha": "90732a2adbb8b6fbb2527b0076b1be09e5b6d9dd"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/beta-lifecycle-golden.js",
+      "gitBlobSha": "ffd614651b6ef7743da1e3d9d93fe184bbfd0570"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/canonical-native-plan.js",
+      "gitBlobSha": "dca14c06308b152f5e86f2bba14eac73f4133f36"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/canonical-native-runtime.js",
+      "gitBlobSha": "de8976417646381f426f731a4fc700c386bee154"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/canonical-runtime.js",
+      "gitBlobSha": "3b71c941a9f2ecb46ef9c6da100e75792e1fd565"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/context.js",
+      "gitBlobSha": "37d9546235d57927947adb13f087e47c743a3540"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/ctx-contract.js",
+      "gitBlobSha": "94e99b739f039ad233a79a0bdbf241225fa624d1"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/doctor-readiness-aggregator.js",
+      "gitBlobSha": "5e5b2b016ab7214b345f6ec602f5ca6a326483bb"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/effects.js",
+      "gitBlobSha": "eeded98f5ba8a1932b541515d6967e2d78300e27"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/io-lifecycle.js",
+      "gitBlobSha": "099004465d5a01ddcfab009731da407f20dd9aa5"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/lifecycle-authoring-alignment.js",
+      "gitBlobSha": "4b72695e9c62c01a02940d568ab06f359063f77e"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/lifecycle-readiness-aggregate.js",
+      "gitBlobSha": "48a8b712fc3049b916fe49cf903162b6770bc138"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/reference-node-lifecycle-golden.js",
+      "gitBlobSha": "dc7c56372806b26c6f245366654fef74ad5863f7"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/request-json-body.js",
+      "gitBlobSha": "60d7accdf8e7adb1020b414ea5f3d80c0df21b8f"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/runtime-api.js",
+      "gitBlobSha": "4557a900b44f6c2be5336b50dac8c5584b684fe2"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/schema-decode-result.js",
+      "gitBlobSha": "978ddef85266c958724228e93df141068f3d0600"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/schema-response-codec.js",
+      "gitBlobSha": "e4596932cdf2f938d6d3c5a4e1377a2f29043556"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/surface-contract.js",
+      "gitBlobSha": "50eb0cc434c8ca7ef655dc4c23b19e3d63671ada"
+    },
+    {
+      "path": "wasm/packages/contracts/src/handler/types-contract.js",
+      "gitBlobSha": "ad9062869088071a84c44337e8cbe8f1b0f64ca0"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/backend-capabilities.js",
+      "gitBlobSha": "e098f8e618000fe096e7371903ac637360694f7b"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/capabilities.js",
+      "gitBlobSha": "256e7a6a8d948dc03e53f3e45116d23e1456752c"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/channel-broadcaster.js",
+      "gitBlobSha": "8a96503b17250c31ea61ee2002ae048fa174baf9"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/json-body.js",
+      "gitBlobSha": "6b412888b99d3fc35bed44fd6a0e8c96186bcd4b"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/request-result-headers.js",
+      "gitBlobSha": "e54e7fd1a34279fa76d7f9bd885505ce937c5ddb"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/streaming-passthrough.js",
+      "gitBlobSha": "dd9f0c4c2b246737c84d52d52df8d86ec65533bf"
+    },
+    {
+      "path": "wasm/packages/contracts/src/host/wasm-host-abi.js",
+      "gitBlobSha": "1af001d511a7959a8e2a9fe3d8fdf26ce3ac425e"
+    },
+    {
+      "path": "wasm/packages/contracts/src/index.js",
+      "gitBlobSha": "bfb3c291147c2f3e4d3d0c3f425f834c4018e3fb"
+    },
+    {
+      "path": "wasm/packages/contracts/src/jwt/contracts.js",
+      "gitBlobSha": "9c14ab3886a5a645522888b2ae9684f1469778d6"
+    },
+    {
+      "path": "wasm/packages/contracts/src/library/api-surface.js",
+      "gitBlobSha": "d22a8c31c2bef68c0419f84953352be69efef55f"
+    },
+    {
+      "path": "wasm/packages/contracts/src/library/contracts.js",
+      "gitBlobSha": "ac1589748457cb7e42413284290d96c644a2e851"
+    },
+    {
+      "path": "wasm/packages/contracts/src/library/manifest.js",
+      "gitBlobSha": "d55c075977523424aa9334a31ac010211b75e319"
+    },
+    {
+      "path": "wasm/packages/contracts/src/library/second-package-owned-lowering.js",
+      "gitBlobSha": "9a0bf3b473dea7ca9f7572d8a7e98dc648c216e8"
+    },
+    {
+      "path": "wasm/packages/contracts/src/library/sidecars.js",
+      "gitBlobSha": "8a1f919e765b4d7eb4f12e5a1a1ad447b847ac62"
+    },
+    {
+      "path": "wasm/packages/contracts/src/logging.js",
+      "gitBlobSha": "8f4f8ab007764a19ef7ae9bcd96a67943a8dddcc"
+    },
+    {
+      "path": "wasm/packages/contracts/src/package/package-contract.js",
+      "gitBlobSha": "e7b0b18aefa8fa2c4c69a3d6a5d943d6ed4e1cf0"
+    },
+    {
+      "path": "wasm/packages/contracts/src/package/package-contract.schema.json",
+      "gitBlobSha": "6b8be35a4ea34e79e6bd4c5b847cdf72cd03f5e2"
+    },
+    {
+      "path": "wasm/packages/contracts/src/package/runtime-pulse-live.js",
+      "gitBlobSha": "58c633d1f1e5ca56d91de1d5f8b6485efbd7cf4a"
+    },
+    {
+      "path": "wasm/packages/contracts/src/path-table.js",
+      "gitBlobSha": "d1ccc21c110e3ada703893f6e94516345683eb1c"
+    },
+    {
+      "path": "wasm/packages/contracts/src/path.js",
+      "gitBlobSha": "490bf812e03b4b7a73d52dffdd4d8560031ef147"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/config-factory.js",
+      "gitBlobSha": "a621d1f1534320d10e4adaaafaf4b4fdb608b1ad"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/config-plan.js",
+      "gitBlobSha": "9037bb4d6b2af245fe291c6d7e7518fed02f7dd7"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/config-runtime.js",
+      "gitBlobSha": "a9f8f4f69805a0f647da6d8412baed334bae13be"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/javascript-application.js",
+      "gitBlobSha": "7bf5a9b413942545564e17f18c0e1849cad2618c"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/javascript-core-capabilities.js",
+      "gitBlobSha": "e37d849e55791a00a0857aec569b6ff2806b8f83"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/native-optimization.js",
+      "gitBlobSha": "dc7c8fc7a3cd450931bdd824579d9cb42f77f19a"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/package-ownership.js",
+      "gitBlobSha": "a68af64d5425d7c750fe9124951ce805a88b1c00"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/package-product-projection.js",
+      "gitBlobSha": "83fda7ff8655f0dd97de55257efbbe2311e77002"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph-identity.js",
+      "gitBlobSha": "30b6ed86696beab836ef9fea49113f347c21bd67"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph-projections.js",
+      "gitBlobSha": "f11a18750435a5ba0946d04d0adb0a91bc4f34ee"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph-resolver.js",
+      "gitBlobSha": "46133a718c91632e3601bd260c3f68fc4c03562b"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph-v2.js",
+      "gitBlobSha": "6d329635bd36c54b488530db7d96450e11542d64"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph-v2.schema.json",
+      "gitBlobSha": "927bb5b8ce75b47ff6aba2566c403a7f1863900b"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph.js",
+      "gitBlobSha": "5fa3b8a477324f2c0fee5e40465bd481064137cc"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/reachable-graph.schema.json",
+      "gitBlobSha": "fd488c46cc9cf008b10a6551bd20257493b30dfc"
+    },
+    {
+      "path": "wasm/packages/contracts/src/project/target-support-evidence.js",
+      "gitBlobSha": "271ac9d0e45705e9b368364aad0381afa954df88"
+    },
+    {
+      "path": "wasm/packages/contracts/src/provider/canonical-provider.js",
+      "gitBlobSha": "6069ff8420bb0a5e9cca719cabd1ddfdc78aefd2"
+    },
+    {
+      "path": "wasm/packages/contracts/src/provider/final-wasm-policy.js",
+      "gitBlobSha": "a699b3fbeee1383f9f802acbff6bc4a949206fe4"
+    },
+    {
+      "path": "wasm/packages/contracts/src/provider/toolchain.js",
+      "gitBlobSha": "7c4634c593caca7eea8d828808b64ebfd3feed0e"
+    },
+    {
+      "path": "wasm/packages/contracts/src/route-plan.js",
+      "gitBlobSha": "a51fc854cf691c84d4f8df63a4c93f3629f50222"
+    },
+    {
+      "path": "wasm/packages/contracts/src/s3/contracts.js",
+      "gitBlobSha": "8d29f7ca5bf3bf948c86630ed04bbac4122e5bca"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/admission-text.js",
+      "gitBlobSha": "48b2a454cc8f778075d952a1dbf1eaaa4ed383a5"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/admission.js",
+      "gitBlobSha": "41dabc6b62f825b6a379a8e64493e505166d9563"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/compile.js",
+      "gitBlobSha": "62934f3b24052da0f6ba82db9f4b39cbafb4f4ac"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/contracts.js",
+      "gitBlobSha": "946b5a2fd5350a7b5905aad8cc23800628e30751"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/generic-parser.js",
+      "gitBlobSha": "ef5db0737f27d76dc5cafaff3be3d93c0c59a468"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/registry.js",
+      "gitBlobSha": "f19d4439439184665b6659973e25044114219231"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/semantic-trace.js",
+      "gitBlobSha": "87e10440e43ab1c511fec6dfbb776f2e3669e9ac"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/v1.js",
+      "gitBlobSha": "d8e60d7a29fb36ad01c5c152da71a7347db46b82"
+    },
+    {
+      "path": "wasm/packages/contracts/src/schema-json/v2.js",
+      "gitBlobSha": "16b0963a0bcd0a0d480dc01c987f7c0d4e7b5e7c"
+    },
+    {
+      "path": "wasm/packages/contracts/src/sha256.js",
+      "gitBlobSha": "eeb7e9b476f27e5521beda036df8b532335c36d8"
+    },
+    {
+      "path": "wasm/packages/contracts/src/spine.js",
+      "gitBlobSha": "0a13e7d201aca65dc4c850547d0824057823e876"
+    },
+    {
+      "path": "wasm/packages/contracts/src/stable-id.js",
+      "gitBlobSha": "4deab93ef36525f15878fec1aa436ae4ccf91cba"
+    },
+    {
+      "path": "wasm/packages/host-runtime/package.json",
+      "gitBlobSha": "910b0dafb58b8b04f534d2ee847d4ded23924301"
+    },
+    {
+      "path": "wasm/packages/host-runtime/src/runtime/native-crypto-verifier.js",
+      "gitBlobSha": "5395f49c61065e4e6864ddadafde9ce4aaadc1a6"
+    },
+    {
+      "path": "wasm/packages/library-kit/package.json",
+      "gitBlobSha": "4d967e688185a82a801133922b8ca7bfac54ca70"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/assets-lowering.js",
+      "gitBlobSha": "6f726bad446e585ea8c885e128f17e95541ebea0"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/handler-library-contracts.js",
+      "gitBlobSha": "0e8a5b6cb10144f4efe270c014c01ad1e2ad3593"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/host-capabilities.js",
+      "gitBlobSha": "e731123440ba136a86f0637b51539e7db0db259e"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/index.js",
+      "gitBlobSha": "3e2c28879ec89143f195531ddf2e212e1c928686"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/library-sidecars.js",
+      "gitBlobSha": "2b6679bad047c5dacb295f77d8ce862e1e966af1"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/package-contracts.js",
+      "gitBlobSha": "520c369fc530d6150fce4f7a4b09adf52746842f"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/compiler/package-lowering.js",
+      "gitBlobSha": "3f07b696307f4fa1d61b58edbe9ad5697678c985"
+    },
+    {
+      "path": "wasm/packages/library-kit/src/index.js",
+      "gitBlobSha": "4d083465c9a4f10131226dec24af3c4dbe290718"
+    },
+    {
+      "path": "wasm/packages/schema-json/package.json",
+      "gitBlobSha": "412efcd99c2d6e274dcbadb52243628744fa56c7"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/canonical-schema-codecs.js",
+      "gitBlobSha": "a0c97528871800f9bba7d1ca686229ef102c0d1a"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/index.js",
+      "gitBlobSha": "7b3daa5663b3a8e37baacb3992aeb2b0453138ba"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/json-admission.js",
+      "gitBlobSha": "895af60e44c3a622ec25de5eeb3397411c54feed"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/scalar-record-codec.js",
+      "gitBlobSha": "77a9a9b1033b57d23a37e6ad9d8ce5532a274eee"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/schema-json-compile.js",
+      "gitBlobSha": "873f8cdf94809d8966a32dd12253974b49fee28c"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/schema-json-generic-parser.js",
+      "gitBlobSha": "318b68f4f9538ff57bf299ddacc5f5b0bbad718d"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/schema-json-sidecar-v2.js",
+      "gitBlobSha": "50ea143d84d1d45f3d966b9c27ef5abd59773f90"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/schema-json-sidecar.js",
+      "gitBlobSha": "393da4b84d409f18be446d86e1ea30e37c098da2"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/compiler/schema-registry.js",
+      "gitBlobSha": "88ab45905f0b99b8a604171365debfc5c767089b"
+    },
+    {
+      "path": "wasm/packages/schema-json/src/index.js",
+      "gitBlobSha": "4d083465c9a4f10131226dec24af3c4dbe290718"
+    }
+  ]
+}
