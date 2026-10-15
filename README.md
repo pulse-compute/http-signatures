@@ -1,88 +1,83 @@
-# HTTP Message Signatures — RFC 9421 investigation package
+# HTTP Message Signatures
 
-> **Status: experimental, private, JavaScript reference only.** This is an
-> interoperability/contract probe, **not** a released Pulse package or a Native
-> lowerer. It does **not** establish all-algorithm/all-component RFC 9421
-> conformance, a supported application authoring API, or Fastly Native support.
+**Experimental, private JavaScript reference. Not a supported or published package.**
 
-The goal is to exercise whether HTTP message component canonicalization can
-remain a package-owned, host-neutral operation while cryptography, key authority,
-HTTP transport and trusted time remain separate. The first slice implements an
-explicit **HMAC-SHA256** RFC 9421 profile and verifies the **exact RFC Appendix
-B.2.5** test vector.
+This repository investigates a bounded HMAC-SHA256 profile of RFC 9421. HMS-00
+recovers the original spike without changing its source or six tests. Passing
+those tests does not establish full RFC conformance, production security, or
+Pulse Native support.
 
-```js
-import { signMessage, verifyMessage } from './src/index.js';
+## Run locally
 
-const message = {
-  method: 'POST',
-  url: 'https://api.example.test/hooks',
-  headers: { 'content-digest': 'sha-256=:...:' },
-};
-const components = ['@method', '@target-uri', 'content-digest'];
-const params = { created: 1780000000, keyid: 'hook-key', alg: 'hmac-sha256' };
-const wire = await signMessage(message, {
-  label: 'sig1', components, params, key: secretBytes,
-});
-// Set wire.signatureInput and wire.signature as HTTP fields.
-// `content-digest` MUST separately be calculated/checked against the body.
+Use Node **24.19.0** (pinned in `.nvmrc` and CI). This is the only qualification
+runtime for HMS-00; other Node versions are unqualified. The package has **no
+runtime or development dependencies**, build step, or install scripts.
 
-const valid = await verifyMessage(message, {
-  ...wire, label: 'sig1', key: trustedSecretBytes,
-  requiredKeyId: 'hook-key',
-  requiredComponents: ['@method', '@target-uri', 'content-digest'],
-  nowSeconds: trustedNowSeconds, maxAgeSeconds: 60,
-});
+```sh
+git clone https://github.com/pulse-compute/http-signatures.git
+cd http-signatures
+# Before HMS-00 merges:
+git switch hms-00/bootstrap-reference
+nvm install
+nvm use
+npm ci --ignore-scripts --no-audit --no-fund
+npm run check
+npm test
 ```
 
-This profile supports unparameterized ordinary ASCII HTTP fields (including
-`content-digest` as an **opaque field value**), and the following derived
-components: `@method`, `@target-uri`, `@authority`, `@scheme`, `@path`, `@query`,
-`@request-target` (origin-form only), and `@status`. Signatures are encoded as
-RFC 8941 dictionaries containing a parameterized Inner List and a Byte Sequence;
-wire values can contain multiple labeled signatures, but the verifier selects
-one explicitly. Supported metadata parameters are `created`, `expires`, `keyid`,
-`alg`, `nonce`, `tag`. Signers must provide `created` and `keyid`; verifiers must
-supply a trusted key, required components, expected keyid, current time, and an
-age bound. No automatic key discovery, runtime secret lookup, clock capture,
-nonce storage, content-digest computation, or permission grant exists here.
+`nvm` is optional; any installation of the pinned Node version works. Tests can
+also run directly without installation: `node --test test/rfc9421.test.js`.
 
-## Scope intentionally excluded
+## Experimental API
 
-- RFC 8941 `;sf`, `;key`, `;bs`, trailer, and `;req` component parameters;
-  `@query-param`, response/request cross-signing, `Accept-Signature`, and
-  complete structured-field normalizations.
-- RSA-PSS, RSA-v1.5, ECDSA, Ed25519 and any algorithm other than HMAC-SHA256.
-- HTTP/1.1 proxy and CONNECT request-target forms, ambiguous multivalue
-  `set-cookie`, non-ASCII field values, and permissive SF formatting variants.
-- Message-body authenticity **unless** the application separately verifies
-  an RFC 9530 `Content-Digest` and requires its coverage by the signature.
-- Per-message replay protection (a verified `created` bound is not a nonce
-  store), secret rotation, application authorization or safe trust in an
-  untrusted client-provided `url`/headers.
+The sole package entry point is `@pulse-compute/http-signatures`. It exports:
 
-The host must supply the **actual authoritative HTTP target URI and field
-values**. Browser/URL normalization, transport proxies, joined multi-value
-headers, and transformations can invalidate signatures. Do not use this as an
-HTTP authorization solution without an application profile and independent
-security review.
+| Export | Purpose |
+|---|---|
+| `serializeSignatureParams` | Serialize the ordered components and signature parameters |
+| `createSignatureBase` | Build the canonical base for the restricted profile |
+| `signMessage` | Produce `Signature-Input` and `Signature` fields with HMAC-SHA256 |
+| `verifyMessage` | Check the selected signature against explicit caller policy |
 
-## Next Pulse-specific qualification
+All exports are ESM named exports from `src/index.js`; no default, CommonJS,
+TypeScript declarations, or subpath API is provided. A checkout consumer can use
+`import { signMessage } from './src/index.js'`. The package-name import works
+inside this package or from an explicitly installed local copy; nothing is
+available from npm through this workstream.
 
-1. Define a first-party package contract and supported package ownership in
-   the release catalog only after human scope approval. Nothing here changes
-   the compiler's trusted lowerer discovery or host capabilities.
-2. Use the existing Crypto HMAC/SHA-256 seam rather than implementing new crypto.
-   Investigate the key-size and data envelope contract and whether package
-   effects can receive authoritative raw HTTP component values across providers.
-3. Implement Native package-owned lowering and test the **same RFC vectors** on
-   Node/Fastly Native and JavaScript targets, with unsupported input failing
-   during inspection instead of falling back to JavaScript.
-4. Expand the covered-component / algorithm surface only after the RFC 8941
-   parser and signature policy are independently qualified.
+The protocol source imports no modules. It needs standard `URL`, `TextEncoder`
+and `Uint8Array` globals, plus a Web Crypto backend. Pass `crypto` explicitly
+(for Node, `webcrypto` from `node:crypto`); the recovered API also defaults to
+`globalThis.crypto`. This inherited fallback is recorded for HMS-01 review.
+The tests import only Node built-ins.
 
-Run the standalone reference test with `node --test test/*.test.js`.
+## Boundaries and limitations
+
+The host must supply authoritative HTTP fields/target, trusted keys, and trusted
+time. The package does not retrieve keys, capture time, grant authorization,
+verify body bytes, or store replay nonces. A valid signature alone does not
+establish body integrity: applications must separately verify RFC 9530
+`Content-Digest` against the body and require that field's signature coverage.
+
+The spike implements unparameterized ASCII HTTP fields and selected derived
+components (`@method`, `@target-uri`, `@authority`, `@scheme`, `@path`, `@query`,
+origin-form `@request-target`, `@status`). It selects one explicitly labeled
+signature from a restricted dictionary representation. This is implemented
+surface, not a complete interoperability qualification.
+
+Unsupported: other algorithms; `;sf`, `;key`, `;bs`, `;tr`, `;req`; `@query-param`;
+request/response cross-signing; `Accept-Signature`; complete RFC 8941 parsing;
+non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
+`set-cookie` values. URL normalization and field joining need further review.
+
+See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
+actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
+describes the small PR/test workflow. Next: **HMS-01 — contract, capability
+matrix, and threat model**. Native work is conditional on a later integration
+investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),
 [RFC 9530](https://www.rfc-editor.org/rfc/rfc9530).
+
+Licensed under [Apache-2.0](LICENSE), matching the recovered package metadata.
