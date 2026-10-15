@@ -1,0 +1,14 @@
+{
+  "archive": "Pulse-HTTP-Signatures-RFC9421-Spike-2026-10-15.zip",
+  "archiveSha256": "43b180880533d1005b1883c9eb7eee8a6a9066292439030632428c3951aaaa2c",
+  "archivePrefix": "packages/http-signatures/",
+  "destinationPrefix": "",
+  "baselineCommit": "f6f5160a6bf0939d6804bfa04cd53d3012f7045c",
+  "baselineTree": "566f204b620864b28d302fca585490931d9871a7",
+  "files": {
+    "README.md": "921505db0a2d7d325f1fdb709e8cd1081dac0710d9152ad71721dfaaa890a18b",
+    "package.json": "ada37f92a29cc4bcfef6518c6ce5d41870466930ab309ec15b8a528a2c9cc4ac",
+    "src/index.js": "e487366b1283872c0ebacbde0cf670f6fb16fd193b958e2961d5d44c8c8f1084",
+    "test/rfc9421.test.js": "b9951ee4079222bb9bfc0db141f49297e5c54bb2f4d3a64f239929d88e5bc91c"
+  }
+}
