@@ -7,7 +7,9 @@
   "exports": {
     ".": "./src/index.js",
     "./fields": "./src/signature-fields.js",
-    "./base": "./src/signature-base.js"
+    "./base": "./src/signature-base.js",
+    "./protocol": "./src/protocol.js",
+    "./webcrypto": "./src/webcrypto.js"
   },
   "scripts": {
     "test": "node --test test/*.test.js",

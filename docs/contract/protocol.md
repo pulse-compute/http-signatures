@@ -5,7 +5,9 @@ not validators or proof of trust. Every limit and semantic rule below must be
 enforced at runtime when that API is implemented. The current spike does not
 implement this contract. The separate [HMS-03 base primitive](../signature-base.md)
 implements snapshot validation and canonicalization; the full policy operation
-ordering below remains an HMS-04–05 implementation contract.
+ordering below describes the full HMS-04–05 contract. The
+[HMS-04 implementation](../protocol.md) enforces the HMAC subset and documents
+phase refinements; body/replay-required profiles remain gated until HMS-05.
 
 ## One authoritative snapshot
 
@@ -100,7 +102,8 @@ not include it. Signing `signature` or `signature-input` fields is outside v1.
 ## Explicit operations
 
 `Protocol.sign(message, options)` and `Protocol.verify(message, options)` are
-reserved **design names**, not new exports. There is no implicit crypto, clock,
+implemented as named `sign` and `verify` exports from `/protocol` in HMS-04 for
+body-excluded, replay-none profiles. There is no implicit crypto, clock,
 key resolver, profile, signature label, algorithm or backend fallback.
 
 Signing receives ordered `covered` and ordered `parameters` plus one bound
@@ -163,8 +166,8 @@ supported input or primitive. Known absence and unavailability must not be
 collapsed internally.
 
 Signing follows phases 1–2, 4–6, 8, then 7; it neither resolves a verifier key
-nor consumes replay state. Its required capabilities are signer, clock and
-digest when body integrity is required. Verification requires the configured
+nor consumes replay state. The full contract requires signer, clock and
+digest when body integrity is required; HMS-04 gates required body/replay modes. Verification requires the configured
 resolver, clock, and mode-dependent digest/replay capabilities.
 
 Return only fixed failure codes, never interpolated attacker strings. These
