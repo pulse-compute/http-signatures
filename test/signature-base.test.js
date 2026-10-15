@@ -238,7 +238,7 @@ test('caller snapshot is unchanged and base bytes are a defensive independent al
 
 test('all ceilings can only be lowered with positive safe integers', () => {
   for (const [name, max] of Object.entries(signatureBaseLimits)) {
-    for (const n of [0, -1, 1.2, max + 1, Infinity]) reject(request(), ['date'], 'PROFILE_INVALID', { limits: { [name]: n } });
+    for (const n of [0, -1, 1.2, (name === 'signatureBytes' ? 512 : max) + 1, Infinity]) reject(request(), ['date'], 'PROFILE_INVALID', { limits: { [name]: n } });
   }
   reject(request(), ['date'], 'PROFILE_INVALID', { limits: { unknown: 1 } });
   reject(request(), ['date'], 'PROFILE_INVALID', { structuredFields: { X: 'dictionary' } });

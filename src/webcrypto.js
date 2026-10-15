@@ -1,4 +1,4 @@
-/** Optional explicit Web Crypto HMAC adapter. No global crypto/key fallback. */
+/** Optional explicit Web Crypto primitive adapters. No global crypto/key fallback. */
 import { BaseFailure, fail, record } from './base-support.js';
 const ALGORITHM = 'hmac-sha256';
 const identityString = value => typeof value === 'string' && value.length > 0 && value.length <= 512 && /^[\x20-\x7e]+$/.test(value);
@@ -53,3 +53,49 @@ export function createSha256Digest(options) {
     } }) };
   } catch { return { ok: false, code: 'CAPABILITY_UNAVAILABLE' }; }
 }
+
+function asymmetricCapability(options, operation, algorithm) {
+  try {
+    try { record(options, ['subtle', 'key', 'keyId', 'keyVersion', 'trustDomain']); }
+    catch { fail('CAPABILITY_UNAVAILABLE'); }
+    const { subtle, key, keyId, keyVersion, trustDomain } = options;
+    if (!subtle || typeof subtle[operation] !== 'function') fail('CAPABILITY_UNAVAILABLE');
+    const fn = subtle[operation].bind(subtle);
+    if (![keyId, keyVersion, trustDomain].every(identityString)) fail('KEY_REJECTED');
+    if (!key || key.type !== (operation === 'sign' ? 'private' : 'public') ||
+        !Array.isArray(key.usages) || key.usages.length > 8 || !key.usages.includes(operation)) fail('KEY_REJECTED');
+    let keyBits, signatureBytes, primitive;
+    if (algorithm === 'ecdsa-p256-sha256') {
+      if (key.algorithm?.name !== 'ECDSA' || key.algorithm?.namedCurve !== 'P-256') fail('KEY_REJECTED');
+      keyBits = 256; signatureBytes = 64; primitive = Object.freeze({ name: 'ECDSA', hash: 'SHA-256' });
+    } else {
+      const a = key.algorithm, e = a?.publicExponent;
+      if (a?.name !== 'RSASSA-PKCS1-v1_5' || a?.hash?.name !== 'SHA-256' ||
+          ![2048, 3072, 4096].includes(a?.modulusLength) || !(e instanceof Uint8Array) ||
+          e.length !== 3 || e[0] !== 1 || e[1] !== 0 || e[2] !== 1) fail('KEY_REJECTED');
+      keyBits = a.modulusLength; signatureBytes = keyBits / 8; primitive = 'RSASSA-PKCS1-v1_5';
+    }
+    const call = async (base, signature) => {
+      try {
+        if (!(base instanceof Uint8Array) || base.length > 65536) fail('OPERATION_FAILED');
+        if (operation === 'verify' && (!(signature instanceof Uint8Array) || signature.length !== signatureBytes)) fail('OPERATION_FAILED');
+        const data = new Uint8Array(base);
+        // ECDSA uses Web Crypto's fixed-width r||s bytes, never ASN.1 DER.
+        if (operation === 'verify') {
+          const result = await fn(primitive, key, new Uint8Array(signature), data);
+          if (typeof result !== 'boolean') fail('OPERATION_FAILED'); return result;
+        }
+        const result = await fn(primitive, key, data);
+        if (!(result instanceof ArrayBuffer) || result.byteLength !== signatureBytes) fail('OPERATION_FAILED');
+        return new Uint8Array(result);
+      } catch { fail('OPERATION_FAILED'); }
+    };
+    return { ok: true, value: Object.freeze({ keyId, keyVersion, trustDomain, algorithm, keyBits, [operation]: call }) };
+  } catch (error) {
+    return { ok: false, code: error instanceof BaseFailure && ['KEY_REJECTED', 'CAPABILITY_UNAVAILABLE'].includes(error.code) ? error.code : 'OPERATION_FAILED' };
+  }
+}
+export function createEcdsaP256Signer(options) { return asymmetricCapability(options, 'sign', 'ecdsa-p256-sha256'); }
+export function createEcdsaP256Verifier(options) { return asymmetricCapability(options, 'verify', 'ecdsa-p256-sha256'); }
+export function createRsaV15Signer(options) { return asymmetricCapability(options, 'sign', 'rsa-v1_5-sha256'); }
+export function createRsaV15Verifier(options) { return asymmetricCapability(options, 'verify', 'rsa-v1_5-sha256'); }

@@ -1,4 +1,6 @@
 /** Bounded RFC 8941/9421 signature-envelope subset. No host or crypto access. */
+import { signatureByteCeiling } from './algorithms.js';
+export { signatureByteCeiling } from './algorithms.js';
 export const signatureFieldLimits = Object.freeze({
   envelopeFieldBytes: 16384, instancesPerName: 16, signatures: 8,
   components: 32, componentParameters: 5, signatureParameters: 6,
@@ -48,7 +50,7 @@ class Budget {
         for (const key of Reflect.ownKeys(overrides)) {
           if (!Object.hasOwn(signatureFieldLimits, key)) fail();
           const value = own(overrides, key);
-          if (!Number.isSafeInteger(value) || value < 1 || value > signatureFieldLimits[key]) fail();
+          if (!Number.isSafeInteger(value) || value < 1 || value > (key === 'signatureBytes' ? signatureByteCeiling : signatureFieldLimits[key])) fail();
           this.limits[key] = value;
         }
       }

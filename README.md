@@ -2,7 +2,8 @@
 
 **Experimental, private JavaScript reference. Not a supported or published package.**
 
-This repository investigates a bounded HMAC-SHA256 profile of RFC 9421. HMS-00
+This repository investigates bounded HMAC-SHA256, P-256/SHA-256 and RSA v1.5/SHA-256
+profiles of RFC 9421. HMS-00
 recovers the original spike without changing its source or six tests. Passing
 those tests does not establish full RFC conformance, production security, or
 Pulse Native support.
@@ -86,8 +87,11 @@ The [HMS-05 content/replay API](docs/content-integrity.md) adds exact body diges
 verification, a `/content-digest` generation helper, and atomic host replay hooks.
 Run `node examples/webhook.mjs` for both original request/response profiles.
 Required capabilities fail closed; excluded modes remain explicitly not checked.
-See the [HMS-05 receipt](docs/hms-05.md). Next: **HMS-06 algorithm interoperability**
-and **HMS-07 Pulse integration investigation**. Native work is
+See the [HMS-05 receipt](docs/hms-05.md). The [HMS-06 algorithm matrix](docs/algorithms.md)
+adds explicit P-256 and RSA v1.5 adapters, fixed-size profiles and RFC/OpenSSL
+interoperability evidence. Run `node examples/asymmetric.mjs` and
+`npm run check:interop` (development-only OpenSSL 3 CLI required for the latter).
+See the [HMS-06 receipt](docs/hms-06.md). Next: **HMS-07 Pulse integration investigation**. Native work is
 conditional on a later integration investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),

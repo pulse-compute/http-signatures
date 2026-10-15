@@ -17,14 +17,14 @@ assert.deepEqual(Object.keys(api).sort(), [
 for (const value of Object.values(api)) assert.equal(typeof value, 'function');
 assert.deepEqual(Object.keys(fields).sort(), ['parseSignature', 'parseSignatureInput',
   'parseSignatureEnvelope', 'serializeSignature', 'serializeSignatureInput',
-  'serializeSignatureParameters', 'signatureFieldLimits'].sort());
+  'serializeSignatureParameters', 'signatureFieldLimits', 'signatureByteCeiling'].sort());
 assert.ok(Object.isFrozen(fields.signatureFieldLimits));
-for (const [key, fn] of Object.entries(fields)) if (key !== 'signatureFieldLimits') assert.equal(typeof fn, 'function');
+for (const [key, fn] of Object.entries(fields)) if (!['signatureFieldLimits', 'signatureByteCeiling'].includes(key)) assert.equal(typeof fn, 'function');
 assert.deepEqual(Object.keys(base).sort(), ['createSignatureBase', 'signatureBaseLimits']);
 assert.equal(typeof base.createSignatureBase, 'function');
 assert.ok(Object.isFrozen(base.signatureBaseLimits));
 assert.deepEqual(Object.keys(protocol).sort(), ['sign', 'verify']);
-assert.deepEqual(Object.keys(webcrypto).sort(), ['createHmacSigner', 'createHmacVerifier', 'createSha256Digest']);
+assert.deepEqual(Object.keys(webcrypto).sort(), ['createEcdsaP256Signer', 'createEcdsaP256Verifier', 'createHmacSigner', 'createHmacVerifier', 'createRsaV15Signer', 'createRsaV15Verifier', 'createSha256Digest']);
 assert.deepEqual(Object.keys(digest), ['createContentDigest']);
 for (const value of [...Object.values(digest), ...Object.values(protocol), ...Object.values(webcrypto)]) assert.equal(typeof value, 'function');
 console.log('Original root, fields, base, protocol, content digest and explicit Web Crypto exports resolve; private guard retained.');

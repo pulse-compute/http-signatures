@@ -1,4 +1,4 @@
-# Explicit HMAC operations (HMS-04–05)
+# Explicit signature operations (HMS-04–06)
 
 Experimental Node 24.19.0 reference API. Import `sign` and `verify` from
 `@pulse-compute/http-signatures/protocol`. Both are async and return exactly
@@ -30,8 +30,9 @@ The [contract types](contract/types.ts) define the records; they are not an
 exported declaration bundle. Inputs are closed records: unknown members fail.
 The [base API](signature-base.md) defines authoritative snapshots, descriptor
 support and exact byte construction. Profile limits are all required, positive
-safe integers no larger than `signatureBaseLimits`; `signatureBytes` is exactly
-32. A single logical work budget covers policy, envelope parsing, base building
+safe integers no larger than `signatureBaseLimits`, except the explicitly
+configurable signature capacity. `signatureBytes` is exactly 32 for HMAC, 64 for
+P-256, or 256/384/512 for RSA-2048/3072/4096. See the [algorithm matrix](algorithms.md). A single logical work budget covers policy, envelope parsing, base building
 and serialization. Crypto/host work and elapsed time are outside that counter.
 
 Signing validates caller-ordered components and metadata, then returns
@@ -50,9 +51,11 @@ algorithm, copied covered descriptors, and explicit body/replay outcomes.
 
 ## Enforced profile
 
-- Only `hmac-sha256`, with a 32-byte signature and a key capability attesting at
-  least 256 key bits. The backend owns the actual key and constant-time MAC
-  comparison; JS identity checks cannot validate backend honesty.
+- Exactly one locally configured algorithm: `hmac-sha256`,
+  `ecdsa-p256-sha256`, or `rsa-v1_5-sha256`, with an exact signature size
+  matching its key capability. No negotiation list, key-size fallback or
+  incoming-algorithm selection. The backend owns keys and cryptographic
+  validation; JS identity checks cannot validate backend honesty.
 - One fixed label, nonempty profile/tag/resolver/domain identities, and 1–32
   distinct locally accepted key IDs. Metadata strings follow the configured
   bounds. The local allowlist is checked before any resolver invocation.
@@ -72,8 +75,8 @@ algorithm, copied covered descriptors, and explicit body/replay outcomes.
   N <= E+S. Boundaries are inclusive; unsafe arithmetic fails. L <= A.
 
 HMS-05 implements required body/replay modes through explicit digest and replay
-capabilities. Body-required signing checks the existing header before MAC;
-verification checks it against captured content bytes after MAC. Replay-required
+capabilities. Body-required signing checks the existing header before signing;
+verification checks it against captured content bytes after signature verification. Replay-required
 verification consumes once after every other check, with inclusive retention
 through `min(created+maxAge, expires if present)+skew`. Success reports
 `bodyIntegrity:'verified'` / `replay:'consumed'` only for completed required
@@ -90,15 +93,15 @@ serialization and output capacity are preflighted before crypto. Required target
 availability can fail during context checks; signer identity can fail during
 initial capability validation. Limits can terminate any phase. Body bytes are
 bounded and copied before the first callback for body-required profiles; digest
-parsing/hashing follows MAC validation on verification. Replay is the final
+parsing/hashing follows signature validation on verification. Replay is the final
 operation, with no remaining limit checks or fallible body work after consumption.
 
 Successful sign invokes clock once and signer once. Successful verify invokes
 clock once, the configured resolver once with `{keyId,algorithm,trustDomain,
 profileId}`, and its returned verifier once. Null resolver output is rejected.
-Key ID, algorithm and trust domain must match; keyVersion is nonempty. No retry,
+Key ID, algorithm, signature width and trust domain must match; keyVersion is nonempty. No retry,
 network key discovery or alternate backend is built in. Required digest and
-replay callbacks each run at most once; no digest runs after an invalid MAC and
+replay callbacks each run at most once; no digest runs after an invalid signature and
 no nonce is consumed after invalid content. Values used after a
 callback or await are owned/captured first; the host must still supply a stable
 snapshot during synchronous validation. Getters/proxies are not a trusted
@@ -108,14 +111,14 @@ adapter interface.
 |---|---|
 | Invalid trusted configuration | PROFILE_INVALID (capacity violations may be LIMIT_EXCEEDED) |
 | Absent complete envelope or selected label | SIGNATURE_NOT_FOUND |
-| Broken envelope or wrong selected MAC length | MALFORMED_SIGNATURE (oversize may hit LIMIT_EXCEEDED) |
+| Broken envelope or wrong selected signature length | MALFORMED_SIGNATURE (oversize may hit LIMIT_EXCEEDED) |
 | Unsupported algorithm / component | UNSUPPORTED_ALGORITHM / UNSUPPORTED_COMPONENT |
 | Wrong context / insufficient full-descriptor coverage | CONTEXT_MISMATCH / COVERAGE_REQUIRED |
 | Missing or mismatched required metadata / invalid time | METADATA_REQUIRED / TIME_INVALID |
 | Missing authority / known absent component | COMPONENT_UNAVAILABLE / COMPONENT_MISSING |
 | Missing required capability | CAPABILITY_UNAVAILABLE |
 | Unapproved or mismatched key capability | KEY_REJECTED |
-| MAC backend returns false | SIGNATURE_INVALID |
+| Signature backend returns false | SIGNATURE_INVALID |
 | Invalid/mismatched required digest | BODY_DIGEST_INVALID |
 | Replay store returns false | REPLAY_REJECTED |
 | Backend throws, returns wrong shape, or clock is invalid | OPERATION_FAILED |
@@ -150,3 +153,9 @@ Fastly, Pulse Native or other host qualification follows from Node tests.
 
 `/webcrypto` also exports `createSha256Digest({subtle})`, returning an explicit
 SHA-256 capability bounded to 1 MiB per invocation. See the content API.
+
+HMS-06 adds `createEcdsaP256Signer` / `createEcdsaP256Verifier` and
+`createRsaV15Signer` / `createRsaV15Verifier` on the same entry point. They use
+the same explicit binding record and fixed failure contract, with private signing
+keys and public verification keys. See [exact primitive/key contracts and
+interoperability evidence](algorithms.md); run `node examples/asymmetric.mjs`.

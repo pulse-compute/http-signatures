@@ -5,7 +5,7 @@ import { normalizeAuthority } from './target.js';
 import { digestCapability } from './content-integrity.js';
 import { signatureFieldLimits } from './signature-fields.js';
 
-export const ALGORITHM = 'hmac-sha256';
+import { validSignatureSize, keySignatureSize } from './algorithms.js';
 export const MAX_TIMESTAMP = 999999999999999;
 export function fieldOperation(fn, value, b) {
   if (b.used === b.limits.workUnits) fail('LIMIT_EXCEEDED');
@@ -56,7 +56,6 @@ export function validateProfile(input) {
       'allowedAlgorithms', 'keyPolicy', 'time', 'requiredTag', 'body', 'replay', 'limits']);
     if (input.contractVersion !== 1) fail();
     record(input.limits, Object.keys(signatureBaseLimits));
-    if (input.limits.signatureBytes !== 32) fail();
     b = new Budget({ limits: input.limits, structuredFields: input.structuredFields });
     nonempty(input.id, b); nonempty(input.requiredTag, b);
     ascii(input.label, b.limits.labelBytes, b, /^[a-z*][a-z0-9_.*-]*$/);
@@ -68,7 +67,8 @@ export function validateProfile(input) {
       scheme: 'https', authority: normalizeAuthority(ctx.authority, 'https', b) };
     if (!Array.isArray(input.allowedAlgorithms) || input.allowedAlgorithms.length !== 1) fail();
     array(input.allowedAlgorithms, 1, b);
-    if (input.allowedAlgorithms[0] !== ALGORITHM) fail();
+    const algorithm = input.allowedAlgorithms[0], signatureBytes = input.limits.signatureBytes;
+    if (!validSignatureSize(algorithm, signatureBytes)) fail();
     record(input.keyPolicy, ['resolverId', 'acceptedKeyIds']); nonempty(input.keyPolicy.resolverId, b);
     array(input.keyPolicy.acceptedKeyIds, 32, b); if (!input.keyPolicy.acceptedKeyIds.length) fail();
     const keys = new Set();
@@ -96,7 +96,7 @@ export function validateProfile(input) {
       parameters: context.kind === 'response' && name !== '@status' ? [{ name: 'req', value: true }] : [] }));
     if (input.body.mode === 'required') required.push({ kind: 'field', name: 'content-digest', parameters: [] });
     coverage(required, value.components, b);
-    return { b, profile: { id: input.id, label: input.label, context, requiredTag: input.requiredTag,
+    return { b, profile: { algorithm, signatureBytes, id: input.id, label: input.label, context, requiredTag: input.requiredTag,
       requiredComponents: copyMember(value, b).components, acceptedKeyIds: keys, resolverId: input.keyPolicy.resolverId,
       time: { ...t }, bodyMode: input.body.mode, replayMode: input.replay.mode,
       replayNamespace: input.replay.namespace } };
@@ -109,11 +109,12 @@ export function keyCapability(cap, operation, b) {
   try {
     record(cap, ['keyId', 'algorithm', 'trustDomain', 'keyVersion', 'keyBits', operation]);
     for (const name of ['keyId', 'trustDomain', 'keyVersion']) nonempty(cap[name], b);
-    if (cap.algorithm !== ALGORITHM || !Number.isSafeInteger(cap.keyBits) || cap.keyBits < 256) fail();
+    const signatureBytes = keySignatureSize(cap.algorithm, cap.keyBits);
+    if (signatureBytes === undefined) fail();
     if (typeof cap[operation] !== 'function') fail('CAPABILITY_UNAVAILABLE');
     // Capture metadata and callback identity before any subsequent callback/await.
     return { keyId: cap.keyId, algorithm: cap.algorithm, trustDomain: cap.trustDomain,
-      keyVersion: cap.keyVersion, keyBits: cap.keyBits, call: cap[operation].bind(cap) };
+      keyVersion: cap.keyVersion, keyBits: cap.keyBits, signatureBytes, call: cap[operation].bind(cap) };
   } catch (error) {
     if (error instanceof BaseFailure && ['LIMIT_EXCEEDED', 'CAPABILITY_UNAVAILABLE'].includes(error.code)) throw error;
     fail('KEY_REJECTED');

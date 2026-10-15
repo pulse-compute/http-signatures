@@ -1,0 +1,54 @@
+{
+  "runtime": "v24.19.0",
+  "scope": "Logical package work; not CPU, heap, RSS, backend or store bounds",
+  "measurements": [
+    {
+      "signatureBytes": 64,
+      "labels": 8,
+      "decodedSignatureBytes": 512,
+      "signatureFieldBytes": 758,
+      "serializeWorkUnits": 2084,
+      "parseEnvelopeWorkUnits": 50152
+    },
+    {
+      "signatureBytes": 256,
+      "labels": 8,
+      "decodedSignatureBytes": 2048,
+      "signatureFieldBytes": 2806,
+      "serializeWorkUnits": 7716,
+      "parseEnvelopeWorkUnits": 197096
+    },
+    {
+      "signatureBytes": 384,
+      "labels": 8,
+      "decodedSignatureBytes": 3072,
+      "signatureFieldBytes": 4150,
+      "serializeWorkUnits": 11428,
+      "parseEnvelopeWorkUnits": 294568
+    },
+    {
+      "signatureBytes": 512,
+      "labels": 8,
+      "decodedSignatureBytes": 4096,
+      "signatureFieldBytes": 5526,
+      "serializeWorkUnits": 15204,
+      "parseEnvelopeWorkUnits": 392776
+    }
+  ],
+  "protocol": [
+    {
+      "algorithm": "ecdsa-p256-sha256",
+      "minimumProtocolWorkUnits": {
+        "sign": 10212,
+        "verify": 15793
+      }
+    },
+    {
+      "algorithm": "rsa-v1_5-sha256",
+      "minimumProtocolWorkUnits": {
+        "sign": 11966,
+        "verify": 34891
+      }
+    }
+  ]
+}

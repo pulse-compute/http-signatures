@@ -14,6 +14,7 @@ HMS-01 defines the profile contract. HMS-02 adds an isolated fields API and
 HMS-03 adds a separate authoritative base API. The original signer/verifier and
 root API are unchanged. HMS-04 adds `/protocol` and explicit `/webcrypto`;
 HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
+HMS-06 adds the [algorithm/key/interop matrix](../algorithms.md).
 
 | Feature | Current runtime status | Evidence / remaining implementation |
 |---|---|---|
@@ -30,9 +31,10 @@ HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
 | Bounded signature dictionaries, ordered typed parameters and byte sequences | supported via `/fields` | HMS-02 exact B.2.5, 57 adapted HTTPWG cases and local syntax/limit tests |
 | Complete envelope label agreement and duplicate rejection | supported via `/fields` | All labels validated; no union/fallback; independent of old verifier |
 | Unrestricted RFC 8941 / all RFC metadata | unsupported | `/fields` remains signature-specific; `/base` has broader internal grammar with explicit count and duplicate restrictions; RFC 9651 forms excluded |
-| RSA, ECDSA, Ed25519 sign or verify | unsupported | HMS-06 primitive and vector gates |
-| Message/result/profile API and explicit capabilities | supported HMAC profile via `/protocol` | Explicit required/excluded body and required/none replay modes; exact coverage, scoped keys, bounded work and fixed failures |
-| Mandatory alg/tag, skew, scoped resolver and 256-bit minimum | supported via `/protocol` | Tamper, time boundaries, resolver scoping and invalid backend tests |
+| P-256/SHA-256 and RSA v1.5/SHA-256 sign/verify | supported via explicit `/protocol` and `/webcrypto` | HMS-06 fixed key/size contracts, RFC P-256 vector, two-way classic Node and OpenSSL CLI checks |
+| RSA-PSS/SHA-512, Ed25519, P-384/SHA-384 | unsupported in package | PSS/Ed25519 published vectors verified externally for assessment only; no package adapter or profile |
+| Message/result/profile API and explicit capabilities | supported fixed-algorithm profiles via `/protocol` | Explicit required/excluded body and required/none replay modes; exact coverage, scoped keys, bounded work and fixed failures |
+| Mandatory alg/tag, skew, scoped resolver and algorithm-specific key size | supported via `/protocol` | Tamper, time boundaries, resolver scoping and invalid backend tests |
 | Content-Digest body computation/verification | supported SHA-256 subset | HMS-05 exact RFC vectors, header dictionary checks, signed coverage and actual bounded content hash |
 | Replay enforcement hook | supported with host-owned atomic store | HMS-05 ordering, scoped tuple, inclusive retention, concurrency and store failure tests; no package registry or production store adapter |
 | Associated-request component binding | supported via `/base` | Exact §2.4; all request-derived components with req; HMS-04 response target/coverage/domain enforcement; HMS-05 verifies response content independently of request content |
@@ -46,7 +48,7 @@ HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
 | Node JS 24.19.0, old spike API | supported reference | Six recovered tests plus boundary observations; no production security qualification |
 | Node JS 24.19.0, `/fields` API | supported experimental subset | HMS-02 tests and logical-work counters; no host/crypto policy |
 | Node JS 24.19.0, `/base` API | supported experimental subset | HMS-03 exact byte/corpus/negative tests and logical-work counters; no adapter provenance proof |
-| Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental HMAC subset | HMS-04–05 tests, RFC B.2.5 and RFC 9530 digest vectors; no host provenance or production replay-store qualification |
+| Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental fixed-algorithm subset | HMS-04–06 tests, RFC B.2.4/B.2.5, OpenSSL CLI and RFC 9530 digest vectors; no host provenance or production replay-store qualification |
 | Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
 | Node Native | unavailable realization | No approved lowerer or host bridge |
 | Fastly Native / Viceroy | unavailable realization | No compile, local host or deployed receipt |
@@ -59,7 +61,7 @@ HMS-05 adds bounded SHA-256 content integrity and explicit replay hooks.
 | Component sources, descriptors and exact base | Package HMS-03 implemented; host adapter qualification remains open |
 | Capability crypto/key policy and result API | Package/backend, HMS-04 implemented; see `../protocol.md` |
 | Content and nonce/replay enforcement | Package HMS-05 implemented; host body capture and atomic durable store qualification remain external |
-| Additional algorithms | Crypto primitive owner and package, HMS-06 |
+| Additional algorithms | Package HMS-06 implemented P-256/RSA v1.5; other algorithms remain separate primitive-owner gates |
 | Host authority, opaque key handles and Native fit | Pulse contract owners, read-only investigation in HMS-07 |
 | Trusted lowering authority / ABI/provider modifications | Human architectural approval before HMS-08, separate Pulse PRs |
 

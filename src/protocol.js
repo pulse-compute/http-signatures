@@ -1,10 +1,10 @@
-/** Experimental HMAC profile. All authority, clock and crypto are explicit. */
+/** Experimental fixed-algorithm profile. All authority, clock and crypto are explicit. */
 import { snapshot, buildBase } from './base-engine.js';
 import { BaseFailure, fail, record, need } from './base-support.js';
 import { checkBody } from './content-integrity.js';
 import { normalizeAuthority } from './target.js';
 import { parseSignatureEnvelope, serializeSignatureInput, serializeSignature } from './signature-fields.js';
-import { ALGORITHM, MAX_TIMESTAMP, validateProfile, capabilities, keyCapability,
+import { MAX_TIMESTAMP, validateProfile, capabilities, keyCapability,
   fieldOperation, copyMember, supported, coverage } from './profile.js';
 
 function context(current, p, b) {
@@ -58,12 +58,12 @@ function metadata(value, p, clock, b) {
 }
 function matchKey(key, keyId, p, b) {
   b.spend(keyId.length * 2 + key.keyId.length + key.algorithm.length + key.trustDomain.length + p.context.trustDomain.length);
-  if (!p.acceptedKeyIds.has(keyId) || key.keyId !== keyId || key.algorithm !== ALGORITHM || key.trustDomain !== p.context.trustDomain) fail('KEY_REJECTED');
+  if (!p.acceptedKeyIds.has(keyId) || key.keyId !== keyId || key.algorithm !== p.algorithm || key.signatureBytes !== p.signatureBytes || key.trustDomain !== p.context.trustDomain) fail('KEY_REJECTED');
 }
 function validateSelected(current, value, p, b) {
-  b.spend(value.parameters.length + 13);
+  b.spend(value.parameters.length + p.algorithm.length + 2);
   const alg = value.parameters.find(p => p.name === 'alg');
-  if (alg && alg.value !== ALGORITHM) fail('UNSUPPORTED_ALGORITHM');
+  if (alg && alg.value !== p.algorithm) fail('UNSUPPORTED_ALGORITHM');
   supported(value.components, current.kind, b.types, b);
   context(current, p, b); coverage(p.requiredComponents, value.components, b);
 }
@@ -92,18 +92,18 @@ export async function sign(message, options) {
     const { meta } = metadata(value, p, caps.clock, b), base = buildBase(current, value, b);
     matchKey(caps.signer, meta.get('keyid'), p, b);
     const signatureInput = fieldOperation(serializeSignatureInput, [{ label: p.label, ...value }], b).value;
-    b.spend(32);
-    const template = fieldOperation(serializeSignature, [{ label: p.label, signature: new Uint8Array(32) }], b);
+    b.spend(p.signatureBytes);
+    const template = fieldOperation(serializeSignature, [{ label: p.label, signature: new Uint8Array(p.signatureBytes) }], b);
     // Reserve the exact second serialization cost and result copy before crypto.
-    // HMAC's output size is fixed; all values take the same writer path.
-    b.spend(template.workUnits + 32);
+    // The profile fixes output size; all values take the same writer path.
+    b.spend(template.workUnits + p.signatureBytes);
     if (signatureInput.length > b.limits.fieldValueBytes || template.value.length > b.limits.fieldValueBytes ||
         b.fields + 2 > b.limits.fieldCount || b.fieldBytes + 24 + signatureInput.length + template.value.length > b.limits.totalFieldBytes) fail('LIMIT_EXCEEDED');
     if (p.bodyMode === 'required') await checkBody(current, b, caps.digest);
     const output = await invoke(caps.signer.call, base);
-    if (!(output instanceof Uint8Array) || output.length !== 32) fail('OPERATION_FAILED');
+    if (!(output instanceof Uint8Array) || output.length !== p.signatureBytes) fail('OPERATION_FAILED');
     const signature = serializeSignature([{ label: p.label, signature: new Uint8Array(output) }],
-      { limits: { envelopeFieldBytes: b.limits.envelopeFieldBytes, labelBytes: b.limits.labelBytes, workUnits: template.workUnits } });
+      { limits: { envelopeFieldBytes: b.limits.envelopeFieldBytes, labelBytes: b.limits.labelBytes, signatureBytes: p.signatureBytes, workUnits: template.workUnits } });
     if (!signature.ok || signature.workUnits !== template.workUnits) fail('OPERATION_FAILED');
     return { ok: true, value: { signatureInput, signature: signature.value } };
   } catch (error) { return failure(error); }
@@ -117,7 +117,7 @@ export async function verify(message, options) {
     const input = envelope.inputs.find(e => e.label === p.label);
     if (!input) fail('SIGNATURE_NOT_FOUND');
     const signature = envelope.signatures.find(e => e.label === p.label).signature;
-    if (signature.length !== 32) fail('MALFORMED_SIGNATURE');
+    if (signature.length !== p.signatureBytes) fail('MALFORMED_SIGNATURE');
     const value = { components: input.components, parameters: input.parameters };
     validateSelected(current, value, p, b);
     const { meta, retainUntilSeconds } = metadata(value, p, caps.clock, b), base = buildBase(current, value, b), keyId = meta.get('keyid');
@@ -132,7 +132,7 @@ export async function verify(message, options) {
       replayEntry = { namespace: p.replayNamespace, profileId: p.id, trustDomain: p.context.trustDomain,
         keyId, nonce: meta.get('nonce'), retainUntilSeconds };
     }
-    const capability = await invoke(caps.resolve, { keyId, algorithm: ALGORITHM, trustDomain: p.context.trustDomain, profileId: p.id });
+    const capability = await invoke(caps.resolve, { keyId, algorithm: p.algorithm, trustDomain: p.context.trustDomain, profileId: p.id });
     if (capability === null) fail('KEY_REJECTED');
     const key = keyCapability(capability, 'verify', b); matchKey(key, keyId, p, b);
     const valid = await invoke(key.call, base, signature);
@@ -145,7 +145,7 @@ export async function verify(message, options) {
       if (!consumed) fail('REPLAY_REJECTED');
     }
     return { ok: true, value: { contextId: current.contextId, profileId: p.id, label: p.label,
-      keyId, keyVersion: key.keyVersion, algorithm: ALGORITHM, covered,
+      keyId, keyVersion: key.keyVersion, algorithm: p.algorithm, covered,
       bodyIntegrity: p.bodyMode === 'required' ? 'verified' : 'not-checked',
       replay: p.replayMode === 'required' ? 'consumed' : 'not-checked' } };
   } catch (error) { return failure(error); }

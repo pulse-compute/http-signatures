@@ -2,11 +2,11 @@
 
 The types in [types.ts](types.ts) describe the reference API. Structural types are
 not validators or proof of trust. Every limit and semantic rule below must be
-enforced by the new HMAC protocol API within its documented subset. The current spike does not
+enforced by the new fixed-algorithm protocol API within its documented subset. The current spike does not
 implement this contract. The separate [HMS-03 base primitive](../signature-base.md)
 implements snapshot validation and canonicalization; the full policy operation
 ordering below describes the full HMS-04–05 contract. The
-[HMS-04 implementation](../protocol.md) enforces the HMAC subset and documents
+[HMS-04–06 implementation](../protocol.md) enforces the declared algorithm subset and documents
 phase refinements; [HMS-05](../content-integrity.md) adds required body/replay
 checks and the bounded digest generation helper.
 
@@ -103,7 +103,7 @@ not include it. Signing `signature` or `signature-input` fields is outside v1.
 ## Explicit operations
 
 `Protocol.sign(message, options)` and `Protocol.verify(message, options)` are
-implemented as named `sign` and `verify` exports from `/protocol` in HMS-04–05. There is no implicit crypto, clock,
+implemented as named `sign` and `verify` exports from `/protocol` in HMS-04–06. There is no implicit crypto, clock,
 key resolver, profile, signature label, algorithm or backend fallback.
 
 Signing receives ordered `covered` and ordered `parameters` plus one bound
@@ -116,7 +116,8 @@ silently replace a digest or mutate the message. A digest-generation helper is
 available through `/content-digest` in HMS-05.
 
 Capability results are bounded and checked before use: HMAC signatures and
-sha-256 digests must be exactly 32 bytes, verify/consume results must be booleans,
+sha-256 digests must be exactly 32 bytes; asymmetric signatures must have the
+exact configured [algorithm width](../algorithms.md). Verify/consume results must be booleans,
 and the clock must return a valid timestamp. Invalid backend results yield
 `OPERATION_FAILED`; they never trigger another implementation or a retry.
 
