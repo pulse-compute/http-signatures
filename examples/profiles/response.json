@@ -31,7 +31,9 @@
     "signatureBaseBytes": 65536,
     "signatureBytes": 32,
     "bodyBytes": 65536,
-    "workUnits": 2097152
+    "workUnits": 2097152,
+    "structuredMembers": 128,
+    "structuredParameters": 32
   },
   "id": "webhook-response-v1",
   "label": "receipt",
@@ -98,5 +100,6 @@
   "requiredTag": "example-webhook-response-v1",
   "replay": {
     "mode": "none"
-  }
+  },
+  "structuredFields": {}
 }

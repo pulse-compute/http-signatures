@@ -43,6 +43,15 @@ the low-level fields primitive has bounded defaults and optional lower ceilings.
 
 ## Enforcement contract for later tickets
 
+HMS-03's `/base` now enforces the snapshot field/count/target/base/body-length
+ceilings above, together with HMS-02 descriptor limits and shared work charging.
+It adds **128 SF members/items per list** and **32 parameters per SF item or inner
+list**, reflected in the design types/examples. These deliberately bounded
+capacities do not establish generic RFC 8941 parser conformance. See
+[the base API](../signature-base.md) and [HMS-03 work measurements](../evidence/hms-03-work.json).
+Body bytes are only length-checked here; digest/replay handling remains future.
+No body allocation or scan is performed by `/base`.
+
 Profiles explicitly supply every ceiling (see the two JSON examples). Accept
 positive safe integers at or below the table; a smaller ceiling is allowed, but
 an empty/zero work budget is invalid. Algorithm-fixed sizes remain exact.

@@ -3,7 +3,9 @@
 The types in [types.ts](types.ts) describe the future API. Structural types are
 not validators or proof of trust. Every limit and semantic rule below must be
 enforced at runtime when that API is implemented. The current spike does not
-implement this contract.
+implement this contract. The separate [HMS-03 base primitive](../signature-base.md)
+implements snapshot validation and canonicalization; the full policy operation
+ordering below remains an HMS-04–05 implementation contract.
 
 ## One authoritative snapshot
 
@@ -20,7 +22,7 @@ do not prevent byte-array mutation.
 | `direction`, `trustDomain` | Trusted adapter configuration, not request headers |
 | `headers`, `trailers` | Separate ordered field instances, preserving repeated names and value bytes; no lossy dictionary or pre-joining |
 | `Field.name` | Valid HTTP field-name token; normalize ASCII case only; reject pseudo-fields here |
-| `Field.value` | Exact exposed field-value bytes, excluding framing/CRLF; initial profile accepts ASCII with HTTP OWS handled by canonicalization |
+| `Field.value` | Exact exposed field-value bytes, excluding field-line framing; retained HTTP/1 obs-fold is unfolded, other CR/LF rejected. Ordinary components require ASCII; `bs` preserves obs-text octets. |
 | Request `method` | Case-sensitive authoritative method token; no automatic uppercasing |
 | Request `target.original` | Original request-target form and bytes, or explicit unavailability; HTTP/2/3 adapters document the exact pseudo-header representation |
 | Target URI and parts | Authoritative RFC component source values, including original percent encoding and query ordering; never reparsed through a normalizing URL API to manufacture lost values |
@@ -51,6 +53,12 @@ The application composition root owns adapter installation. A caller-set
 A future Pulse boundary must enforce this separately; these types grant no
 Native capability.
 
+HMS-03 representation refinement: `target.query` is empty for absent or begins
+with `?` for present, while `target.path` excludes the query. The URI spelling is
+preserved; separate scheme/authority/path components apply their defined RFC
+normalizations. Components require their explicit source; no unavailable part
+is reconstructed from another source. See the base API for target-form limits.
+
 ## Covered component descriptors
 
 Components are ordered discriminated records, not strings containing `;req` or
@@ -70,6 +78,11 @@ combinations fail; never strip a parameter to make a descriptor work.
 | Query parameter | Derived `@query-param` with exactly one `name` string; decoding rules belong to HMS-03 |
 | Response status | Derived `@status`; response context only, never `req` |
 | Request-derived value | Method/URI/parts on request; response requires `req=true` and retained request |
+
+The Profile's `structuredFields` map supplies the application-known RFC 8941
+type (`item`, `list`, `dictionary`) for `sf`/`key`; an empty map enables neither.
+This is schema data, not a hook for replacing canonicalization. Both peers must
+use the same schema. The bounded parser rejects duplicate keys/parameters.
 
 `name` is only valid for `@query-param`. `sf`, `key`, `bs`, `tr` are field-only.
 `req` is valid only in a response, on a request-applicable component. Modeling

@@ -6,7 +6,8 @@
   "description": "Experimental bounded RFC 9421 HTTP Message Signatures protocol package (JS reference)",
   "exports": {
     ".": "./src/index.js",
-    "./fields": "./src/signature-fields.js"
+    "./fields": "./src/signature-fields.js",
+    "./base": "./src/signature-base.js"
   },
   "scripts": {
     "test": "node --test test/*.test.js",

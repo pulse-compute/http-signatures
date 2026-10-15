@@ -1,0 +1,90 @@
+{
+  "runtime": "v24.19.0",
+  "kind": "logical package work; not CPU, heap or RSS bounds",
+  "measurements": [
+    {
+      "name": "B.2.1",
+      "ok": true,
+      "workUnits": 1990,
+      "outputBytes": 98
+    },
+    {
+      "name": "B.2.2",
+      "ok": true,
+      "workUnits": 6323,
+      "outputBytes": 317
+    },
+    {
+      "name": "B.2.3",
+      "ok": true,
+      "workUnits": 6923,
+      "outputBytes": 458
+    },
+    {
+      "name": "B.2.4",
+      "ok": true,
+      "workUnits": 5352,
+      "outputBytes": 312
+    },
+    {
+      "name": "B.2.5",
+      "ok": true,
+      "workUnits": 3662,
+      "outputBytes": 200
+    },
+    {
+      "name": "B.2.6",
+      "ok": true,
+      "workUnits": 5258,
+      "outputBytes": 284
+    },
+    {
+      "name": "128 fields; 32 covered; index once",
+      "ok": true,
+      "workUnits": 558434,
+      "outputBytes": 32450
+    },
+    {
+      "name": "65,536-byte base",
+      "ok": true,
+      "workUnits": 526036,
+      "outputBytes": 65536
+    },
+    {
+      "name": "65,537-byte base rejected",
+      "ok": false,
+      "workUnits": 394953,
+      "code": "LIMIT_EXCEEDED"
+    },
+    {
+      "name": "form UTF-8 replacement expansion",
+      "ok": true,
+      "workUnits": 227206,
+      "outputBytes": 9072
+    },
+    {
+      "name": "128 SF members; 16 items each",
+      "ok": true,
+      "workUnits": 95882,
+      "outputBytes": 5046
+    },
+    {
+      "name": "same SF field with 32 selected members shares work ceiling",
+      "ok": true,
+      "workUnits": 1948592,
+      "outputBytes": 2018
+    },
+    {
+      "name": "same SF workload; lowered work ceiling rejects",
+      "ok": false,
+      "workUnits": 1000000,
+      "code": "LIMIT_EXCEEDED"
+    },
+    {
+      "name": "response and associated request",
+      "ok": true,
+      "workUnits": 5470,
+      "outputBytes": 223
+    }
+  ]
+}
