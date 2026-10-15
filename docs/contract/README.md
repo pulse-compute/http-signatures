@@ -4,7 +4,9 @@
 freezes the workstream's intended data model and semantics. It does not add a
 runtime API, npm types, a host adapter, or supported-package status. Changes to
 this contract must explain compatibility and update the examples and matrix.
-The four existing exports remain the HMS-00 spike API.
+The four existing root exports remain the HMS-00 spike API. The separately
+implemented [HMS-02 fields API](../signature-fields.md) provides syntax operations
+only; `Protocol.sign` and `Protocol.verify` are still future work.
 
 Start with the [input and operation contract](protocol.md), then the
 [security profile and threat model](security.md). The

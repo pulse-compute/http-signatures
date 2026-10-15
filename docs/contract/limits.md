@@ -32,6 +32,15 @@ measurement establishes acceptance boundaries only; it does not show bounded
 peak allocation, runtime under hostile input, or safe concurrency. In particular,
 the spike can allocate before checking limits and can scan unused headers.
 
+## HMS-02 implementation status
+
+The isolated `/fields` API now enforces the envelope-specific ceilings and a
+shared logical-work budget. It does not enforce body/target/total-message limits,
+which require later integration. [API limits](../signature-fields.md) and
+[work measurements](../evidence/hms-02-work.json) distinguish current behavior
+from the unchanged spike observations above. The full Profile remains explicit;
+the low-level fields primitive has bounded defaults and optional lower ceilings.
+
 ## Enforcement contract for later tickets
 
 Profiles explicitly supply every ceiling (see the two JSON examples). Accept
