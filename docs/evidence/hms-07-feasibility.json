@@ -1,0 +1,256 @@
+{
+  "version": "hms07.feasibility.v1",
+  "pulseCommit": "e6a78640928a93f0e41813f55d9847895ea9be41",
+  "packageBaseCommit": "7d7826468ecf46f2f2de35cf03bd48b252cd573e",
+  "runtime": "v24.19.0",
+  "toolchain": {
+    "assemblyscript": "0.28.18",
+    "binaryen": "129.0.0-nightly.20260428",
+    "long": "5.3.2",
+    "typescript": "5.9.3"
+  },
+  "pulseSourceFilesVerified": 332,
+  "wasm": {
+    "bytes": 8535,
+    "sha256": "e5d7d3c12a743c97877a814df33d22dfdbe6564d606497c05b9761421877fb71",
+    "recipe": [
+      "--runtime",
+      "incremental",
+      "--exportRuntime",
+      "--optimizeLevel",
+      "2",
+      "--shrinkLevel",
+      "1",
+      "--noAssert"
+    ],
+    "imports": [
+      {
+        "module": "env",
+        "name": "abort",
+        "kind": "function"
+      }
+    ],
+    "selectedWithoutFallback": true,
+    "missingSelectionRejected": true,
+    "scope": "Crypto primitive only; not a Pulse Native HTTP-signatures application"
+  },
+  "primitive": [
+    {
+      "backend": "pulse-javascript-byte-seam",
+      "rfcB25": "pass",
+      "changedBase": "rejected",
+      "input32768": "pass",
+      "input32769": "rejected",
+      "strictProfileSignVerify": "pass",
+      "bodyIntegrity": "verified",
+      "replay": "consumed-and-duplicate-rejected",
+      "changedBody": "rejected",
+      "protocolExecution": "JavaScript reference, not compiled Native"
+    },
+    {
+      "backend": "pulse-wasm-primitive-in-node",
+      "rfcB25": "pass",
+      "changedBase": "rejected",
+      "input32768": "pass",
+      "input32769": "rejected",
+      "strictProfileSignVerify": "pass",
+      "bodyIntegrity": "verified",
+      "replay": "consumed-and-duplicate-rejected",
+      "changedBody": "rejected",
+      "protocolExecution": "JavaScript reference, not compiled Native",
+      "verifyMemoryBytesBefore": 2424832,
+      "verifyMemoryBytesAfter": 2555904
+    }
+  ],
+  "sourceGraph": {
+    "native": {
+      "status": "rejected",
+      "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+      "diagnostics": [
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/protocol.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/base-engine.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/signature-fields.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/algorithms.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/base-support.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/target.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/structured-field.js"
+        },
+        {
+          "code": "PULSE_NATIVE_IMPORT_UNSUPPORTED",
+          "message": "Package source permits static imports/re-exports, types and function declarations only; module initialization and captured values are unsupported.",
+          "file": "npm/@pulse-compute/http-signatures@0.0.0-development/2565e6ca6277e809de4f9598469a3dd69b376141cd17954e1a17682f747f4801/src/profile.js"
+        }
+      ]
+    },
+    "javascript": {
+      "status": "admitted-and-inspected",
+      "summary": {
+        "projectModules": 1,
+        "runtimeProjectModules": 1,
+        "typeOnlyProjectModules": 0,
+        "packageModules": 1,
+        "edges": 1,
+        "unsupportedBoundaries": 0,
+        "cycles": 0
+      },
+      "runtimeProviderIntegration": "not-qualified"
+    }
+  },
+  "nativeSyntax": [
+    {
+      "case": "control",
+      "status": "accepted-plan",
+      "version": "pulse.canonical-native-plan.v9"
+    },
+    {
+      "case": "headers",
+      "status": "accepted-plan",
+      "version": "pulse.canonical-native-plan.v9"
+    },
+    {
+      "case": "typedArray",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Generated expression NewExpression is outside the canonical native value model."
+        }
+      ]
+    },
+    {
+      "case": "map",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Generated expression NewExpression is outside the canonical native value model."
+        }
+      ]
+    },
+    {
+      "case": "regexp",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Generated expression RegularExpressionLiteral is outside the canonical native value model."
+        },
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Method call .test() is outside the canonical native fetch-response contract."
+        }
+      ]
+    },
+    {
+      "case": "callback",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Generated expression ArrowFunction is outside the canonical native value model."
+        },
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Direct function calls are outside the canonical native value model."
+        }
+      ]
+    },
+    {
+      "case": "tryCatch",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_COMPILE_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_CONTROL_FLOW_UNSUPPORTED",
+          "message": "Canonical lowering supports if/else, literal-capped pure for loops and bounded sequential read loops; other loops, switch, and try/catch are reserved."
+        }
+      ]
+    },
+    {
+      "case": "ordinaryAwait",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_COMPILE_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_NATIVE_AWAIT_UNSUPPORTED",
+          "message": "Native Pulse supports await only on trusted Pulse effects; signer.sign(\"base\") is not lowerable."
+        }
+      ]
+    },
+    {
+      "case": "rawTarget",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Context read ctx.req.rawTarget is not part of the canonical native context contract."
+        }
+      ]
+    },
+    {
+      "case": "trailers",
+      "status": "rejected",
+      "error": "PULSE_CANONICAL_NATIVE_PLAN_FAILED",
+      "diagnostics": [
+        {
+          "code": "PULSE_CANONICAL_NATIVE_EXPRESSION_UNSUPPORTED",
+          "message": "Context read ctx.req.trailers is not part of the canonical native context contract."
+        }
+      ]
+    }
+  ],
+  "lowerer": {
+    "trusted": false,
+    "catalog": [
+      "@pulse-compute/assets",
+      "@pulse-compute/crypto",
+      "@pulse-compute/entities",
+      "@pulse-compute/grip",
+      "@pulse-compute/jwt",
+      "@pulse-compute/s3"
+    ]
+  },
+  "hostObservations": {
+    "dotSegmentTarget": {
+      "input": "/a/../b?x=%2f",
+      "normalizedPath": "/b"
+    },
+    "combinedHeader": "a, b",
+    "invalidUtf8ReencodingChangesBytes": true,
+    "lateResultRejected": "PULSE_REQUEST_DEADLINE_EXCEEDED",
+    "scope": "Node web-platform and existing budget probes; provider adapter observations are source inspection"
+  },
+  "decision": "NO-GO for unchanged-source Native or automatic HMS-08; conditional HMAC bridge proposal requires human architectural approval"
+}

@@ -1,0 +1,129 @@
+{
+  "version": "hms07.targets.v1",
+  "pulseCommit": "e6a78640928a93f0e41813f55d9847895ea9be41",
+  "packageBaseCommit": "7d7826468ecf46f2f2de35cf03bd48b252cd573e",
+  "evidence": "hms-07-feasibility.json",
+  "decision": "../pulse-integration.md",
+  "statusDefinitions": {
+    "unavailable": "No installed, qualified Pulse HMS capability; never silently fall back.",
+    "executed": "An assertion was run at the exact pinned sources; scope is stated.",
+    "source-inspected": "Implementation or contract read; no target execution inferred.",
+    "not-run": "No execution evidence for this target or feature."
+  },
+  "targets": [
+    {
+      "target": "node-javascript",
+      "pulseHmsIntegration": "unavailable",
+      "protocol": {
+        "evidence": "executed",
+        "result": "Reference strict HMAC sign/verify passes; Pulse source graph admits import and inspection.",
+        "scope": "Standalone JS protocol, not a Pulse request-owned package effect."
+      },
+      "crypto": {
+        "evidence": "executed",
+        "result": "Explicit Pulse JS byte seam and HS256 verifier pass RFC B.2.5, tampering, body/replay composition and signing input bound."
+      },
+      "host": {
+        "evidence": "source-inspected",
+        "result": "Node raw field pairs and budgeted body ownership exist; URL construction normalizes target; no HMS snapshot/key/time/replay binding."
+      },
+      "lifecycle": {
+        "evidence": "executed",
+        "result": "Existing Node request budget rejects a late completion in an isolated probe; no HMS effect integration."
+      },
+      "missing": [
+        "authoritative raw target and exact bounded body snapshot",
+        "private scoped key and wall-time binding",
+        "request-owned HMS operation and cancellation fencing",
+        "qualified atomic replay store when required"
+      ]
+    },
+    {
+      "target": "fastly-javascript",
+      "pulseHmsIntegration": "unavailable",
+      "protocol": {
+        "evidence": "not-run",
+        "result": "No HMS provider or host execution."
+      },
+      "crypto": {
+        "evidence": "source-inspected",
+        "result": "Explicit provider seams exist; no Fastly HMS qualification."
+      },
+      "host": {
+        "evidence": "source-inspected",
+        "result": "Default Headers.entries() snapshot may combine values; no HMS authoritative capture adapter."
+      },
+      "lifecycle": {
+        "evidence": "source-inspected",
+        "result": "Request duration/budget options reject with PULSE_REQUEST_DURATION_UNSUPPORTED."
+      },
+      "missing": [
+        "field/target/body authority proof",
+        "private key/time/replay binding",
+        "HMS lifecycle contract compatible with target",
+        "Fastly execution evidence"
+      ]
+    },
+    {
+      "target": "node-native",
+      "pulseHmsIntegration": "unavailable",
+      "protocol": {
+        "evidence": "executed",
+        "result": "Actual npm export source graph rejects with PULSE_NATIVE_IMPORT_UNSUPPORTED; two controls accepted as Native plans and eight syntax/context cases rejected.",
+        "scope": "Compiler admission/planning only; no full HMS application emitted."
+      },
+      "crypto": {
+        "evidence": "executed",
+        "result": "Unchanged HMAC source compiled to Wasm and executed in Node through existing binder; exact RFC and strict JS protocol composition pass.",
+        "scope": "Only crypto is Wasm; synthetic explicit selection, no Native protocol or provider qualification."
+      },
+      "host": {
+        "evidence": "source-inspected",
+        "result": "No HMS lowerer, package effect or authoritative snapshot; private Crypto secret staging is not an application key API."
+      },
+      "lifecycle": {
+        "evidence": "not-run",
+        "result": "No complete Native HMS request; primitive memory growth observed, application allocation/cancellation unqualified."
+      },
+      "missing": [
+        "approved narrow protocol realization",
+        "approved synchronized first-party bridge and exact independent package pin",
+        "authoritative snapshot and private capabilities",
+        "emitted application sign/verify, cancellation and memory qualification"
+      ]
+    },
+    {
+      "target": "fastly-native-viceroy",
+      "pulseHmsIntegration": "unavailable",
+      "protocol": {
+        "evidence": "not-run",
+        "result": "No HMS artifact, Viceroy or deployed-host execution."
+      },
+      "crypto": {
+        "evidence": "source-inspected",
+        "result": "Guest-source selection exists; the Node primitive result is not Fastly evidence."
+      },
+      "host": {
+        "evidence": "source-inspected",
+        "result": "Fastly multi-value header ABI enumeration exists; target/body/secret/lifetime preservation for HMS unproved."
+      },
+      "lifecycle": {
+        "evidence": "not-run",
+        "result": "No HMS operation or replay lifetime qualification."
+      },
+      "missing": [
+        "approved bridge and protocol realization",
+        "Fastly-specific field/target/body authority fixtures",
+        "private key/time/replay and cancellation contract",
+        "Viceroy and target execution receipts"
+      ]
+    }
+  ],
+  "approvalsRequiredForHms08": [
+    "narrow protocol sidecar ownership and profile",
+    "synchronized trusted bridge registration and external artifact pin",
+    "authoritative host snapshot and private key/lifetime boundary"
+  ],
+  "pulseMutations": [],
+  "publicationOrSupportPromotion": false
+}
