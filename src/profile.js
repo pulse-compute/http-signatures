@@ -2,6 +2,7 @@
 import { Budget, signatureBaseLimits } from './base-engine.js';
 import { BaseFailure, fail, record, array, ascii } from './base-support.js';
 import { normalizeAuthority } from './target.js';
+import { digestCapability } from './content-integrity.js';
 import { signatureFieldLimits } from './signature-fields.js';
 
 export const ALGORITHM = 'hmac-sha256';
@@ -97,7 +98,8 @@ export function validateProfile(input) {
     coverage(required, value.components, b);
     return { b, profile: { id: input.id, label: input.label, context, requiredTag: input.requiredTag,
       requiredComponents: copyMember(value, b).components, acceptedKeyIds: keys, resolverId: input.keyPolicy.resolverId,
-      time: { ...t }, bodyMode: input.body.mode, replayMode: input.replay.mode } };
+      time: { ...t }, bodyMode: input.body.mode, replayMode: input.replay.mode,
+      replayNamespace: input.replay.namespace } };
   } catch (error) {
     if (error instanceof BaseFailure && error.code === 'LIMIT_EXCEEDED') throw error;
     fail('PROFILE_INVALID');
@@ -121,13 +123,18 @@ export function capabilities(caps, mode, p, b) {
   try {
     record(caps, [mode === 'sign' ? 'signer' : 'keys', 'clock'], mode === 'sign' ? ['digest'] : ['digest', 'replay']);
     record(caps.clock, ['nowSeconds']); if (typeof caps.clock.nowSeconds !== 'function') fail();
-    if (p.bodyMode !== 'excluded' || p.replayMode !== 'none') fail(); // HMS-05, never downgrade
     const clock = caps.clock.nowSeconds.bind(caps.clock);
-    if (mode === 'sign') return { clock, signer: keyCapability(caps.signer, 'sign', b) };
+    const digest = p.bodyMode === 'required' ? digestCapability(caps.digest) : undefined;
+    let consume;
+    if (mode === 'verify' && p.replayMode === 'required') {
+      record(caps.replay, ['consume']); if (typeof caps.replay.consume !== 'function') fail();
+      consume = caps.replay.consume.bind(caps.replay);
+    }
+    if (mode === 'sign') return { clock, digest, signer: keyCapability(caps.signer, 'sign', b) };
     record(caps.keys, ['id', 'resolve']);
     nonempty(caps.keys.id, b);
     if (caps.keys.id !== p.resolverId || typeof caps.keys.resolve !== 'function') fail();
-    return { clock, resolve: caps.keys.resolve.bind(caps.keys) };
+    return { clock, digest, consume, resolve: caps.keys.resolve.bind(caps.keys) };
   } catch (error) {
     if (error instanceof BaseFailure && ['LIMIT_EXCEEDED', 'KEY_REJECTED'].includes(error.code)) throw error;
     fail('CAPABILITY_UNAVAILABLE');

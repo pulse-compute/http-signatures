@@ -1,4 +1,4 @@
-# Explicit HMAC operations (HMS-04)
+# Explicit HMAC operations (HMS-04–05)
 
 Experimental Node 24.19.0 reference API. Import `sign` and `verify` from
 `@pulse-compute/http-signatures/protocol`. Both are async and return exactly
@@ -15,12 +15,16 @@ time, transport and authorization; plain JS records cannot establish provenance.
 
 ```js
 const signed = await sign(message, {
-  profile, covered, parameters, capabilities: { signer, clock }
+  profile, covered, parameters, capabilities: { signer, clock, digest }
 });
 const verified = await verify(message, {
-  profile, capabilities: { keys, clock }
+  profile, capabilities: { keys, clock, digest, replay }
 });
 ```
+
+Digest is required for body-required profiles; replay is required only on
+verification when replay is required. See [content integrity and replay](content-integrity.md)
+and run `node examples/webhook.mjs` for both original contract profiles.
 
 The [contract types](contract/types.ts) define the records; they are not an
 exported declaration bundle. Inputs are closed records: unknown members fail.
@@ -59,19 +63,23 @@ algorithm, copied covered descriptors, and explicit body/replay outcomes.
   `@method;req`, and `@target-uri;req`. Additional coverage compares full
   descriptors including parameter values, independent of parameter order.
 - `created`, `keyid`, `alg`, `tag` are mandatory. Tag must equal requiredTag.
-  Optional nonce must be nonempty; it does not establish replay protection.
+  Optional nonce must be nonempty; replay-required profiles mandate it.
+  Nonce metadata alone does not establish replay protection.
   `expires` is mandatory when the profile requires it.
 - One synchronous clock sample must be a nonnegative safe integer within the
   RFC structured integer range. With now N, created C, expiry E, skew S, age A
   and lifetime L: C <= N+S; N <= C+A+S; when E exists, C <= E <= C+L and
   N <= E+S. Boundaries are inclusive; unsafe arithmetic fails. L <= A.
 
-HMS-04 implements **body excluded / replay none** only. Valid profiles requiring
-body integrity or replay return `CAPABILITY_UNAVAILABLE` before callbacks, even
-if a digest/replay capability is supplied. HMS-05 owns those operations. Success
-always reports `bodyIntegrity:'not-checked'` and `replay:'not-checked'`. Covering a
-Content-Digest field alone never verifies body bytes. The original webhook and
-response design profiles require HMS-05 and cannot yet run.
+HMS-05 implements required body/replay modes through explicit digest and replay
+capabilities. Body-required signing checks the existing header before MAC;
+verification checks it against captured content bytes after MAC. Replay-required
+verification consumes once after every other check, with inclusive retention
+through `min(created+maxAge, expires if present)+skew`. Success reports
+`bodyIntegrity:'verified'` / `replay:'consumed'` only for completed required
+checks. Excluded/none modes return `not-checked` and invoke no corresponding
+capability. Missing required capabilities fail closed. See the
+[content API](content-integrity.md) for digest grammar and store obligations.
 
 ## Capability behavior and failures
 
@@ -80,14 +88,18 @@ envelope, check supported components/context/coverage, check metadata/time,
 build the base, bind one key, and perform one crypto operation. Sign-side field
 serialization and output capacity are preflighted before crypto. Required target
 availability can fail during context checks; signer identity can fail during
-initial capability validation. Limits can terminate any phase. Body/replay
-phases of the full contract remain gated as described above.
+initial capability validation. Limits can terminate any phase. Body bytes are
+bounded and copied before the first callback for body-required profiles; digest
+parsing/hashing follows MAC validation on verification. Replay is the final
+operation, with no remaining limit checks or fallible body work after consumption.
 
 Successful sign invokes clock once and signer once. Successful verify invokes
 clock once, the configured resolver once with `{keyId,algorithm,trustDomain,
 profileId}`, and its returned verifier once. Null resolver output is rejected.
 Key ID, algorithm and trust domain must match; keyVersion is nonempty. No retry,
-network key discovery or alternate backend is built in. Values used after a
+network key discovery or alternate backend is built in. Required digest and
+replay callbacks each run at most once; no digest runs after an invalid MAC and
+no nonce is consumed after invalid content. Values used after a
 callback or await are owned/captured first; the host must still supply a stable
 snapshot during synchronous validation. Getters/proxies are not a trusted
 adapter interface.
@@ -103,7 +115,9 @@ adapter interface.
 | Missing authority / known absent component | COMPONENT_UNAVAILABLE / COMPONENT_MISSING |
 | Missing required capability | CAPABILITY_UNAVAILABLE |
 | Unapproved or mismatched key capability | KEY_REJECTED |
-| Backend returns false | SIGNATURE_INVALID |
+| MAC backend returns false | SIGNATURE_INVALID |
+| Invalid/mismatched required digest | BODY_DIGEST_INVALID |
+| Replay store returns false | REPLAY_REJECTED |
 | Backend throws, returns wrong shape, or clock is invalid | OPERATION_FAILED |
 
 Other snapshot failures use MALFORMED_MESSAGE; all resource failures use
@@ -133,3 +147,6 @@ The exact RFC B.2.5 bytes, MAC and Signature field pass through this adapter.
 That RFC example lacks this profile's target coverage, alg and tag, so it is a
 primitive interoperability fixture, not a valid strict-profile message. No
 Fastly, Pulse Native or other host qualification follows from Node tests.
+
+`/webcrypto` also exports `createSha256Digest({subtle})`, returning an explicit
+SHA-256 capability bounded to 1 MiB per invocation. See the content API.

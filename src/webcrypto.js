@@ -35,3 +35,21 @@ function capability(options, operation) {
 }
 export function createHmacSigner(options) { return capability(options, 'sign'); }
 export function createHmacVerifier(options) { return capability(options, 'verify'); }
+
+/** Explicit bounded SHA-256 capability; host supplies already captured bytes. */
+export function createSha256Digest(options) {
+  try {
+    try { record(options, ['subtle']); } catch { fail('CAPABILITY_UNAVAILABLE'); }
+    const { subtle } = options;
+    if (!subtle || typeof subtle.digest !== 'function') fail('CAPABILITY_UNAVAILABLE');
+    const fn = subtle.digest.bind(subtle);
+    return { ok: true, value: Object.freeze({ async sha256(content) {
+      try {
+        if (!(content instanceof Uint8Array) || content.length > 1048576) fail('OPERATION_FAILED');
+        const output = await fn('SHA-256', new Uint8Array(content));
+        if (!(output instanceof ArrayBuffer) || output.byteLength !== 32) fail('OPERATION_FAILED');
+        return new Uint8Array(output);
+      } catch { fail('OPERATION_FAILED'); }
+    } }) };
+  } catch { return { ok: false, code: 'CAPABILITY_UNAVAILABLE' }; }
+}

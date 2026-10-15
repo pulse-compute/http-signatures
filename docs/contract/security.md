@@ -2,7 +2,7 @@
 
 The application chooses a trusted profile before examining the incoming label,
 keyid, algorithm or tag. The package never chooses a policy from attacker input.
-Both examples are design fixtures requiring HMS-02–05 implementation.
+Both example profiles run in the HMS-05 reference example with explicit capabilities.
 
 ## Mandatory policy
 
@@ -138,15 +138,15 @@ is outside what the protocol can detect; inconsistent inputs still fail closed.
 | Threat | Required mitigation / owner | Evidence status / next ticket |
 |---|---|---|
 | Proxy rewrite or fabricated original URI | Host proves sources; package refuses unavailable components | No adapter qualification; HMS-03/07 |
-| Field/query normalization changes signed bytes | Preserve instances/encoding; exact base fixtures | Only selected spike cases; HMS-02/03 |
-| Weaker signature or unsigned required field | Fixed label; full descriptor coverage; no union/fallback | Basic spike negatives; HMS-04/05 |
-| Algorithm/key confusion; key lookup SSRF | Fixed algorithm, local allowlist and bound key capabilities | Contract only; HMS-04 |
-| Body tampering with valid MAC | Signed and recomputed Content-Digest over exact bytes | Unsupported; HMS-05 |
-| Replay inside a valid time window | Atomic nonce store after verification | Unsupported; HMS-05 |
-| Cross-service/tenant/response substitution | Profile tag, key scope, signed target and associated request binding | Contract only; HMS-04/05/07 |
-| Slow or oversized malicious input | Pre-allocation bounds, work budget, one key/crypto call; host deadlines | Boundary probes only; HMS-02–05/09 |
-| Mutation between checking and use | Host immutable snapshot; bounded package copies | Contract only; HMS-03/05 |
-| Errors/logs expose secrets or create a key oracle | Fixed local codes; uniform external failure; no raw sensitive output | Contract only; HMS-04/05 |
+| Field/query normalization changes signed bytes | Preserve instances/encoding; exact base fixtures | HMS-02/03 exact bytes and corpus evidence |
+| Weaker signature or unsigned required field | Fixed label; full descriptor coverage; no union/fallback | HMS-04/05 fixed-label and full-descriptor tests |
+| Algorithm/key confusion; key lookup SSRF | Fixed algorithm, local allowlist and bound key capabilities | HMS-04 allowlist, algorithm and capability-binding tests |
+| Body tampering with valid MAC | Signed and recomputed Content-Digest over exact bytes | HMS-05 body/nonce positive, negative and ordering tests |
+| Replay inside a valid time window | Atomic nonce store after verification | HMS-05 body/nonce positive, negative and ordering tests |
+| Cross-service/tenant/response substitution | Profile tag, key scope, signed target and associated request binding | HMS-04/05 profile tests; host qualification remains HMS-07 |
+| Slow or oversized malicious input | Pre-allocation bounds, work budget, one key/crypto call; host deadlines | HMS-02–05 work/count/byte tests; host capacity remains HMS-09 |
+| Mutation between checking and use | Host immutable snapshot; bounded package copies | HMS-03/05 bounded copies and async mutation tests |
+| Errors/logs expose secrets or create a key oracle | Fixed local codes; uniform external failure; no raw sensitive output | HMS-04/05 fixed-result and thrown-backend tests |
 | Treat valid MAC as permission or confidentiality | Application authorization; TLS; explicit result scope | Application/host responsibility |
 | Hidden Native fallback or widened compiler authority | Separate go/no-go and human architectural review | HMS-07 before HMS-08 |
 
@@ -154,11 +154,13 @@ References for implementation review: RFC 9421 §§2, 3.2, 7–8 and RFC 9530 §
 The profile choices above (fixed alg/tag/label, time windows, limits) are this
 workstream's restrictions, not universal RFC requirements.
 
-## HMS-04 implementation boundary
+## HMS-05 implementation boundary
 
-The [explicit HMAC API](../protocol.md) now enforces this profile for body excluded /
-replay none. Valid body-required or replay-required configurations fail with
-CAPABILITY_UNAVAILABLE until HMS-05, even when callbacks are supplied. Success
-never claims body integrity or replay protection. Key allowlists contain 1–32
-unique IDs; responses bind an associated request in the same trust domain.
-Node Web Crypto tests establish only the reference backend behavior.
+The [explicit HMAC API](../protocol.md) supports both required and excluded modes.
+Required digest/replay capabilities must be present; failures never degrade to
+MAC-only acceptance. Success claims only completed checks. Digest syntax and
+replay-store obligations are documented in [content integrity](../content-integrity.md).
+Key allowlists contain 1–32 unique IDs; responses bind an associated request in
+the same trust domain. Only the response's own captured body is hashed for its
+integrity policy. Production replay storage and host body capture remain external;
+Node reference tests establish no Native or other host qualification.

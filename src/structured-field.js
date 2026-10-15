@@ -118,3 +118,27 @@ export function structured(source, type, selectedKey, b) {
   }
   return join(members, ', ', b.limits.signatureBaseBytes, b);
 }
+
+/** RFC 9530 dictionary subset: every member is a Byte Sequence; parameters
+ * are parsed and ignored. Duplicate algorithms/parameters remain invalid. */
+export function sha256Digest(source, b) {
+  const r = new Reader(source, b), seen = new Set(); let selected;
+  r.spaces();
+  while (r.i < source.length) {
+    if (seen.size >= b.limits.structuredMembers) fail('LIMIT_EXCEEDED');
+    b.spend(1); const key = r.key(); b.spend(key.length);
+    if (seen.has(key)) fail(); seen.add(key);
+    r.expect('=');
+    if (r.peek() !== ':') fail();
+    const item = r.item(); // Validates all members, including unsupported hashes.
+    if (key === 'sha-256') {
+      b.spend(item.bare.length);
+      selected = decodeBinary(item.bare.slice(1, -1), b);
+      if (selected.length !== 32) fail();
+    }
+    r.spaces(true); if (r.i === source.length) break;
+    r.expect(','); r.spaces(true); if (r.i === source.length) fail();
+  }
+  if (selected === undefined) fail();
+  b.spend(32); return Uint8Array.from(selected, c => c.charCodeAt(0));
+}

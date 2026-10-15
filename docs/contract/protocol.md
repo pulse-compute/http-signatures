@@ -1,13 +1,14 @@
 # Message and operation contract
 
-The types in [types.ts](types.ts) describe the future API. Structural types are
+The types in [types.ts](types.ts) describe the reference API. Structural types are
 not validators or proof of trust. Every limit and semantic rule below must be
-enforced at runtime when that API is implemented. The current spike does not
+enforced by the new HMAC protocol API within its documented subset. The current spike does not
 implement this contract. The separate [HMS-03 base primitive](../signature-base.md)
 implements snapshot validation and canonicalization; the full policy operation
 ordering below describes the full HMS-04–05 contract. The
 [HMS-04 implementation](../protocol.md) enforces the HMAC subset and documents
-phase refinements; body/replay-required profiles remain gated until HMS-05.
+phase refinements; [HMS-05](../content-integrity.md) adds required body/replay
+checks and the bounded digest generation helper.
 
 ## One authoritative snapshot
 
@@ -102,8 +103,7 @@ not include it. Signing `signature` or `signature-input` fields is outside v1.
 ## Explicit operations
 
 `Protocol.sign(message, options)` and `Protocol.verify(message, options)` are
-implemented as named `sign` and `verify` exports from `/protocol` in HMS-04 for
-body-excluded, replay-none profiles. There is no implicit crypto, clock,
+implemented as named `sign` and `verify` exports from `/protocol` in HMS-04–05. There is no implicit crypto, clock,
 key resolver, profile, signature label, algorithm or backend fallback.
 
 Signing receives ordered `covered` and ordered `parameters` plus one bound
@@ -113,7 +113,7 @@ profile; the package does not silently rewrite parameters. The supplied clock
 validates the signing window. If body integrity is required, the package checks
 existing Content-Digest against supplied bytes before signing; it does not
 silently replace a digest or mutate the message. A digest-generation helper is
-HMS-05 work.
+available through `/content-digest` in HMS-05.
 
 Capability results are bounded and checked before use: HMAC signatures and
 sha-256 digests must be exactly 32 bytes, verify/consume results must be booleans,
@@ -167,7 +167,7 @@ collapsed internally.
 
 Signing follows phases 1–2, 4–6, 8, then 7; it neither resolves a verifier key
 nor consumes replay state. The full contract requires signer, clock and
-digest when body integrity is required; HMS-04 gates required body/replay modes. Verification requires the configured
+digest when body integrity is required; HMS-05 implements these required modes. Verification requires the configured
 resolver, clock, and mode-dependent digest/replay capabilities.
 
 Return only fixed failure codes, never interpolated attacker strings. These

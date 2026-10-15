@@ -52,10 +52,10 @@ The tests import only Node built-ins.
 ## Boundaries and limitations
 
 The host must supply authoritative HTTP fields/target, trusted keys, and trusted
-time. The package does not retrieve keys, capture time, grant authorization,
-verify body bytes, or store replay nonces. A valid signature alone does not
-establish body integrity: applications must separately verify RFC 9530
-`Content-Digest` against the body and require that field's signature coverage.
+time. The package does not retrieve keys, capture time, grant authorization, or own
+replay storage. The new `/protocol` API can require signed-and-verified RFC 9530
+`Content-Digest` and explicit atomic replay consumption. The unchanged root spike
+does neither; a valid signature alone does not establish body integrity.
 
 The spike implements unparameterized ASCII HTTP fields and selected derived
 components (`@method`, `@target-uri`, `@authority`, `@scheme`, `@path`, `@query`,
@@ -71,7 +71,7 @@ non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
 See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
 actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
 describes the small PR/test workflow. The [HMS-01 contract](docs/contract/README.md) defines the intended message model,
-profiles and explicit capabilities, with body/replay enforcement still pending HMS-05. The [HMS-02 fields API](docs/signature-fields.md) is now
+profiles and explicit capabilities enforced by the new protocol API. The [HMS-02 fields API](docs/signature-fields.md) is now
 available through `@pulse-compute/http-signatures/fields` for bounded parsing and
 serialization. It does not alter the original signer/verifier or establish full
 RFC conformance. The [HMS-03 base API](docs/signature-base.md) is available through
@@ -82,9 +82,12 @@ implement the new authentication policy or change the old signer/verifier.
 The [HMS-04 protocol API](docs/protocol.md) adds explicit HMAC `sign`/`verify`
 through `/protocol`, with an optional explicit `/webcrypto` adapter. It enforces
 context, coverage, metadata, time and scoped keys. Run `node examples/hmac.mjs`.
-Body-required and replay-required profiles fail closed until HMS-05; the current
-receipt reports both as not checked. See the [implementation receipt](docs/hms-04.md).
-Next: **HMS-05 — body integrity and replay enforcement**. Native work is
+The [HMS-05 content/replay API](docs/content-integrity.md) adds exact body digest
+verification, a `/content-digest` generation helper, and atomic host replay hooks.
+Run `node examples/webhook.mjs` for both original request/response profiles.
+Required capabilities fail closed; excluded modes remain explicitly not checked.
+See the [HMS-05 receipt](docs/hms-05.md). Next: **HMS-06 algorithm interoperability**
+and **HMS-07 Pulse integration investigation**. Native work is
 conditional on a later integration investigation and human architectural approval.
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
