@@ -49,7 +49,8 @@ It adds **128 SF members/items per list** and **32 parameters per SF item or inn
 list**, reflected in the design types/examples. These deliberately bounded
 capacities do not establish generic RFC 8941 parser conformance. See
 [the base API](../signature-base.md) and [HMS-03 work measurements](../evidence/hms-03-work.json).
-Body bytes are only length-checked here; digest/replay handling remains future.
+Body bytes are only length-checked by `/base`; HMS-05 `/protocol` separately
+copies and hashes content when required.
 No body allocation or scan is performed by `/base`.
 
 Profiles explicitly supply every ceiling (see the two JSON examples). Accept
@@ -99,3 +100,23 @@ Backend cryptography and async host work are not package work-counter units.
 The explicit Web Crypto adapter separately bounds base inputs to 65,536 bytes,
 MACs to 32 bytes and key metadata to 256–32768 bits. These are reference bounds,
 not a Native capacity qualification or worst-case resource guarantee.
+
+## HMS-05 enforcement
+
+Required message bodies are length-checked and charged before one private copy,
+prior to clock/key callbacks. Associated-request bytes count toward the aggregate
+body ceiling but are not copied/hashed as the response's body. `/base` still does
+no body scan or allocation, and its recorded work counts remain unchanged.
+Digest parsing uses the same remaining budget and SF member/parameter limits.
+Combined normalized Content-Digest values are capped by fieldValueBytes (raw
+instances and aggregate input bytes are already bounded by snapshot validation).
+Digest comparison visits all 32 bytes without an early mismatch return; this is
+not a JavaScript constant-time guarantee. No package work can fail a limit check
+after successful replay consumption.
+
+The [content work receipt](../evidence/hms-05-work.json) records helper work,
+minimum protocol work budgets, one-below rejections and exact capability counts
+for 0, 65,536 and 1,048,576 content bytes. The default work ceiling admits these
+cases; dense headers/selectors can still exhaust it. The explicit SHA-256 adapter
+bounds one input to 1 MiB and owns its own defensive copy. Neither the receipt nor
+package counters bound backend cryptographic work, store CPU, wall time or RSS.

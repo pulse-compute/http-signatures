@@ -86,7 +86,7 @@ function block(a, b) {
     return index;
   });
 }
-export function snapshot(message, b, associated = false) {
+export function snapshot(message, b, associated = false, copyBody = false) {
   if (!message || typeof message !== 'object') fail();
   const kind = own(message, 'kind');
   if (!['request', 'response'].includes(kind) || (associated && kind !== 'request')) fail();
@@ -97,12 +97,13 @@ export function snapshot(message, b, associated = false) {
   }
   if (!['inbound', 'outbound'].includes(message.direction)) fail();
   const headers = block(message.headers, b), trailers = block(message.trailers, b);
-  const body = message.body;
+  const body = message.body; let content;
   if (own(body, 'state') === 'available') {
     record(body, ['state', 'bytes']); if (!(body.bytes instanceof Uint8Array)) fail();
     b.bodyBytes += body.bytes.length; if (b.bodyBytes > b.limits.bodyBytes) fail('LIMIT_EXCEEDED');
+    if (copyBody) { b.spend(body.bytes.length); content = new Uint8Array(body.bytes); }
   } else available(body, () => fail());
-  const common = { kind, headers, trailers, contextId: message.contextId,
+  const common = { body: content, kind, headers, trailers, contextId: message.contextId,
     direction: message.direction, trustDomain: message.trustDomain };
   if (kind === 'request') return { ...common, target: target(message, b) };
   const status = available(message.status, n => {

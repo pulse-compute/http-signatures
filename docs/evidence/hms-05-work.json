@@ -1,0 +1,54 @@
+{
+  "runtime": "v24.19.0",
+  "kind": "logical package work; not CPU, heap, RSS, backend or store bounds",
+  "measurements": [
+    {
+      "bodyBytes": 0,
+      "helperWorkUnits": 164,
+      "minimumProtocolWorkUnits": {
+        "sign": 18879,
+        "verify": 21443
+      },
+      "verifyCalls": {
+        "clock": 1,
+        "sign": 0,
+        "resolve": 1,
+        "verify": 1,
+        "digest": 1,
+        "consume": 1
+      }
+    },
+    {
+      "bodyBytes": 65536,
+      "helperWorkUnits": 65700,
+      "minimumProtocolWorkUnits": {
+        "sign": 84415,
+        "verify": 86979
+      },
+      "verifyCalls": {
+        "clock": 1,
+        "sign": 0,
+        "resolve": 1,
+        "verify": 1,
+        "digest": 1,
+        "consume": 1
+      }
+    },
+    {
+      "bodyBytes": 1048576,
+      "helperWorkUnits": 1048740,
+      "minimumProtocolWorkUnits": {
+        "sign": 1067455,
+        "verify": 1070019
+      },
+      "verifyCalls": {
+        "clock": 1,
+        "sign": 0,
+        "resolve": 1,
+        "verify": 1,
+        "digest": 1,
+        "consume": 1
+      }
+    }
+  ]
+}

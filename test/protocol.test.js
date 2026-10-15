@@ -196,14 +196,16 @@ test('optional expiry still enforces age; overflowing timestamp arithmetic rejec
 for (const n of [NaN, Infinity, -1, 1000.5, 1000000000000000, '1000', Promise.resolve(1000)]) test(`invalid clock result ${String(n)}`, async () => {
   const h = setup(); h.clock.nowSeconds = () => n; error(await sign(h.message, signOptions(h)), 'OPERATION_FAILED'); assert.equal(h.counts.sign, 0);
 });
-for (const mode of ['body', 'replay']) test(`${mode}-required profiles fail closed until HMS-05`, async () => {
-  const h = setup();
-  if (mode === 'body') { h.profile.body = { mode: 'required', algorithm: 'sha-256' }; h.profile.requiredComponents.push(component('content-digest')); }
-  else h.profile.replay = { mode: 'required', namespace: 'test' };
-  const opts = signOptions(h); opts.capabilities.digest = { sha256() { throw new Error('must not run'); } };
-  error(await sign(h.message, opts), 'CAPABILITY_UNAVAILABLE'); noCrypto(h); assert.equal(h.counts.clock, 0);
-  const v = verifyOptions(h); v.capabilities.digest = opts.capabilities.digest; v.capabilities.replay = { consume() { throw new Error('must not run'); } };
-  error(await verify(h.message, v), 'CAPABILITY_UNAVAILABLE'); noCrypto(h);
+test('body-required profiles require an explicit digest capability', async () => {
+  const h = setup(); h.profile.body = { mode: 'required', algorithm: 'sha-256' };
+  h.profile.requiredComponents.push(component('content-digest'));
+  error(await sign(h.message, signOptions(h)), 'CAPABILITY_UNAVAILABLE'); noCrypto(h); assert.equal(h.counts.clock, 0);
+  error(await verify(h.message, verifyOptions(h)), 'CAPABILITY_UNAVAILABLE'); noCrypto(h);
+});
+test('replay-required verification requires a store; signing requires a nonce', async () => {
+  const h = setup(); h.profile.replay = { mode: 'required', namespace: 'test' };
+  error(await verify(h.message, verifyOptions(h)), 'CAPABILITY_UNAVAILABLE'); noCrypto(h);
+  error(await sign(h.message, signOptions(h)), 'METADATA_REQUIRED'); noCrypto(h); assert.equal(h.counts.clock, 0);
 });
 test('excluded body is visibly unchecked, even if a digest field was signed', async () => {
   const h = setup(); h.covered.push(component('content-digest')); const r = await sign(h.message, signOptions(h)); assert.equal(r.ok, true);

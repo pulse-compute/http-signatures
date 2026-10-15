@@ -1,5 +1,5 @@
-/** HMS contract v1: contract types only, not package exports. HMS-04 implements the
- * body-excluded/replay-none Protocol subset; required modes await HMS-05. */
+/** HMS contract v1: contract types only, not package exports. HMS-04–05 implement the
+ * bounded HMAC Protocol with explicit digest/replay capabilities. */
 export type Available<T> =
   | { state: 'available'; value: T }
   | { state: 'unavailable'; reason: 'not-exposed' | 'transformed' | 'not-retained' };
@@ -106,7 +106,10 @@ export type KeyResolver = {
   resolve: (query: { keyId: string; algorithm: 'hmac-sha256';
     trustDomain: string; profileId: string }) => Promise<Verifier | null>;
 };
+/** Hash exact captured content bytes once; no stream, decode or ambient backend. */
 export type Digest = { sha256: (content: Uint8Array) => Promise<Uint8Array> };
+/** Atomically reject duplicates and consume the scoped tuple. Retain through
+ * retainUntilSeconds inclusive; recheck expiry using trusted store time. */
 export type ReplayStore = {
   consume: (entry: { namespace: string; profileId: string; trustDomain: string;
     keyId: string; nonce: string; retainUntilSeconds: number }) => Promise<boolean>;
@@ -129,3 +132,7 @@ export interface Protocol {
     capabilities: { keys: KeyResolver; clock: Clock; digest?: Digest; replay?: ReplayStore };
   }): Promise<Result<Verified>>;
 }
+
+/** /content-digest helper shape; limits may only lower the base ceilings. */
+export type ContentDigestOptions = { digest: Digest; limits?: Partial<Limits> };
+export type ContentDigestResult = Result<string> & { workUnits: number };

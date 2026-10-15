@@ -1,6 +1,7 @@
 /** Experimental HMAC profile. All authority, clock and crypto are explicit. */
 import { snapshot, buildBase } from './base-engine.js';
 import { BaseFailure, fail, record, need } from './base-support.js';
+import { checkBody } from './content-integrity.js';
 import { normalizeAuthority } from './target.js';
 import { parseSignatureEnvelope, serializeSignatureInput, serializeSignature } from './signature-fields.js';
 import { ALGORITHM, MAX_TIMESTAMP, validateProfile, capabilities, keyCapability,
@@ -44,7 +45,7 @@ function metadata(value, p, clock, b) {
   for (const param of value.parameters) b.spend(param.name.length + String(param.value).length * 2);
   const meta = new Map(value.parameters.map(p => [p.name, p.value]));
   for (const k of ['created', 'keyid', 'alg', 'tag']) if (!meta.has(k) || meta.get(k) === '') fail('METADATA_REQUIRED');
-  if (meta.get('tag') !== p.requiredTag || (meta.has('nonce') && !meta.get('nonce')) || (p.time.requireExpires && !meta.has('expires'))) fail('METADATA_REQUIRED');
+  if (meta.get('tag') !== p.requiredTag || ((meta.has('nonce') || p.replayMode === 'required') && !meta.get('nonce')) || (p.time.requireExpires && !meta.has('expires'))) fail('METADATA_REQUIRED');
   const created = meta.get('created'), expires = meta.get('expires');
   let n; try { n = clock(); } catch { fail('OPERATION_FAILED'); }
   if (!Number.isSafeInteger(n) || n < 0 || n > MAX_TIMESTAMP) fail('OPERATION_FAILED');
@@ -52,7 +53,8 @@ function metadata(value, p, clock, b) {
   const { maxAgeSeconds: age, maxLifetimeSeconds: life, clockSkewSeconds: skew } = p.time;
   if (created < 0 || created > add(n, skew) || n > add(add(created, age), skew)) fail('TIME_INVALID');
   if (expires !== undefined && (expires < created || expires > add(created, life) || n > add(expires, skew))) fail('TIME_INVALID');
-  return meta;
+  const retainUntilSeconds = add(Math.min(add(created, age), expires ?? Infinity), skew);
+  return { meta, retainUntilSeconds };
 }
 function matchKey(key, keyId, p, b) {
   b.spend(keyId.length * 2 + key.keyId.length + key.algorithm.length + key.trustDomain.length + p.context.trustDomain.length);
@@ -74,7 +76,7 @@ function init(options, mode) {
 const FAILURE_CODES = new Set(['PROFILE_INVALID', 'LIMIT_EXCEEDED', 'MALFORMED_MESSAGE', 'MALFORMED_SIGNATURE',
   'SIGNATURE_NOT_FOUND', 'UNSUPPORTED_COMPONENT', 'UNSUPPORTED_ALGORITHM', 'CONTEXT_MISMATCH',
   'COMPONENT_UNAVAILABLE', 'COMPONENT_MISSING', 'COVERAGE_REQUIRED', 'METADATA_REQUIRED', 'TIME_INVALID',
-  'CAPABILITY_UNAVAILABLE', 'KEY_REJECTED', 'SIGNATURE_INVALID', 'OPERATION_FAILED']);
+  'CAPABILITY_UNAVAILABLE', 'KEY_REJECTED', 'SIGNATURE_INVALID', 'BODY_DIGEST_INVALID', 'REPLAY_REJECTED', 'OPERATION_FAILED']);
 const failure = error => ({ ok: false, code: error instanceof BaseFailure && FAILURE_CODES.has(error.code) ? error.code : 'OPERATION_FAILED' });
 async function invoke(fn, ...args) {
   try { return await fn(...args); } catch { fail('OPERATION_FAILED'); }
@@ -82,12 +84,12 @@ async function invoke(fn, ...args) {
 
 export async function sign(message, options) {
   try {
-    const { p, b, caps } = init(options, 'sign'), current = snapshot(message, b);
+    const { p, b, caps } = init(options, 'sign'), current = snapshot(message, b, false, p.bodyMode === 'required');
     envelopeSources(message, current, 'sign', b);
     const supplied = { components: options.covered, parameters: options.parameters };
     b.serialize(supplied); const value = copyMember(supplied, b);
     validateSelected(current, value, p, b);
-    const meta = metadata(value, p, caps.clock, b), base = buildBase(current, value, b);
+    const { meta } = metadata(value, p, caps.clock, b), base = buildBase(current, value, b);
     matchKey(caps.signer, meta.get('keyid'), p, b);
     const signatureInput = fieldOperation(serializeSignatureInput, [{ label: p.label, ...value }], b).value;
     b.spend(32);
@@ -97,6 +99,7 @@ export async function sign(message, options) {
     b.spend(template.workUnits + 32);
     if (signatureInput.length > b.limits.fieldValueBytes || template.value.length > b.limits.fieldValueBytes ||
         b.fields + 2 > b.limits.fieldCount || b.fieldBytes + 24 + signatureInput.length + template.value.length > b.limits.totalFieldBytes) fail('LIMIT_EXCEEDED');
+    if (p.bodyMode === 'required') await checkBody(current, b, caps.digest);
     const output = await invoke(caps.signer.call, base);
     if (!(output instanceof Uint8Array) || output.length !== 32) fail('OPERATION_FAILED');
     const signature = serializeSignature([{ label: p.label, signature: new Uint8Array(output) }],
@@ -108,7 +111,7 @@ export async function sign(message, options) {
 
 export async function verify(message, options) {
   try {
-    const { p, b, caps } = init(options, 'verify'), current = snapshot(message, b);
+    const { p, b, caps } = init(options, 'verify'), current = snapshot(message, b, false, p.bodyMode === 'required');
     const envelope = envelopeSources(message, current, 'verify', b);
     b.spend(envelope.inputs.length + envelope.signatures.length);
     const input = envelope.inputs.find(e => e.label === p.label);
@@ -117,20 +120,33 @@ export async function verify(message, options) {
     if (signature.length !== 32) fail('MALFORMED_SIGNATURE');
     const value = { components: input.components, parameters: input.parameters };
     validateSelected(current, value, p, b);
-    const meta = metadata(value, p, caps.clock, b), base = buildBase(current, value, b), keyId = meta.get('keyid');
+    const { meta, retainUntilSeconds } = metadata(value, p, caps.clock, b), base = buildBase(current, value, b), keyId = meta.get('keyid');
     b.spend(keyId.length);
     if (!p.acceptedKeyIds.has(keyId)) fail('KEY_REJECTED');
     // All message/policy data is owned before awaiting resolver/crypto. Capture
     // the result coverage before callbacks; no caller object is re-read later.
     const covered = copyMember(value, b).components;
+    let replayEntry;
+    if (p.replayMode === 'required') {
+      b.spend(p.replayNamespace.length + p.id.length + p.context.trustDomain.length + keyId.length + meta.get('nonce').length + 6);
+      replayEntry = { namespace: p.replayNamespace, profileId: p.id, trustDomain: p.context.trustDomain,
+        keyId, nonce: meta.get('nonce'), retainUntilSeconds };
+    }
     const capability = await invoke(caps.resolve, { keyId, algorithm: ALGORITHM, trustDomain: p.context.trustDomain, profileId: p.id });
     if (capability === null) fail('KEY_REJECTED');
     const key = keyCapability(capability, 'verify', b); matchKey(key, keyId, p, b);
     const valid = await invoke(key.call, base, signature);
     if (typeof valid !== 'boolean') fail('OPERATION_FAILED');
     if (!valid) fail('SIGNATURE_INVALID');
+    if (p.bodyMode === 'required') await checkBody(current, b, caps.digest);
+    if (replayEntry) {
+      const consumed = await invoke(caps.consume, replayEntry);
+      if (typeof consumed !== 'boolean') fail('OPERATION_FAILED');
+      if (!consumed) fail('REPLAY_REJECTED');
+    }
     return { ok: true, value: { contextId: current.contextId, profileId: p.id, label: p.label,
       keyId, keyVersion: key.keyVersion, algorithm: ALGORITHM, covered,
-      bodyIntegrity: 'not-checked', replay: 'not-checked' } };
+      bodyIntegrity: p.bodyMode === 'required' ? 'verified' : 'not-checked',
+      replay: p.replayMode === 'required' ? 'consumed' : 'not-checked' } };
   } catch (error) { return failure(error); }
 }
