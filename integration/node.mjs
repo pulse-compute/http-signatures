@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { resolve, join, dirname } from 'node:path';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, cpSync, symlinkSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, cpSync, symlinkSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { request as httpRequest } from 'node:http';
 import { spawnSync } from 'node:child_process';
@@ -22,7 +22,7 @@ function write(path, content) { const file = join(root, path); mkdirSync(dirname
 const profile = { id:'fixture', label:'sig1', authority:'example.test', tag:'hms-example', trustDomain:'fixture', maxAgeSeconds:60, clockSkewSeconds:5 };
 const key = 'public-fixture-key-32-bytes-long!!';
 const body = Buffer.from('{"message":"hello"}\n');
-const headers = [['Content-Digest', 'sha-256=:' + createHash('sha256').update(body).digest('base64') + ':']];
+const headers = [['Content-Digest', 'sha-256=:' + createHash('sha256').update(body).digest('base64') + ':'], ['Authorization', 'private-authorization-fixture']];
 const binding = { package:'@pulse-compute/http-signatures', contractId:'pulse.http-signatures', artifact:'pulse.http-signatures:fixture',
   operations:['sign','verify'], secret:'HMS_KEY', keyId:'fixture-key', keyVersion:'v1', trustDomain:'fixture', origin:'https://example.test' };
 try {
@@ -56,7 +56,7 @@ app.post('/verify',async ctx => { const result = await signatures.verify(ctx,${J
       const execution = await toolchain.executeCanonicalNativeModule(compiled.native,options);
       assert.equal(execution.response.status,200);
       const trace = JSON.stringify(execution.trace);
-      for (const sensitive of [key, body.toString(), fields.find(pair=>pair[0]==='Signature')?.[1]].filter(Boolean)) assert.ok(!trace.includes(sensitive), 'private effect trace');
+      for (const sensitive of [key, 'private-authorization-fixture', body.toString(), fields.find(pair=>pair[0]==='Signature')?.[1]].filter(Boolean)) assert.ok(!trace.includes(sensitive), 'private effect trace');
       return JSON.parse(execution.response.body);
     } finally { closePackageHttp(handle); }
   }
@@ -103,7 +103,25 @@ app.post('/verify',async ctx => { const result = await signatures.verify(ctx,${J
       [replace(incoming,'Signature-Input',signed.value.signatureInput.replace('@method','@path')),body,{}, {},'UNSUPPORTED_COMPONENT'],
       [[...incoming,['Signature',signed.value.signature]],body,{}, {},'SIGNATURE_NOT_FOUND'],
     ];
-    for (const [fields,data,override,original,code] of cases) assert.deepEqual(await run('verify',fields,data,'inbound',target,override,original),{ok:false,code});
+    for (const [fields,data,override,original,code] of cases) {
+      assert.deepEqual(await run('verify',fields,data,'inbound',target,override,original),{ok:false,code});
+      // Compare failures inside the declared profile with the independent JS
+      // protocol, not just the JS target running the same Wasm implementation.
+      if (target === 'native' && ['SIGNATURE_INVALID','BODY_DIGEST_INVALID','TIME_INVALID','KEY_REJECTED'].includes(code)) {
+        const rawTarget=original.target || '/events', split=rawTarget.indexOf('?');
+        const refMessage={...received,method:av(original.method || 'POST'),headers:av(fields.map(([name,value])=>({name,value:bytes(value)}))),
+          body:{state:'available',bytes:data},target:{...received.target,original:av({form:'origin',raw:bytes(rawTarget)}),
+            uri:av('https://example.test'+rawTarget),path:av(split<0?rawTarget:rawTarget.slice(0,split)),query:av(split<0?'':rawTarget.slice(split))}};
+        let selectedVerifier=verifier;
+        if (override.secrets) {
+          const alternate=await webcrypto.subtle.importKey('raw',bytes(override.secrets.HMS_KEY),{name:'HMAC',hash:'SHA-256'},false,['sign','verify']);
+          selectedVerifier=createHmacVerifier({...keyBinding,key:alternate}).value;
+        }
+        const result=await referenceVerify(refMessage,{profile:verifyProfile,capabilities:{keys:{id:'fixture',resolve:()=>selectedVerifier},digest,
+          clock:{nowSeconds:override.packageWallClock || clock.nowSeconds}}});
+        assert.deepEqual(result,{ok:false,code});
+      }
+    }
     for (const override of [{packageHttp:{}},{packageArtifacts:[]},{packageBindings:{}},{secrets:{}},
       {packageBindings:{fixture:{...binding,operations:['sign']}}}]) {
       await assert.rejects(run('verify',incoming,body,'inbound',target,override));
@@ -143,6 +161,14 @@ export function pointer():usize{return changetype<usize>(value);} export functio
     const selected=target==='native'?project:jsProject;
     const built=toolchain.buildProject(selected);
     assert.equal(built.status,'built');
+    function inspectOutput(directory) {
+      for (const entry of readdirSync(directory,{withFileTypes:true})) {
+        const file=join(directory,entry.name);
+        if(entry.isDirectory()) inspectOutput(file);
+        else for(const sensitive of [key,'private-authorization-fixture']) assert.ok(!readFileSync(file).includes(Buffer.from(sensitive)),'private data excluded from build artifacts');
+      }
+    }
+    inspectOutput(built.outDir);
     const launcher=createNodeLauncher({target,buildDir:built.outDir,port:0,packageBindings:{fixture:binding},secrets:{HMS_KEY:key}});
     const ready=await launcher.start();
     try {
