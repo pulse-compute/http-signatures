@@ -1,5 +1,11 @@
 # Pulse integration decision (HMS-07)
 
+**Historical checkpoint.** The findings below describe the pinned HMS-07 tree.
+Pulse has since merged trusted external lowerer admission and 64 KiB HMAC input;
+the synchronized first-party bridge/pin proposal below is superseded. See the
+[HMS-08 runtime contract proposal](hms-08-contract.md) for the remaining host and
+runtime boundary. The original measurements and receipts are unchanged.
+
 **NO-GO for compiling the current protocol unchanged or automatically starting
 HMS-08. Conditional GO for a narrow, explicitly approved HMAC first-party bridge.**
 The required cryptographic primitive already works. The remaining decisions are
