@@ -147,10 +147,11 @@ conformance or a guarantee that a host preserves signed bytes.
 
 HMS-08 implements package-owned Native protocol Wasm with a generic versioned
 Pulse runtime/host contract, explicit Node capture and host-owned keys. It needs
-the accompanying Pulse runtime-binding change. No HTTP Signatures registration,
+the generic package runtime binding implemented in Pulse. No HTTP Signatures registration,
 package pin or matching release version is required in Pulse. See
-[the implemented profile](docs/pulse-native.md) and [acceptance evidence](docs/hms-08.md).
-Fastly and the broader target qualification remain HMS-09 work.
+[the implemented profile](docs/pulse-native.md), [HMS-08 implementation](docs/hms-08.md),
+and [HMS-09 qualification and handoff](docs/hms-09.md). Node Native and JavaScript
+have profile-scoped local evidence; Fastly remains unavailable.
 
 [HMS-07](docs/pulse-integration.md) remains the historical investigation against
 its pinned Pulse revision. Its former allowlist, synchronized bridge and 32 KiB
@@ -176,7 +177,7 @@ npm test
 `nvm` is optional; any installation of the pinned Node version works.
 `npm run check:interop` additionally requires the development-only OpenSSL 3 CLI.
 See [CONTRIBUTING.md](CONTRIBUTING.md), the [HMS-00 provenance receipt](docs/hms-00.md)
-and the [HMS-08 implementation](docs/hms-08.md).
+and the [qualification rerun commands](docs/hms-09.md#reproduce).
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),
