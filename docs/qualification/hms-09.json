@@ -1,0 +1,1760 @@
+{
+  "schema": "hms.qualification.v1",
+  "ticket": "HMS-09",
+  "startedAt": "2026-10-17T00:24:21.757Z",
+  "command": "node integration/node.mjs /path/to/prepared/pulse [report.json]",
+  "fixture": {
+    "id": "strict-hmac-post-v1",
+    "nowSeconds": 1000,
+    "maxBodyBytes": 65536,
+    "bodyBytes": 20,
+    "baseSha256": "04aa48c4c1d8418c9db719a22390515df8a97c291e64f422fe88c15e09462142"
+  },
+  "profile": {
+    "algorithm": "hmac-sha256",
+    "bodyDigest": "sha-256",
+    "components": [
+      "@method",
+      "@target-uri",
+      "content-digest"
+    ],
+    "context": "HTTPS request, origin-form target, uppercase method",
+    "replay": "not-checked",
+    "unsupported": [
+      "response",
+      "trailers",
+      "selectors",
+      "multiple labels",
+      "asymmetric crypto",
+      "required replay"
+    ],
+    "configuration": {
+      "id": "fixture",
+      "label": "sig1",
+      "authority": "example.test",
+      "tag": "hms-example",
+      "trustDomain": "fixture",
+      "maxAgeSeconds": 60,
+      "clockSkewSeconds": 5
+    }
+  },
+  "sources": {
+    "package": {
+      "commit": "0d1d20e798059b6864779e71672daee2c756ee3c",
+      "tree": "c66a5fc54561eb77181f1c22e14454691a239bd0",
+      "dirty": false
+    },
+    "pulse": {
+      "commit": "833eab56a5f8d17437878a7420c0748ffe915dcc",
+      "tree": "1b0893e20dbee7b0c2a86add7415d19205734ffb",
+      "dirty": false
+    }
+  },
+  "toolchain": {
+    "node": "v24.19.0",
+    "v8": "13.6.233.17-node.51",
+    "nodeOpenSSL": "3.5.7",
+    "platform": "linux",
+    "architecture": "x64",
+    "assemblyscript": "0.28.18",
+    "typescript": "5.9.3",
+    "packageLockSha256": "466eaf8cb3737ccf40784a6cc58b390c12b70b745722b220dc29f714098d3a06",
+    "assemblyscriptLockSha256": "17c094a68a3280bf2aa06387e934027693a4d9c492838b087ece6430189109cb",
+    "pulseLockSha256": "2b7fb127800ce3723ffa450f7978c1cb72b86238850cd5da4695cfc23b460ec3",
+    "npm": "11.9.0",
+    "pnpm": "12.14.0",
+    "fastly": {
+      "status": "unavailable"
+    },
+    "viceroy": {
+      "status": "unavailable"
+    },
+    "externalOpenSSL": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)"
+  },
+  "vectors": [
+    {
+      "id": "RFC9421-B.2.5",
+      "scope": "primitive base/MAC; not accepted strict profile",
+      "baseUtf8": "\"date\": Tue, 20 Apr 2021 02:07:55 GMT\n\"@authority\": example.com\n\"content-type\": application/json\n\"@signature-params\": (\"date\" \"@authority\" \"content-type\");created=1618884473;keyid=\"test-shared-secret\"",
+      "baseBytes": 200,
+      "baseSha256": "82faed1b67e492cfc8fe50fee1b6fdbdcf9f4d6384af8282339dcad5e44310e7",
+      "signatureBase64": "pxcQw6G3AjtMBQjwo8XzkZf/bws5LelbaMk5rGIGtE8="
+    }
+  ],
+  "fastly": {
+    "nativeAdmission": "PULSE_PROVIDER_CAPABILITY_UNSUPPORTED",
+    "javascriptAdmission": {
+      "id": "package.invoke",
+      "status": "blocked",
+      "required": true,
+      "reasonId": "unknown-fastly-javascript-capability-fail-closed",
+      "owner": "compiler"
+    },
+    "execution": "unavailable",
+    "viceroy": "not-run",
+    "deployed": "not-run"
+  },
+  "realizations": {
+    "native": {
+      "version": "pulse.native-crypto-verifier.v1",
+      "semanticOwner": "@pulse-compute/crypto",
+      "automaticFallback": false,
+      "algorithms": [
+        {
+          "algorithm": "SHA-256",
+          "realization": "guest-source:pulse-hmac-as",
+          "implementation": "pulse-hmac-as.v1",
+          "guestUnitRequired": false,
+          "available": true
+        },
+        {
+          "algorithm": "HMAC-SHA256",
+          "realization": "guest-source:pulse-hmac-as",
+          "implementation": "pulse-hmac-as.v1",
+          "guestUnitRequired": false,
+          "available": true
+        }
+      ],
+      "available": true
+    },
+    "javascript": {
+      "target": "javascript",
+      "automaticFallback": false,
+      "algorithms": [
+        {
+          "algorithm": "SHA-256",
+          "realization": "runtime-builtin",
+          "implementation": "webcrypto.subtle.sha-256-bytes.v1",
+          "available": true,
+          "automaticFallback": false
+        },
+        {
+          "algorithm": "HMAC-SHA256",
+          "realization": "runtime-builtin",
+          "implementation": "webcrypto.subtle.hmac-sha-256-bytes.v1",
+          "available": true,
+          "automaticFallback": false
+        }
+      ]
+    }
+  },
+  "resources": {
+    "packageWasm": {
+      "bytes": 24565,
+      "sha256": "45b1b8b80c8b074b0e11a85ee17565c43c93b4a551b85a0da47af5e4e42fba87",
+      "initialPages": 5,
+      "maximumPages": 32,
+      "maximumBytes": 2097152
+    },
+    "appWasm": {
+      "bytes": 7179,
+      "sha256": "7f8fda49e53edb6f5091814ccb84b05d225513045afce8f8afc4afc3c3534996"
+    },
+    "baselineRecipe": "Two constant-text POST routes; no package imports, crypto declarations or package bindings.",
+    "baseline": {
+      "wasmBytes": 1922,
+      "wasmSha256": "dd1b96622f9e1deb989014ddbeee7b9735900254997833c1b8a5411ebcde7a57",
+      "milliseconds": 877.7877420000004,
+      "rssDeltaBytes": 262144
+    },
+    "full": {
+      "wasmBytes": 7179,
+      "wasmSha256": "7f8fda49e53edb6f5091814ccb84b05d225513045afce8f8afc4afc3c3534996",
+      "milliseconds": 1041.5356550000006,
+      "rssDeltaBytes": 4194304
+    },
+    "initialCompile": {
+      "milliseconds": 1113.26291,
+      "rssDeltaBytes": 23068672
+    },
+    "incremental": {
+      "appWasmBytes": 5257,
+      "physicalWasmBytes": 29822,
+      "compileMilliseconds": 163.74791300000015,
+      "rssDeltaBytes": 3932160
+    },
+    "limits": {
+      "bodyBytes": 65536,
+      "privateCryptoMessageBytes": 65536,
+      "cryptoCommands": 4,
+      "packageMemoryBytes": 2097152
+    },
+    "caveats": [
+      "Single process, baseline then full, warm caches and GC: timings and signed RSS deltas are observations, not isolated overhead or regression thresholds.",
+      "JS uses the same package Wasm; app Wasm and compile deltas describe Native only.",
+      "Runtime peak RSS, isolated per-request memory and production latency budgets unavailable.",
+      "Cancellation/deadline probes cover host checkpoints and late-result fencing; trusted synchronous Wasm is not CPU-preempted.",
+      "Physical Wasm delta counts app module plus package module once; excludes base64/JSON/JS carrier size."
+    ]
+  },
+  "finishedAt": "2026-10-17T00:24:28.874Z",
+  "outcome": "completed-with-gaps",
+  "fatalHarnessFailure": false,
+  "checks": [
+    {
+      "id": "setup",
+      "targets": [
+        "native",
+        "javascript"
+      ],
+      "features": [
+        "admission"
+      ],
+      "scope": "compile/prepare actual imported package",
+      "status": "pass",
+      "durationMs": 1195.307
+    },
+    {
+      "id": "native:exchange",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "canonicalization",
+        "sign",
+        "verify",
+        "redaction"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 15.862
+    },
+    {
+      "id": "native:negative:signature",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 4.437
+    },
+    {
+      "id": "native:negative:key",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.706
+    },
+    {
+      "id": "native:negative:expired",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.623
+    },
+    {
+      "id": "native:negative:future",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 3.178
+    },
+    {
+      "id": "native:negative:method",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.571
+    },
+    {
+      "id": "native:negative:target",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 3.087
+    },
+    {
+      "id": "native:negative:mixed-method",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 4.285
+    },
+    {
+      "id": "native:negative:body",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.597
+    },
+    {
+      "id": "native:negative:missing",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.064
+    },
+    {
+      "id": "native:negative:key-id",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.441
+    },
+    {
+      "id": "native:negative:duplicate-created",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.036
+    },
+    {
+      "id": "native:negative:component",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.508
+    },
+    {
+      "id": "native:negative:duplicate-signature",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.195
+    },
+    {
+      "id": "native:grant:0",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.909
+    },
+    {
+      "id": "native:grant:1",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.56
+    },
+    {
+      "id": "native:grant:2",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.561
+    },
+    {
+      "id": "native:grant:3",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.357
+    },
+    {
+      "id": "native:grant:4",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.442
+    },
+    {
+      "id": "native:body",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "body-boundary"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 10.906
+    },
+    {
+      "id": "native:normalization",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "host-normalization"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 16.142
+    },
+    {
+      "id": "native:lifecycle",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "cancellation",
+        "deadline",
+        "redaction"
+      ],
+      "scope": "actual package artifact/effect at Node host seam with selected crypto, including late completion fencing",
+      "status": "pass",
+      "durationMs": 7.425
+    },
+    {
+      "id": "native:replay",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "replay"
+      ],
+      "scope": "repeated verification is explicitly not-checked; no replay protection",
+      "status": "pass",
+      "durationMs": 4.691
+    },
+    {
+      "id": "native:build",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "http-build",
+        "redaction"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2254.632
+    },
+    {
+      "id": "native:dev",
+      "targets": [
+        "native"
+      ],
+      "features": [
+        "http-dev"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1098.436
+    },
+    {
+      "id": "native:openssl",
+      "targets": [
+        "native",
+        "openssl"
+      ],
+      "features": [
+        "canonicalization",
+        "sign",
+        "verify",
+        "negative"
+      ],
+      "scope": "literal-base HMAC interoperability; no general external HTTP parser",
+      "status": "pass",
+      "durationMs": 18.279
+    },
+    {
+      "id": "javascript:exchange",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "canonicalization",
+        "sign",
+        "verify",
+        "redaction"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 16.241
+    },
+    {
+      "id": "javascript:negative:signature",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.448
+    },
+    {
+      "id": "javascript:negative:key",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.676
+    },
+    {
+      "id": "javascript:negative:expired",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.538
+    },
+    {
+      "id": "javascript:negative:future",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.198
+    },
+    {
+      "id": "javascript:negative:method",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.983
+    },
+    {
+      "id": "javascript:negative:target",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.413
+    },
+    {
+      "id": "javascript:negative:mixed-method",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.6
+    },
+    {
+      "id": "javascript:negative:body",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.07
+    },
+    {
+      "id": "javascript:negative:missing",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.374
+    },
+    {
+      "id": "javascript:negative:key-id",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.152
+    },
+    {
+      "id": "javascript:negative:duplicate-created",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.025
+    },
+    {
+      "id": "javascript:negative:component",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 0.936
+    },
+    {
+      "id": "javascript:negative:duplicate-signature",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 0.869
+    },
+    {
+      "id": "javascript:grant:0",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 2.096
+    },
+    {
+      "id": "javascript:grant:1",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 0.702
+    },
+    {
+      "id": "javascript:grant:2",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 0.709
+    },
+    {
+      "id": "javascript:grant:3",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 1.198
+    },
+    {
+      "id": "javascript:grant:4",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "grants"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 0.537
+    },
+    {
+      "id": "javascript:body",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "body-boundary"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 6.229
+    },
+    {
+      "id": "javascript:normalization",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "host-normalization"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 8.908
+    },
+    {
+      "id": "javascript:lifecycle",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "cancellation",
+        "deadline",
+        "redaction"
+      ],
+      "scope": "actual package artifact/effect at Node host seam with selected crypto, including late completion fencing",
+      "status": "pass",
+      "durationMs": 7.31
+    },
+    {
+      "id": "javascript:replay",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "replay"
+      ],
+      "scope": "repeated verification is explicitly not-checked; no replay protection",
+      "status": "pass",
+      "durationMs": 2.871
+    },
+    {
+      "id": "javascript:build",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "http-build",
+        "redaction"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 79.133
+    },
+    {
+      "id": "javascript:dev",
+      "targets": [
+        "javascript"
+      ],
+      "features": [
+        "http-dev"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 30.755
+    },
+    {
+      "id": "javascript:openssl",
+      "targets": [
+        "javascript",
+        "openssl"
+      ],
+      "features": [
+        "canonicalization",
+        "sign",
+        "verify",
+        "negative"
+      ],
+      "scope": "literal-base HMAC interoperability; no general external HTTP parser",
+      "status": "pass",
+      "durationMs": 25.417
+    },
+    {
+      "id": "reference:exchange",
+      "targets": [
+        "reference"
+      ],
+      "features": [
+        "canonicalization",
+        "sign",
+        "verify"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 10.682
+    },
+    {
+      "id": "reference:body",
+      "targets": [
+        "reference",
+        "native",
+        "javascript"
+      ],
+      "features": [
+        "body-boundary"
+      ],
+      "scope": "same boundary fixtures and exact fields across both targets and independent JS protocol",
+      "status": "pass",
+      "durationMs": 12.873
+    },
+    {
+      "id": "reference:negative",
+      "targets": [
+        "reference"
+      ],
+      "features": [
+        "negative"
+      ],
+      "scope": "strict-profile",
+      "status": "pass",
+      "durationMs": 5.867
+    },
+    {
+      "id": "reference:replay",
+      "targets": [
+        "reference"
+      ],
+      "features": [
+        "replay"
+      ],
+      "scope": "explicit fixture-only atomic store, duplicate and store failure",
+      "status": "pass",
+      "durationMs": 2.634
+    },
+    {
+      "id": "rfc-b25",
+      "targets": [
+        "native",
+        "javascript",
+        "reference",
+        "openssl"
+      ],
+      "features": [
+        "rfc-b25"
+      ],
+      "scope": "exact published base/MAC primitives; outside narrow strict profile",
+      "status": "pass",
+      "durationMs": 803.27
+    },
+    {
+      "id": "static-refusals",
+      "targets": [
+        "native",
+        "javascript"
+      ],
+      "features": [
+        "admission"
+      ],
+      "scope": "shared literal-option validator; Native compile diagnostics",
+      "status": "pass",
+      "durationMs": 29.759
+    },
+    {
+      "id": "fastly-refusal",
+      "targets": [
+        "fastly-js-local",
+        "fastly-js-viceroy",
+        "fastly-native-viceroy",
+        "fastly-native-deployed"
+      ],
+      "features": [
+        "admission"
+      ],
+      "scope": "provider admission probe only; never execution evidence",
+      "status": "pass",
+      "durationMs": 1.611
+    },
+    {
+      "id": "resources",
+      "targets": [
+        "native",
+        "javascript"
+      ],
+      "features": [
+        "resources"
+      ],
+      "scope": "physical Wasm and same-process incremental compile/RSS observations",
+      "status": "pass",
+      "durationMs": 1920.626
+    }
+  ],
+  "matrix": [
+    {
+      "target": "native",
+      "backend": "package Wasm + guest-source:pulse-hmac-as",
+      "environment": "Node Native",
+      "features": {
+        "admission": {
+          "status": "pass",
+          "checks": [
+            "setup",
+            "static-refusals"
+          ]
+        },
+        "canonicalization": {
+          "status": "pass",
+          "checks": [
+            "native:exchange",
+            "native:openssl"
+          ]
+        },
+        "sign": {
+          "status": "pass",
+          "checks": [
+            "native:exchange",
+            "native:openssl"
+          ]
+        },
+        "verify": {
+          "status": "pass",
+          "checks": [
+            "native:exchange",
+            "native:openssl"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "checks": [
+            "native:negative:signature",
+            "native:negative:key",
+            "native:negative:expired",
+            "native:negative:future",
+            "native:negative:method",
+            "native:negative:target",
+            "native:negative:mixed-method",
+            "native:negative:body",
+            "native:negative:missing",
+            "native:negative:key-id",
+            "native:negative:duplicate-created",
+            "native:negative:component",
+            "native:negative:duplicate-signature",
+            "native:openssl"
+          ]
+        },
+        "host-normalization": {
+          "status": "pass",
+          "checks": [
+            "native:normalization"
+          ]
+        },
+        "body-boundary": {
+          "status": "pass",
+          "checks": [
+            "native:body",
+            "reference:body"
+          ]
+        },
+        "grants": {
+          "status": "pass",
+          "checks": [
+            "native:grant:0",
+            "native:grant:1",
+            "native:grant:2",
+            "native:grant:3",
+            "native:grant:4"
+          ]
+        },
+        "redaction": {
+          "status": "pass",
+          "checks": [
+            "native:exchange",
+            "native:lifecycle",
+            "native:build"
+          ]
+        },
+        "cancellation": {
+          "status": "pass",
+          "checks": [
+            "native:lifecycle"
+          ]
+        },
+        "deadline": {
+          "status": "pass",
+          "checks": [
+            "native:lifecycle"
+          ]
+        },
+        "replay": {
+          "status": "unsupported",
+          "checks": [
+            "native:replay"
+          ],
+          "reason": "Verification reports replay:not-checked; replay-required profile is refused."
+        },
+        "rfc-b25": {
+          "status": "pass",
+          "checks": [
+            "rfc-b25"
+          ]
+        },
+        "http-build": {
+          "status": "pass",
+          "checks": [
+            "native:build"
+          ]
+        },
+        "http-dev": {
+          "status": "pass",
+          "checks": [
+            "native:dev"
+          ]
+        },
+        "resources": {
+          "status": "pass",
+          "checks": [
+            "resources"
+          ]
+        }
+      }
+    },
+    {
+      "target": "javascript",
+      "backend": "package Wasm + runtime-builtin",
+      "environment": "Node JavaScript",
+      "features": {
+        "admission": {
+          "status": "pass",
+          "checks": [
+            "setup",
+            "static-refusals"
+          ]
+        },
+        "canonicalization": {
+          "status": "pass",
+          "checks": [
+            "javascript:exchange",
+            "javascript:openssl"
+          ]
+        },
+        "sign": {
+          "status": "pass",
+          "checks": [
+            "javascript:exchange",
+            "javascript:openssl"
+          ]
+        },
+        "verify": {
+          "status": "pass",
+          "checks": [
+            "javascript:exchange",
+            "javascript:openssl"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "checks": [
+            "javascript:negative:signature",
+            "javascript:negative:key",
+            "javascript:negative:expired",
+            "javascript:negative:future",
+            "javascript:negative:method",
+            "javascript:negative:target",
+            "javascript:negative:mixed-method",
+            "javascript:negative:body",
+            "javascript:negative:missing",
+            "javascript:negative:key-id",
+            "javascript:negative:duplicate-created",
+            "javascript:negative:component",
+            "javascript:negative:duplicate-signature",
+            "javascript:openssl"
+          ]
+        },
+        "host-normalization": {
+          "status": "pass",
+          "checks": [
+            "javascript:normalization"
+          ]
+        },
+        "body-boundary": {
+          "status": "pass",
+          "checks": [
+            "javascript:body",
+            "reference:body"
+          ]
+        },
+        "grants": {
+          "status": "pass",
+          "checks": [
+            "javascript:grant:0",
+            "javascript:grant:1",
+            "javascript:grant:2",
+            "javascript:grant:3",
+            "javascript:grant:4"
+          ]
+        },
+        "redaction": {
+          "status": "pass",
+          "checks": [
+            "javascript:exchange",
+            "javascript:lifecycle",
+            "javascript:build"
+          ]
+        },
+        "cancellation": {
+          "status": "pass",
+          "checks": [
+            "javascript:lifecycle"
+          ]
+        },
+        "deadline": {
+          "status": "pass",
+          "checks": [
+            "javascript:lifecycle"
+          ]
+        },
+        "replay": {
+          "status": "unsupported",
+          "checks": [
+            "javascript:replay"
+          ],
+          "reason": "Verification reports replay:not-checked; replay-required profile is refused."
+        },
+        "rfc-b25": {
+          "status": "pass",
+          "checks": [
+            "rfc-b25"
+          ]
+        },
+        "http-build": {
+          "status": "pass",
+          "checks": [
+            "javascript:build"
+          ]
+        },
+        "http-dev": {
+          "status": "pass",
+          "checks": [
+            "javascript:dev"
+          ]
+        },
+        "resources": {
+          "status": "pass",
+          "checks": [
+            "resources"
+          ]
+        }
+      }
+    },
+    {
+      "target": "reference",
+      "backend": "independent package JS protocol + explicit Web Crypto",
+      "environment": "Node reference",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "canonicalization": {
+          "status": "pass",
+          "checks": [
+            "reference:exchange"
+          ]
+        },
+        "sign": {
+          "status": "pass",
+          "checks": [
+            "reference:exchange"
+          ]
+        },
+        "verify": {
+          "status": "pass",
+          "checks": [
+            "reference:exchange"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "checks": [
+            "reference:negative"
+          ]
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "body-boundary": {
+          "status": "pass",
+          "checks": [
+            "reference:body"
+          ]
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "replay": {
+          "status": "pass",
+          "checks": [
+            "reference:replay"
+          ]
+        },
+        "rfc-b25": {
+          "status": "pass",
+          "checks": [
+            "rfc-b25"
+          ]
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        }
+      }
+    },
+    {
+      "target": "openssl",
+      "backend": "OpenSSL CLI HMAC over literal fixture base",
+      "environment": "Independent CLI interface; shared OpenSSL lineage with Node",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "canonicalization": {
+          "status": "pass",
+          "checks": [
+            "native:openssl",
+            "javascript:openssl"
+          ]
+        },
+        "sign": {
+          "status": "pass",
+          "checks": [
+            "native:openssl",
+            "javascript:openssl"
+          ]
+        },
+        "verify": {
+          "status": "pass",
+          "checks": [
+            "native:openssl",
+            "javascript:openssl"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "checks": [
+            "native:openssl",
+            "javascript:openssl"
+          ]
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "body-boundary": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "replay": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "rfc-b25": {
+          "status": "pass",
+          "checks": [
+            "rfc-b25"
+          ]
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "Not exercised for this target by this qualification."
+        }
+      }
+    },
+    {
+      "target": "fastly-js-local",
+      "unavailable": "No generic package.invoke host binding; local JS is not Viceroy evidence.",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [
+            "fastly-refusal"
+          ],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "canonicalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "sign": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "verify": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "negative": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "body-boundary": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "replay": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "rfc-b25": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; local JS is not Viceroy evidence."
+        }
+      }
+    },
+    {
+      "target": "fastly-js-viceroy",
+      "unavailable": "No generic package.invoke host binding; no Viceroy execution.",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [
+            "fastly-refusal"
+          ],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "canonicalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "sign": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "verify": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "negative": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "body-boundary": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "replay": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "rfc-b25": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        }
+      }
+    },
+    {
+      "target": "fastly-native-viceroy",
+      "unavailable": "No generic package.invoke host binding; no Viceroy execution.",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [
+            "fastly-refusal"
+          ],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "canonicalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "sign": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "verify": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "negative": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "body-boundary": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "replay": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "rfc-b25": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no Viceroy execution."
+        }
+      }
+    },
+    {
+      "target": "fastly-native-deployed",
+      "unavailable": "No generic package.invoke host binding; no deployment requested or performed.",
+      "features": {
+        "admission": {
+          "status": "unavailable",
+          "checks": [
+            "fastly-refusal"
+          ],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "canonicalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "sign": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "verify": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "negative": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "host-normalization": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "body-boundary": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "grants": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "redaction": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "cancellation": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "deadline": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "replay": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "rfc-b25": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "http-build": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "http-dev": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        },
+        "resources": {
+          "status": "unavailable",
+          "checks": [],
+          "reason": "No generic package.invoke host binding; no deployment requested or performed."
+        }
+      }
+    }
+  ]
+}

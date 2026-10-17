@@ -179,3 +179,28 @@ realizations. Pulse owns capture, grants, private staging, lifecycle and executi
 HMS-09 changes no monorepo contract and requires no new architectural exception.
 Human review/merge remains required; no merge, release, deployment or publication
 is performed by this workstream step.
+
+## Recorded checkpoint
+
+- Base: HTTP Signatures `7befdc329fd25f3f370f082b85941aad07caef16`.
+- Tested implementation: `0d1d20e798059b6864779e71672daee2c756ee3c`, tree
+  `c66a5fc54561eb77181f1c22e14454691a239bd0`, clean checkout.
+- Pulse: `833eab56a5f8d17437878a7420c0748ffe915dcc`, tree
+  `1b0893e20dbee7b0c2a86add7415d19205734ffb`, clean checkout, no Pulse edits.
+- Qualification: **61/61 checks passed**, `completed-with-gaps`; all four Fastly
+  environment rows remain unavailable, both Pulse replay cells unsupported.
+- Package: `npm run check`, `npm run check:contract`, `npm test` (**872/872**),
+  `npm run check:interop` and reproducible `npm run build:native` passed.
+- Pulse prerequisites: frozen install, build, `corepack pnpm maintainer:check`,
+  and `node wasm/test/contracts/assert-package-runtime.cjs` passed. The generic
+  host test is supplemental seam evidence, not a proxy for a missing target.
+- No unresolved failures in the recorded run. Broader monorepo release tests,
+  production deployment, Fastly execution and production performance are not
+  claimed. The receipt follow-up changes only this document and the JSON report;
+  its parent is the exact tested implementation commit.
+
+Changed files are the shared integration runner, two qualification helpers,
+report tests, the `qualify` script, README/contributor/capability documentation,
+this handoff and its JSON receipt. Contract ownership is unchanged. The next
+optional step is an explicitly scoped HMS-10 promotion decision; closing any
+Fastly or replay gap first requires the owner gates above.
