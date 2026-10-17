@@ -53,9 +53,9 @@ package-owned protocol Wasm and the approved generic runtime/host contract.
 | Node JS 24.19.0, `/fields` API | supported experimental subset | HMS-02 tests and logical-work counters; no host/crypto policy |
 | Node JS 24.19.0, `/base` API | supported experimental subset | HMS-03 exact byte/corpus/negative tests and logical-work counters; no adapter provenance proof |
 | Node JS 24.19.0, `/protocol` and `/webcrypto` | supported experimental fixed-algorithm subset | HMS-04–06 tests, RFC B.2.4/B.2.5, OpenSSL CLI and RFC 9530 digest vectors; no host provenance or production replay-store qualification |
-| Fastly JS | unavailable adapter/qualification | No execution evidence; source portability is insufficient |
-| Node Native and Node JavaScript `/pulse` | implemented experimental narrow HMAC profile | HMS-08 emitted Native parity, 64 KiB body integrity, authority/negative tests and built real HTTP Node execution; accompanying Pulse runtime-binding change required. Broader qualification remains HMS-09 |
-| Fastly Native / Viceroy | unavailable realization | No compile, local host or deployed receipt |
+| Fastly JS | unavailable adapter/qualification | HMS-09 records local JS and Viceroy separately as unavailable; package.invoke admission is blocked |
+| Node Native and Node JavaScript `/pulse` | implemented experimental narrow HMAC profile | HMS-09 exact profile parity, 64 KiB boundaries, independent HMAC, authority/negative cases, built/dev HTTP, lifecycle and resource evidence; see [handoff](../hms-09.md). Replay remains not-checked; no production qualification |
+| Fastly Native / Viceroy | unavailable realization | HMS-09 provider admission refusal; Viceroy and deployed execution explicitly unavailable |
 
 ## Migration and owner gates
 

@@ -13,6 +13,9 @@ This is an experimental reference package. Preserve honest, profile-scoped claim
 - Include ticket ID, base/head SHAs, changed files, contract owner, commands and
   results, RFC vectors, target/capability status, known failures, next dependency,
   and architecture approval needs in each PR receipt.
+- Cross-target checkpoints use `npm run qualify -- /path/to/prepared/pulse /tmp/hms-09.json`;
+  see [HMS-09](docs/hms-09.md) for setup, evidence boundaries and handoff.
+  Never turn a passing admission-refusal probe into a target execution pass.
 - The package owns HTTP parsing/canonicalization and verification policy; crypto
   backends own cryptography; hosts own authoritative context, keys, and time.
 - Pulse compiler/host changes require separate PRs against `pulse-compute/pulse`

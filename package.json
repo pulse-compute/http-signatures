@@ -20,7 +20,8 @@
     "check:interop": "node scripts/check-interop.mjs",
     "measure:limits": "node scripts/measure-reference-limits.mjs",
     "build:native": "node scripts/build-native.mjs",
-    "test:integration": "node integration/node.mjs"
+    "test:integration": "node integration/node.mjs",
+    "qualify": "node integration/node.mjs"
   },
   "license": "Apache-2.0",
   "engines": {
