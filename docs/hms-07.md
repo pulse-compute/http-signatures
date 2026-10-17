@@ -1,5 +1,9 @@
 # HMS-07 implementation receipt
 
+This historical receipt retains its original scope. The subsequent
+[HMS-08 checkpoint](hms-08.md) records merged external-lowerer/64 KiB prerequisites
+and the remaining runtime contract decision.
+
 Ticket: read-only Pulse integration investigation and decision gate.
 Repository: `pulse-compute/http-signatures`; PR target: `main`; human merge.
 Base: `7d7826468ecf46f2f2de35cf03bd48b252cd573e` (merged HMS-06).

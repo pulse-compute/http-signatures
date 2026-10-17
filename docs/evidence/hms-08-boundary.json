@@ -1,0 +1,55 @@
+{
+  "ticket": "HMS-08",
+  "status": "blocked-on-contract-decision",
+  "pulse": {
+    "revision": "c42b23e78d32114b69647f6ea6cc3b2d3150b36a",
+    "tree": "5da4aa501ed2b7d725d3455064bb0de9a5627392"
+  },
+  "runtime": "v24.19.0",
+  "scope": "Runtime/provider admission and Node adapter probe; no Native HMS compile or execution.",
+  "cases": [
+    {
+      "name": "external-runtime-sign",
+      "status": "expected-refusal",
+      "code": "PULSE_RUNTIME_PACKAGE_EFFECT_UNTRUSTED"
+    },
+    {
+      "name": "node-provider-sign",
+      "status": "expected-refusal",
+      "code": "PULSE_PROVIDER_CAPABILITY_UNSUPPORTED"
+    },
+    {
+      "name": "provider-descriptor-cannot-add-sign",
+      "status": "expected-refusal",
+      "code": "PULSE_PROVIDER_CAPABILITY_UNKNOWN"
+    },
+    {
+      "name": "external-runtime-verify",
+      "status": "expected-refusal",
+      "code": "PULSE_RUNTIME_PACKAGE_EFFECT_UNTRUSTED"
+    },
+    {
+      "name": "node-provider-verify",
+      "status": "expected-refusal",
+      "code": "PULSE_PROVIDER_CAPABILITY_UNSUPPORTED"
+    },
+    {
+      "name": "provider-descriptor-cannot-add-verify",
+      "status": "expected-refusal",
+      "code": "PULSE_PROVIDER_CAPABILITY_UNKNOWN"
+    },
+    {
+      "name": "forged-request-context",
+      "status": "expected-refusal",
+      "code": "PULSE_RUNTIME_PACKAGE_CONTEXT_REQUIRED"
+    },
+    {
+      "name": "node-adapter-normalization",
+      "status": "observed",
+      "methodChanged": true,
+      "targetChanged": true,
+      "rawFieldPairsRetained": true,
+      "originalTargetExposed": false
+    }
+  ]
+}

@@ -1,19 +1,166 @@
 # HTTP Message Signatures
 
-**Experimental, private JavaScript reference. Not a supported or published package.**
+Bounded [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421) signing and verification
+with explicit coverage, keys, trusted time, body integrity and replay policy.
 
-This repository investigates bounded HMAC-SHA256, P-256/SHA-256 and RSA v1.5/SHA-256
-profiles of RFC 9421. HMS-00
-recovers the original spike without changing its source or six tests. Passing
-those tests does not establish full RFC conformance, production security, or
-Pulse Native support.
+**Experimental and private.** The JavaScript reference supports HMAC-SHA256,
+P-256/SHA-256 and RSA v1.5/SHA-256. A narrow Pulse Node HMAC profile runs as
+package-owned Wasm. Neither is published or qualified for production.
+See the [capability matrix](docs/contract/capabilities.md).
 
-## Run locally
+## Usage
 
-Use Node **24.19.0** (pinned in `.nvmrc` and CI). This is the only qualification
-runtime for HMS-00; other Node versions are unqualified. The root package has **no
-runtime or development dependencies**, build step, or install scripts. The optional
-HMS-07 investigation has an isolated, pinned development toolchain.
+Use `@pulse-compute/http-signatures/protocol` for signing and verification.
+Package-name imports work from this checkout or an installed local copy;
+there is no npm release. Run the complete HMAC example with Node **24.19.0**:
+
+```sh
+node examples/hmac.mjs
+```
+
+**Sign a request.** The host supplies `message`, an authoritative HTTP snapshot;
+`profile`, the local policy; ordered signature `parameters`; a scoped `signer`;
+and a trusted `clock`. The [complete setup](examples/hmac-context.mjs) provides
+these values for an empty-body GET using a public fixture key and fixed time.
+
+<!-- usage:sign -->
+```js
+import { sign } from '@pulse-compute/http-signatures/protocol';
+
+const signed = await sign(message, {
+  profile,
+  covered: profile.requiredComponents,
+  parameters,
+  capabilities: { signer, clock },
+});
+if (!signed.ok) throw new Error(signed.code);
+
+const signatureHeaders = {
+  'Signature-Input': signed.value.signatureInput,
+  Signature: signed.value.signature,
+};
+```
+
+Install both fields before sending the exact signed message. Signing returns
+fields; it does not mutate the snapshot or send a request.
+
+**Verify a request.** The receiving host captures `received`, including both
+signature fields, and supplies its `receivingProfile`, scoped key resolver
+`keys`, and trusted `clock`.
+
+<!-- usage:verify -->
+```js
+import { verify } from '@pulse-compute/http-signatures/protocol';
+
+const checked = await verify(received, {
+  profile: receivingProfile,
+  capabilities: { keys, clock },
+});
+if (!checked.ok) throw new Error(checked.code);
+
+console.log(checked.value); // Verified identity, coverage and policy outcomes.
+```
+
+Both operations return `{ ok: true, value }` or `{ ok: false, code }`.
+Applications decide authorization after verification and should map failures to
+a uniform external authentication response.
+
+This GET example explicitly excludes body integrity and replay protection.
+For body-bearing messages, require signed `content-digest` coverage and verify
+the captured body bytes; a valid signature alone does not authenticate a body.
+The webhook example shows that setup and an atomic replay hook:
+
+```sh
+node examples/webhook.mjs     # Content-Digest, request/response, replay rejection
+node examples/asymmetric.mjs # P-256 and RSA signing/verification
+```
+
+The example keys, clock and in-memory replay store are fixtures. Real hosts own
+snapshot provenance, key provisioning, trusted time, transport and replay storage.
+See [protocol options](docs/protocol.md) and [body/replay policy](docs/content-integrity.md).
+
+**Pulse handler (Node Native or JavaScript).** With the accompanying generic
+Pulse runtime binding and an explicit host key grant:
+
+```ts
+import { signatures } from '@pulse-compute/http-signatures/pulse';
+
+app.post('/events', async ctx => {
+  const result = await signatures.verify(ctx, {
+    binding: 'webhook',
+    profile: {
+      id: 'webhook', label: 'sig1', authority: 'api.example.test',
+      tag: 'webhook', trustDomain: 'partner-a',
+      maxAgeSeconds: 60, clockSkewSeconds: 5,
+    },
+  });
+  return ctx.text(result); // JSON verification receipt; authorize separately.
+});
+```
+
+The host captures HTTP bytes and supplies private crypto; the handler receives a
+bounded JSON Result string. This profile requires signed SHA-256 Content-Digest
+and does not check replay. See [complete configuration and limits](docs/pulse-native.md).
+
+## API
+
+All entry points use named ESM exports. There is no default export, CommonJS
+entry point or exported TypeScript declaration bundle.
+
+| Import | Purpose |
+|---|---|
+| `/pulse` | Request-owned Node sign/verify effects with literal profile and host binding |
+| `/protocol` | `sign` and `verify` with explicit profile and capabilities |
+| `/webcrypto` | Explicit HMAC, P-256, RSA v1.5 and SHA-256 capability adapters |
+| `/content-digest` | `createContentDigest` for bounded SHA-256 body bytes |
+| `/fields` | Parse and serialize bounded Signature-Input/Signature dictionaries |
+| `/base` | Construct exact signature-base bytes from authoritative snapshots |
+| Package root | Original HMS-00 spike: `signMessage`, `verifyMessage`, `createSignatureBase`, `serializeSignatureParams` |
+
+The root spike is preserved for provenance and has weaker policy and parsing
+semantics. New integrations should use `/protocol`. The optional `/webcrypto`
+adapter requires an explicitly supplied `SubtleCrypto` and key; the strict
+protocol has no ambient key lookup, clock or backend fallback.
+
+## Supported scope
+
+The JavaScript reference implements bounded signature dictionaries; ordered
+HTTP fields and derived components; structured selectors, binary wrapping,
+trailers and associated-request coverage when authoritative inputs exist;
+explicit algorithm/key/time/coverage policy; and SHA-256 content integrity with
+host-owned replay hooks. Each feature has restrictions and negative tests.
+
+Unsupported features include Accept-Signature negotiation, appending signatures,
+RSA-PSS, Ed25519 and unrestricted Structured Fields. Missing authoritative
+components fail closed. This is a tested bounded profile, not blanket RFC
+conformance or a guarantee that a host preserves signed bytes.
+
+| Documentation | Details |
+|---|---|
+| [Contract and threat model](docs/contract/README.md) | Message model, authority, limits and security policy |
+| [Signature fields](docs/signature-fields.md) | RFC 8941 envelope parsing and serialization |
+| [Signature bases](docs/signature-base.md) | RFC 9421 components and canonical bytes |
+| [Algorithms](docs/algorithms.md) | Exact keys, signature forms and independent interoperability |
+| [Capability matrix](docs/contract/capabilities.md) | Supported, unsupported and unavailable features/targets |
+
+## Pulse integration
+
+HMS-08 implements package-owned Native protocol Wasm with a generic versioned
+Pulse runtime/host contract, explicit Node capture and host-owned keys. It needs
+the accompanying Pulse runtime-binding change. No HTTP Signatures registration,
+package pin or matching release version is required in Pulse. See
+[the implemented profile](docs/pulse-native.md) and [acceptance evidence](docs/hms-08.md).
+Fastly and the broader target qualification remain HMS-09 work.
+
+[HMS-07](docs/pulse-integration.md) remains the historical investigation against
+its pinned Pulse revision. Its former allowlist, synchronized bridge and 32 KiB
+constraints have been superseded by the merged Pulse prerequisites.
+
+## Development
+
+Use Node **24.19.0**, pinned in `.nvmrc` and CI. The reference has no runtime dependencies or install scripts. The `/pulse`
+entry has an optional runtime peer, and the committed Native artifact has a
+separate reproducible AssemblyScript build. See the [integration guide](docs/pulse-native.md).
 
 ```sh
 git clone https://github.com/pulse-compute/http-signatures.git
@@ -22,84 +169,16 @@ nvm install
 nvm use
 npm ci --ignore-scripts --no-audit --no-fund
 npm run check
+npm run check:contract
 npm test
 ```
 
-`nvm` is optional; any installation of the pinned Node version works. Tests can
-also run directly without installation: `node --test test/rfc9421.test.js`.
-
-## Experimental API
-
-The root entry point is `@pulse-compute/http-signatures`. Its unchanged spike API exports:
-
-| Export | Purpose |
-|---|---|
-| `serializeSignatureParams` | Serialize the ordered components and signature parameters |
-| `createSignatureBase` | Build the canonical base for the restricted profile |
-| `signMessage` | Produce `Signature-Input` and `Signature` fields with HMAC-SHA256 |
-| `verifyMessage` | Check the selected signature against explicit caller policy |
-
-These four exports are ESM named exports from `src/index.js`. There is no default
-export, CommonJS entry point or TypeScript declaration bundle. A checkout consumer can use
-`import { signMessage } from './src/index.js'`. The package-name import works
-inside this package or from an explicitly installed local copy; nothing is
-available from npm through this workstream.
-
-The root spike source imports no modules. It needs standard `URL`, `TextEncoder`
-and `Uint8Array` globals, plus a Web Crypto backend. Pass `crypto` explicitly
-(for Node, `webcrypto` from `node:crypto`); the recovered API also defaults to
-`globalThis.crypto`. This inherited fallback is recorded for HMS-01 review.
-The tests import only Node built-ins.
-
-## Boundaries and limitations
-
-The host must supply authoritative HTTP fields/target, trusted keys, and trusted
-time. The package does not retrieve keys, capture time, grant authorization, or own
-replay storage. The new `/protocol` API can require signed-and-verified RFC 9530
-`Content-Digest` and explicit atomic replay consumption. The unchanged root spike
-does neither; a valid signature alone does not establish body integrity.
-
-The spike implements unparameterized ASCII HTTP fields and selected derived
-components (`@method`, `@target-uri`, `@authority`, `@scheme`, `@path`, `@query`,
-origin-form `@request-target`, `@status`). It selects one explicitly labeled
-signature from a restricted dictionary representation. This is implemented
-surface, not a complete interoperability qualification.
-
-Unsupported in the unchanged root spike: other algorithms; `;sf`, `;key`, `;bs`, `;tr`, `;req`; `@query-param`;
-request/response cross-signing; `Accept-Signature`; complete RFC 8941 parsing;
-non-ASCII field values; proxy/CONNECT target forms and ambiguous repeated
-`set-cookie` values. URL normalization and field joining need further review.
-
-See the [HMS-00 receipt](docs/hms-00.md) for provenance, immutable baseline,
-actual test coverage, target status, and known gaps. [CONTRIBUTING.md](CONTRIBUTING.md)
-describes the small PR/test workflow. The [HMS-01 contract](docs/contract/README.md) defines the intended message model,
-profiles and explicit capabilities enforced by the new protocol API. The [HMS-02 fields API](docs/signature-fields.md) is now
-available through `@pulse-compute/http-signatures/fields` for bounded parsing and
-serialization. It does not alter the original signer/verifier or establish full
-RFC conformance. The [HMS-03 base API](docs/signature-base.md) is available through
-`@pulse-compute/http-signatures/base` for authoritative snapshots, ordinary and
-structured field selectors, binary wrapping, trailers, derived components and
-request-bound responses. It returns exact signature-base bytes; it does not
-implement the new authentication policy or change the old signer/verifier.
-The [HMS-04 protocol API](docs/protocol.md) adds explicit HMAC `sign`/`verify`
-through `/protocol`, with an optional explicit `/webcrypto` adapter. It enforces
-context, coverage, metadata, time and scoped keys. Run `node examples/hmac.mjs`.
-The [HMS-05 content/replay API](docs/content-integrity.md) adds exact body digest
-verification, a `/content-digest` generation helper, and atomic host replay hooks.
-Run `node examples/webhook.mjs` for both original request/response profiles.
-Required capabilities fail closed; excluded modes remain explicitly not checked.
-See the [HMS-05 receipt](docs/hms-05.md). The [HMS-06 algorithm matrix](docs/algorithms.md)
-adds explicit P-256 and RSA v1.5 adapters, fixed-size profiles and RFC/OpenSSL
-interoperability evidence. Run `node examples/asymmetric.mjs` and
-`npm run check:interop` (development-only OpenSSL 3 CLI required for the latter).
-See the [HMS-06 receipt](docs/hms-06.md). The [HMS-07 Pulse investigation](docs/pulse-integration.md)
-proves HMAC primitive reuse and records the exact Native admission failures,
-host gaps and a narrow bridge proposal. See its [reproduction instructions](spikes/hms-07/README.md)
-and [receipt](docs/hms-07.md). **HMS-08 requires human architectural approval**;
-the unchanged protocol is not Native eligible and no Pulse integration is qualified.
+`nvm` is optional; any installation of the pinned Node version works.
+`npm run check:interop` additionally requires the development-only OpenSSL 3 CLI.
+See [CONTRIBUTING.md](CONTRIBUTING.md), the [HMS-00 provenance receipt](docs/hms-00.md)
+and the [HMS-08 implementation](docs/hms-08.md).
 
 Standards: [RFC 9421](https://www.rfc-editor.org/rfc/rfc9421),
 [RFC 8941](https://www.rfc-editor.org/rfc/rfc8941),
 [RFC 9530](https://www.rfc-editor.org/rfc/rfc9530).
-
-Licensed under [Apache-2.0](LICENSE), matching the recovered package metadata.
+Licensed under [Apache-2.0](LICENSE).

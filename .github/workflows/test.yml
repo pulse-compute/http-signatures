@@ -23,6 +23,9 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run check
+      - run: npm ci --prefix spikes/hms-07/toolchain --ignore-scripts --no-audit --no-fund
+      - run: node scripts/build-native.mjs
+      - run: git diff --exit-code -- native/module.json
       - run: npm run check:contract
       - run: node scripts/measure-reference-limits.mjs
       - run: node scripts/measure-base-work.mjs
